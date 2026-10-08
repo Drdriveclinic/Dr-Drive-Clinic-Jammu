@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="washSpotlight" cx="65%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#182838" />
+      <stop offset="60%" stop-color="#09121c" />
+      <stop offset="100%" stop-color="#03060a" />
+    </radialGradient>
+    <linearGradient id="foamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#a0c8e6" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#washSpotlight)" />
+
+  <!-- Detailing Wash Spray & Hydrophobic Foam Canopy -->
+  <g transform="translate(680, 260)">
+    <ellipse cx="500" cy="500" rx="450" ry="30" fill="#000000" opacity="0.8" />
+    
+    <!-- Car Shape Under Foam -->
+    <path d="M 100 420 Q 240 340 440 320 Q 680 240 900 270 Q 1060 290 1160 380 Q 1180 420 1140 440 L 120 440 Z" fill="#0c1824" stroke="#1d354d" stroke-width="2" />
+    
+    <!-- Snow Foam Blanket (Top Half) -->
+    <path d="M 380 300 Q 420 280 460 295 Q 520 250 600 240 Q 680 230 760 250 Q 840 230 920 280 Q 980 300 1020 340 Q 940 370 860 350 Q 780 380 700 360 Q 600 370 520 350 Q 440 370 380 300 Z" fill="url(#foamGrad)" />
+    
+    <!-- Hydrophobic Droplets Beading -->
+    <g fill="#00d2ff" opacity="0.75">
+      <circle cx="500" cy="310" r="8" />
+      <circle cx="560" cy="290" r="12" />
+      <circle cx="630" cy="270" r="10" />
+      <circle cx="720" cy="280" r="14" />
+      <circle cx="800" cy="300" r="9" />
+      <circle cx="880" cy="320" r="11" />
+      <circle cx="670" cy="330" r="7" />
+    </g>
+
+    <!-- High-Pressure Foam Lance Mist Effect -->
+    <path d="M 1200 120 L 750 300 L 950 360 Z" fill="rgba(255,255,255,0.12)" />
+  </g>
+</svg>

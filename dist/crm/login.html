@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Drive Clinic CRM — Studio Management Workspace</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/crm.css">
+</head>
+<body class="crm-body" style="background:#070707; color:#ffffff; font-family:'Space Grotesk', sans-serif;">
+
+  <!-- =========================================================================
+       LOGIN OVERLAY SCREEN
+       ========================================================================= -->
+  <div id="crmLoginScreen" class="crm-login-wrap" style="display:none;">
+    <div class="crm-login-card" style="background:#111111; border:1px solid rgba(255,255,255,0.14); border-top:3px solid #E50914;">
+      <div class="crm-login-header">
+        <div class="crm-login-logo-box">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:#ffffff; letter-spacing:0.06em;">THE DRIVE CLINIC</div>
+          <span style="font-size:10px; font-weight:800; color:#E50914; letter-spacing:0.18em; text-transform:uppercase;">STUDIO CRM WORKSPACE // JAMMU</span>
+        </div>
+        <h2 class="crm-login-title" style="margin-top:16px; font-size:20px; font-weight:700;">Admin & Studio Sign In</h2>
+        <p class="crm-login-desc" style="color:#888888; font-size:13px;">Manage bay workflow, leads pipeline, job cards, inventory & invoices.</p>
+      </div>
+
+      <div id="loginErrorBox" class="crm-login-error" style="display:none;">
+        ⚠️ Invalid email or password. Use demo credentials below.
+      </div>
+
+      <form id="crmLoginForm" onsubmit="handleCrmLogin(event)" class="crm-login-form">
+        <div class="crm-form-group">
+          <label class="crm-label" style="color:#aaaaaa; font-size:11px;">Admin Email Address</label>
+          <input type="email" id="loginEmailInput" class="crm-input" value="owner@thedriveclinic.com" required style="background:#181818; border-color:rgba(255,255,255,0.18);">
+        </div>
+
+        <div class="crm-form-group">
+          <label class="crm-label" style="color:#aaaaaa; font-size:11px;">Password</label>
+          <input type="password" id="loginPassInput" class="crm-input" value="clinic2026" required style="background:#181818; border-color:rgba(255,255,255,0.18);">
+        </div>
+
+        <div style="background:rgba(229,9,20,0.1); border:1px solid rgba(229,9,20,0.3); border-radius:6px; padding:10px 14px; font-size:12px; color:#cccccc;">
+          <strong style="color:#ff8080;">Official Admin Login ID & Password:</strong><br>
+          <span style="font-family:monospace; color:#ffffff;">Email: <strong>owner@thedriveclinic.com</strong></span><br>
+          <span style="font-family:monospace; color:#ffffff;">Password: <strong>clinic2026</strong></span>
+        </div>
+
+        <button type="submit" class="crm-btn crm-btn-primary" style="width:100%; height:46px; font-size:14px; font-weight:700; background:#E50914; border:none; border-radius:6px; color:#ffffff; cursor:pointer; margin-top:8px;">
+          Sign In to Studio Workspace &rarr;
+        </button>
+      </form>
+
+      <div class="crm-login-footer" style="border-top:1px solid rgba(255,255,255,0.08); padding-top:16px; margin-top:20px;">
+        <span class="crm-login-demo-label" style="font-size:11px; color:#888888; text-transform:uppercase; font-weight:700;">Quick Demo Access:</span>
+        <div class="crm-demo-buttons" style="display:flex; gap:8px; margin-top:8px;">
+          <button type="button" class="crm-btn crm-btn-sm crm-btn-secondary" style="flex:1; background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:7px 10px; border-radius:4px; font-size:12px; cursor:pointer;" onclick="quickLogin('owner@thedriveclinic.com', 'clinic2026')">👑 Studio Owner</button>
+          <button type="button" class="crm-btn crm-btn-sm crm-btn-secondary" style="flex:1; background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:7px 10px; border-radius:4px; font-size:12px; cursor:pointer;" onclick="quickLogin('rohan@thedriveclinic.com', 'clinic2026')">🔧 Master Tech</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MAIN UNIFIED CRM SHELL (ONLY ONE UNIFIED CRM PANEL)
+       ========================================================================= -->
+  <div id="crmAppShell" class="crm-shell" style="display:none; min-height:100vh;">
+    <!-- SIDEBAR -->
+    <aside class="crm-sidebar" style="background:#0a0a0a; border-right:1px solid rgba(255,255,255,0.09); width:260px; display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; z-index:100;">
+      <div class="crm-sidebar-header" style="padding:22px 20px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <a href="/" target="_blank" style="text-decoration:none;">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:#ffffff; letter-spacing:0.06em; line-height:1;">THE DRIVE CLINIC</div>
+            <div style="font-size:9.5px; font-weight:800; color:#E50914; letter-spacing:0.18em;">STUDIO CRM // JAMMU</div>
+          </a>
+        </div>
+      </div>
+
+      <nav class="crm-nav" style="padding:16px 12px; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:10px; font-weight:800; color:#666666; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px 4px;">OPERATIONS</div>
+        
+        <a href="#overview" class="crm-nav-link active" onclick="switchCrmTab('overview', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Studio Bays & Overview</span>
+        </a>
+
+        <a href="#leads" class="crm-nav-link" onclick="switchCrmTab('leads', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Leads Pipeline</span>
+          <span class="crm-nav-badge" id="badgeLeadCount" style="margin-left:auto; background:#E50914; color:#ffffff; font-size:10px; font-weight:800; padding:2px 7px; border-radius:10px;">0</span>
+        </a>
+
+        <a href="#job-cards" class="crm-nav-link" onclick="switchCrmTab('job-cards', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Job Cards (Offline Journey)</span>
+        </a>
+
+        <a href="#inventory" class="crm-nav-link" onclick="switchCrmTab('inventory', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          <span>Inventory Manager</span>
+        </a>
+
+        <a href="#invoices" class="crm-nav-link" onclick="switchCrmTab('invoices', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Invoices & Billing</span>
+        </a>
+
+        <div style="font-size:10px; font-weight:800; color:#666666; letter-spacing:0.15em; text-transform:uppercase; padding:14px 12px 4px;">CUSTOMER CARE</div>
+
+        <a href="#memberships" class="crm-nav-link" onclick="switchCrmTab('memberships', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>VIP Memberships</span>
+        </a>
+
+        <a href="#customers" class="crm-nav-link" onclick="switchCrmTab('customers', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Customers & Vehicles</span>
+        </a>
+      </nav>
+
+      <!-- USER PROFILE & LOGOUT -->
+      <div class="crm-sidebar-user" style="padding:14px 16px; border-top:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:32px; height:32px; border-radius:50%; background:#E50914; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:#ffffff;">A</div>
+          <div>
+            <div id="crmUserName" style="font-size:13px; font-weight:700; color:#ffffff;">Amit Kapoor</div>
+            <div style="font-size:10.5px; color:#888888; text-transform:uppercase;">Studio Owner</div>
+          </div>
+        </div>
+        <button type="button" class="crm-btn-icon" title="Log Out" onclick="handleCrmLogout()" style="background:none; border:none; color:#aaaaaa; cursor:pointer; padding:6px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="crm-main" style="margin-left:260px; padding:28px 32px; min-height:100vh; background:#070707;">
+      <!-- TOP GLOBAL BAR -->
+      <div class="crm-topbar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <h1 id="crmViewTitle" style="font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:0.04em; margin:0; color:#ffffff;">STUDIO BAY OPERATIONS</h1>
+          <p id="crmViewSubtitle" style="font-size:12.5px; color:#888888; margin:4px 0 0;">Live detailing bay workload, paint correction & coating status in Jammu.</p>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+          <a href="/" target="_blank" class="crm-btn crm-btn-secondary" style="background:#141414; border:1px solid rgba(255,255,255,0.14); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+            <span>🌐 View Public Site</span>
+          </a>
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="exportCurrentTableCsv()" style="background:#141414; border:1px solid rgba(255,255,255,0.14); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <span>📥 Export CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: OVERVIEW & BAYS -->
+      <section id="tab-overview" class="crm-tab-pane">
+        <div class="crm-stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;">
+          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
+            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE IN-BAY VEHICLES</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statInBay">4</div>
+            <div style="font-size:12px; color:#22c55e;">● All 4 detailing bays active</div>
+          </div>
+          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
+            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">PENDING LEADS</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#E50914; margin-top:6px;" id="statPendingLeads">3</div>
+            <div style="font-size:12px; color:#aaaaaa;">Website inquiries awaiting quote</div>
+          </div>
+          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
+            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE JOB CARDS</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statActiveJobs">5</div>
+            <div style="font-size:12px; color:#3b82f6;">Under service / paint prep</div>
+          </div>
+          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
+            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">VIP MEMBERS ENROLLED</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#fbbf24; margin-top:6px;" id="statMembersCount">18</div>
+            <div style="font-size:12px; color:#aaaaaa;">Jammu subscription passes</div>
+          </div>
+        </div>
+
+        <!-- 4 STUDIO BAYS GRID -->
+        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.04em; margin-bottom:14px; color:#ffffff;">LIVE DETAILING BAYS</h3>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:18px;">
+          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #E50914; border-radius:8px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; color:#E50914; letter-spacing:0.12em;">BAY 01 // PPF CLEANROOM</span>
+              <span class="crm-badge crm-badge-warning" style="background:rgba(234,179,8,0.15); color:#eab308; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">IN PROGRESS (75%)</span>
+            </div>
+            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">BMW M340i xDrive (Portimao Blue)</h4>
+            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 CK 9999 • STEK DynoShield Full Body PPF</p>
+            <div style="font-size:12px; color:#cccccc;">Lead Tech: Rohan Sharma • ETA: Today 6:00 PM</div>
+          </div>
+
+          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #3b82f6; border-radius:8px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; color:#3b82f6; letter-spacing:0.12em;">BAY 02 // CERAMIC COATING</span>
+              <span class="crm-badge crm-badge-info" style="background:rgba(59,130,246,0.15); color:#3b82f6; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">PAINT CORRECTION (Stage 2)</span>
+            </div>
+            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">Mahindra Thar Roxx 4x4 (Stealth Black)</h4>
+            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 CQ 7788 • Gtechniq Ultra 9-Year Coating</p>
+            <div style="font-size:12px; color:#cccccc;">Lead Tech: Arjun Mehta • ETA: Tomorrow 2:00 PM</div>
+          </div>
+
+          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #22c55e; border-radius:8px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; color:#22c55e; letter-spacing:0.12em;">BAY 03 // DECON & WASH BAY</span>
+              <span class="crm-badge crm-badge-success" style="background:rgba(34,197,94,0.15); color:#22c55e; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">FINAL STEAM PURGE</span>
+            </div>
+            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">Audi A6 Matrix (Ibis White)</h4>
+            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 BW 0001 • VIP Signature Decon Wash & Leather Purge</p>
+            <div style="font-size:12px; color:#cccccc;">Lead Tech: Sameer Khan • Ready for Delivery in 30 mins</div>
+          </div>
+
+          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #a855f7; border-radius:8px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; color:#a855f7; letter-spacing:0.12em;">BAY 04 // INSPECTION & DELIVERY</span>
+              <span class="crm-badge crm-badge-secondary" style="background:rgba(168,85,247,0.15); color:#a855f7; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">INSPECTION PASSED</span>
+            </div>
+            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">Toyota Fortuner Legender (Pearl White)</h4>
+            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 DA 5555 • Front Bumper PPF + Gloss Top-Up</p>
+            <div style="font-size:12px; color:#cccccc;">Customer arriving at 5:30 PM • Invoice Ready</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: LEADS PIPELINE -->
+      <section id="tab-leads" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:13px; color:#888888;">All leads received from online booking, contact forms and manual inquiries.</div>
+          <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddLead')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
+            + Add New Lead
+          </button>
+        </div>
+
+        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+          <table class="crm-table" id="tableLeads" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Lead Name & WhatsApp</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Vehicle Model</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Service Inquired</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Source</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Stage</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: JOB CARDS -->
+      <section id="tab-job-cards" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:13px; color:#888888;">Complete customer offline journey: Quotation preparation, product deduction, service status & payment receipt.</div>
+          <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalCreateJobCard')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
+            + Create New Job Card
+          </button>
+        </div>
+
+        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+          <table class="crm-table" id="tableJobCards" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Job Card #</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer & Vehicle</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Service & Items Used</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Quotation (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Service Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Payment Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="jobCardsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: INVENTORY -->
+      <section id="tab-inventory" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:13px; color:#888888;">Live studio stock catalog. Stock is automatically deducted when added to Job Cards.</div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="crm-btn crm-btn-secondary" onclick="openModal('modalStockIn')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:9px 16px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
+              📦 Stock In / Restock
+            </button>
+            <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddProduct')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
+              + Add New Product
+            </button>
+          </div>
+        </div>
+
+        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+          <table class="crm-table" id="tableInventory" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Product SKU & Item</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Category</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Available Stock</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Unit Cost (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer Price (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 5: INVOICES -->
+      <section id="tab-invoices" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:13px; color:#888888;">All studio billing records, paid status, and print-ready tax invoices.</div>
+        </div>
+
+        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+          <table class="crm-table" id="tableInvoices" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Invoice #</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer & Reg</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Amount (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Payment Mode</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="invoicesTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 6: MEMBERSHIPS -->
+      <section id="tab-memberships" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:13px; color:#888888;">VIP Subscription Club passes enrolled from website and studio desk.</div>
+          <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalEnrollMember')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
+            + Enroll VIP Member
+          </button>
+        </div>
+
+        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+          <table class="crm-table" id="tableMemberships" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Member Pass Code</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer & Phone</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Plan & Cycle</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Remaining Washes</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="membershipsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 7: CUSTOMERS & VEHICLES -->
+      <section id="tab-customers" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-size:13px; color:#888888;">Complete history of all client vehicles, visits, and studio remarks.</div>
+        </div>
+
+        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+          <table class="crm-table" id="tableCustomers" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer Name & Phone</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Registered Vehicles</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Total Visits</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Lifetime Spend</th>
+                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Studio Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="customersTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODALS: ADD LEAD, CREATE JOB CARD, ADD PRODUCT, STOCK IN, ENROLL MEMBER, INVOICE PREVIEW
+       ========================================================================= -->
+
+  <!-- 1. Modal: Add Lead -->
+  <div class="crm-modal-backdrop" id="modalAddLead">
+    <div class="crm-modal" onclick="event.stopPropagation()">
+      <div class="crm-modal-header">
+        <h3 class="crm-modal-title">Add Manual Studio Lead</h3>
+        <button class="crm-modal-close" onclick="closeModal('modalAddLead')">&times;</button>
+      </div>
+      <form onsubmit="handleManualAddLead(event)">
+        <div class="crm-modal-body">
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Customer Name *</label>
+              <input type="text" name="name" class="crm-input" placeholder="e.g. Vikram Sharma" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">WhatsApp / Phone *</label>
+              <input type="tel" name="phone" class="crm-input" placeholder="+91 94191 22334" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Vehicle Brand & Model *</label>
+              <input type="text" name="vehicle" class="crm-input" placeholder="e.g. BMW 330Li / Thar Roxx" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Registration No.</label>
+              <input type="text" name="vehicle_reg" class="crm-input" placeholder="e.g. JK 02 CQ 8899">
+            </div>
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Service Inquired *</label>
+            <select name="service" class="crm-select crm-input" required>
+              <option value="Paint Protection Film (PPF)">Paint Protection Film (PPF)</option>
+              <option value="Ceramic Coating 9H+">Ceramic Coating 9H+</option>
+              <option value="Full Studio Car Detailing">Full Studio Car Detailing</option>
+              <option value="VIP Wash Club Pass">VIP Wash Club Pass</option>
+              <option value="Bike Detailing">Bike Detailing</option>
+            </select>
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Inquiry Notes / Customer Requirements</label>
+            <textarea name="notes" class="crm-input" style="height:60px; padding:8px 14px;" placeholder="Customer wants scratch removal and front bumper PPF"></textarea>
+          </div>
+        </div>
+        <div class="crm-modal-footer">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddLead')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Save Lead</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Modal: Create Job Card (With Quote Prep & Inventory Product Deduction) -->
+  <div class="crm-modal-backdrop" id="modalCreateJobCard">
+    <div class="crm-modal" style="max-width:620px;" onclick="event.stopPropagation()">
+      <div class="crm-modal-header">
+        <h3 class="crm-modal-title">Create Job Card & Service Quote</h3>
+        <button class="crm-modal-close" onclick="closeModal('modalCreateJobCard')">&times;</button>
+      </div>
+      <form onsubmit="handleCreateJobCard(event)">
+        <div class="crm-modal-body">
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Customer Name *</label>
+              <input type="text" name="customer_name" class="crm-input" placeholder="e.g. Rahul Verma" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Phone / WhatsApp *</label>
+              <input type="tel" name="phone" class="crm-input" placeholder="+91 94191 55667" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Vehicle Model *</label>
+              <input type="text" name="vehicle_model" class="crm-input" placeholder="e.g. Audi A4 / Scorpio-N" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Registration No. *</label>
+              <input type="text" name="vehicle_reg" class="crm-input" placeholder="e.g. JK 02 BB 1234" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Primary Service *</label>
+              <select name="service_name" class="crm-input" required>
+                <option value="STEK PPF Full Body">STEK PPF Full Body</option>
+                <option value="Ceramic Coating 9H+ Ultra">Ceramic Coating 9H+ Ultra</option>
+                <option value="Full Multi-Stage Car Detailing">Full Multi-Stage Car Detailing</option>
+                <option value="Signature Studio Wash & Decon">Signature Studio Wash & Decon</option>
+                <option value="Interior Deep Steam Purge">Interior Deep Steam Purge</option>
+              </select>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Quotation Price (₹) *</label>
+              <input type="number" name="total_amount" class="crm-input" placeholder="e.g. 45000" required>
+            </div>
+          </div>
+
+          <!-- Product Used from Inventory with Stock Deduction -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:14px; margin-top:6px;">
+            <div style="font-size:11px; font-weight:800; color:#E50914; text-transform:uppercase; margin-bottom:8px;">📦 INVENTORY PRODUCT DEDUCTION</div>
+            <div class="crm-form-row">
+              <div class="crm-form-group">
+                <label class="crm-label">Product to Deduct</label>
+                <select name="product_id" id="jobProductSelect" class="crm-input">
+                  <option value="">-- None (Labor only) --</option>
+                </select>
+              </div>
+              <div class="crm-form-group">
+                <label class="crm-label">Quantity Used</label>
+                <input type="number" step="0.5" name="product_qty" class="crm-input" placeholder="1.0" value="1">
+              </div>
+            </div>
+          </div>
+
+          <div class="crm-form-row" style="margin-top:6px;">
+            <div class="crm-form-group">
+              <label class="crm-label">Payment Status *</label>
+              <select name="payment_status" class="crm-input">
+                <option value="UNPAID">UNPAID (Pending Completion)</option>
+                <option value="PAID">PAID IN FULL</option>
+              </select>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Payment Mode</label>
+              <select name="payment_mode" class="crm-input">
+                <option value="UPI / QR">UPI / QR Code</option>
+                <option value="Credit / Debit Card">Credit / Debit Card</option>
+                <option value="Cash">Cash</option>
+                <option value="NetBanking">NetBanking / Transfer</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="crm-modal-footer">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalCreateJobCard')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Generate Job Card & Deduct Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Modal: Add Product to Inventory -->
+  <div class="crm-modal-backdrop" id="modalAddProduct">
+    <div class="crm-modal" onclick="event.stopPropagation()">
+      <div class="crm-modal-header">
+        <h3 class="crm-modal-title">Add New Product to Inventory</h3>
+        <button class="crm-modal-close" onclick="closeModal('modalAddProduct')">&times;</button>
+      </div>
+      <form onsubmit="handleAddInventoryProduct(event)">
+        <div class="crm-modal-body">
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Product SKU *</label>
+              <input type="text" name="sku" class="crm-input" placeholder="e.g. PPF-STEK-15M" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Category *</label>
+              <select name="category" class="crm-input" required>
+                <option value="PPF">PPF & Vinyl Films</option>
+                <option value="COATING">Ceramic & Graphene Coatings</option>
+                <option value="CHEMICAL">Detailing Shampoos & Chemicals</option>
+                <option value="PADS">Polishing Pads & Compounds</option>
+              </select>
+            </div>
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Product Name *</label>
+            <input type="text" name="name" class="crm-input" placeholder="e.g. Gtechniq Crystal Serum Light 50ml" required>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Initial Stock Qty *</label>
+              <input type="number" name="stock" class="crm-input" placeholder="10" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Unit of Measure *</label>
+              <input type="text" name="unit" class="crm-input" placeholder="Bottles / Meters / Units" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Unit Cost (₹) *</label>
+              <input type="number" name="cost" class="crm-input" placeholder="4200" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Customer Price (₹) *</label>
+              <input type="number" name="price" class="crm-input" placeholder="8500" required>
+            </div>
+          </div>
+        </div>
+        <div class="crm-modal-footer">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddProduct')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Modal: Enroll VIP Member -->
+  <div class="crm-modal-backdrop" id="modalEnrollMember">
+    <div class="crm-modal" onclick="event.stopPropagation()">
+      <div class="crm-modal-header">
+        <h3 class="crm-modal-title">Enroll New VIP Member</h3>
+        <button class="crm-modal-close" onclick="closeModal('modalEnrollMember')">&times;</button>
+      </div>
+      <form onsubmit="handleManualEnrollMember(event)">
+        <div class="crm-modal-body">
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Customer Name *</label>
+              <input type="text" name="customer_name" class="crm-input" placeholder="e.g. Rajesh Khajuria" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Phone / WhatsApp *</label>
+              <input type="tel" name="phone" class="crm-input" placeholder="+91 94191 33445" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Membership Package *</label>
+              <select name="plan_name" class="crm-input" required>
+                <option value="Signature Wash Club">Signature Wash Club (₹2,999/mo)</option>
+                <option value="Ceramic Care Pass">Ceramic Care Pass (₹14,999/yr)</option>
+                <option value="Elite Concierge Detail Pass">Elite Concierge Detail Pass (₹29,999/yr)</option>
+              </select>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Billing Cycle *</label>
+              <select name="billing_cycle" class="crm-input">
+                <option value="Monthly">Monthly</option>
+                <option value="Annual">Annual</option>
+              </select>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Vehicle Model *</label>
+              <input type="text" name="vehicle_model" class="crm-input" placeholder="e.g. BMW X5 / Fortuner" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Registration Plate</label>
+              <input type="text" name="vehicle_reg" class="crm-input" placeholder="e.g. JK 02 DA 0007">
+            </div>
+          </div>
+        </div>
+        <div class="crm-modal-footer">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalEnrollMember')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Activate VIP Pass</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       CRM STATE MANAGER & CLIENT STORAGE SCRIPT
+       ========================================================================= -->
+  <script>
+  // Initial Sample Seed Data for Instant Netlify Demo
+  const DEFAULT_STATE = {
+    leads: [
+      { id: 101, customer_name: "Simranjeet Singh", phone: "+91 94191 88223", email: "simran@gmail.com", service_name: "STEK PPF Full Body", vehicle_model: "Mahindra Thar Roxx", vehicle_reg: "JK 02 CQ 8899", source: "WEBSITE", stage: "NEW", created_at: "2026-10-08 14:30" },
+      { id: 102, customer_name: "Dr. Ankur Gupta", phone: "+91 94191 44112", email: "dr.ankur@gmail.com", service_name: "Ceramic Coating 9H+", vehicle_model: "Audi A6 Matrix", vehicle_reg: "JK 02 BW 0001", source: "WEBSITE", stage: "CONTACTED", created_at: "2026-10-08 11:15" },
+      { id: 103, customer_name: "Col. Sanjeev Manhas", phone: "+91 94191 99001", email: "sanjeev.m@outlook.com", service_name: "Full Studio Car Detailing", vehicle_model: "Toyota Fortuner", vehicle_reg: "JK 02 DA 5555", source: "MANUAL", stage: "BAY_SCHEDULED", created_at: "2026-10-07 16:45" }
+    ],
+    jobCards: [
+      { id: "JC-2026-041", customer_name: "Vikram Sharma", phone: "+91 94191 22334", vehicle_model: "BMW M340i xDrive", vehicle_reg: "JK 02 CK 9999", service_name: "STEK DynoShield Full PPF", total_amount: 145000, service_status: "UNDER_SERVICE", payment_status: "PAID", payment_mode: "UPI / QR", created_at: "2026-10-08" },
+      { id: "JC-2026-042", customer_name: "Rohan Jamwal", phone: "+91 94191 77665", vehicle_model: "Thar Roxx 4x4", vehicle_reg: "JK 02 CQ 7788", service_name: "Ceramic Coating 9H+ Ultra", total_amount: 32000, service_status: "UNDER_SERVICE", payment_status: "PAID", payment_mode: "Card", created_at: "2026-10-08" },
+      { id: "JC-2026-043", customer_name: "Arun Mehra", phone: "+91 94191 11223", vehicle_model: "Hyundai Creta N Line", vehicle_reg: "JK 02 CL 4400", service_name: "Interior Deep Steam Purge", total_amount: 4500, service_status: "COMPLETED", payment_status: "PAID", payment_mode: "Cash", created_at: "2026-10-07" }
+    ],
+    inventory: [
+      { id: 1, sku: "PPF-STEK-15M", name: "STEK DynoShield PPF 15m Roll", category: "PPF", stock: 6.5, unit: "Rolls", cost: 65000, price: 125000 },
+      { id: 2, sku: "CER-GTECH-50ML", name: "Gtechniq Crystal Serum Light 50ml", category: "COATING", stock: 14, unit: "Bottles", cost: 4200, price: 9500 },
+      { id: 3, sku: "CER-EXOV5-50ML", name: "Gtechniq EXO v5 Hydrophobic Top-Up", category: "COATING", stock: 18, unit: "Bottles", cost: 3800, price: 7500 },
+      { id: 4, sku: "SHAMP-KOCH-GS", name: "Koch-Chemie Gsf Gentle Snow Foam 5L", category: "CHEMICAL", stock: 8, unit: "Cans", cost: 2600, price: 4200 },
+      { id: 5, sku: "PAD-RUPES-YEL", name: "Rupes Yellow Fine Polishing Pad 150mm", category: "PADS", stock: 32, unit: "Pads", cost: 650, price: 1200 }
+    ],
+    invoices: [
+      { id: "INV-2026-089", customer_name: "Vikram Sharma", vehicle_reg: "JK 02 CK 9999", amount: 145000, payment_mode: "UPI / QR", status: "PAID", date: "2026-10-08" },
+      { id: "INV-2026-090", customer_name: "Rohan Jamwal", vehicle_reg: "JK 02 CQ 7788", amount: 32000, payment_mode: "Card", status: "PAID", date: "2026-10-08" },
+      { id: "INV-2026-091", customer_name: "Arun Mehra", vehicle_reg: "JK 02 CL 4400", amount: 4500, payment_mode: "Cash", status: "PAID", date: "2026-10-07" },
+      { id: "INV-2026-092", customer_name: "Simranjeet Singh", vehicle_reg: "JK 02 CQ 8899", amount: 85000, payment_mode: "Pending", status: "UNPAID", date: "2026-10-08" }
+    ],
+    memberships: [
+      { id: 1, member_no: "TDC-VIP-1001", customer_name: "Aman Gupta", phone: "+91 94191 11222", plan_name: "Ceramic Care Pass", billing_cycle: "Annual", remaining_washes: 6, status: "ACTIVE", date: "2026-01-15" },
+      { id: 2, member_no: "TDC-VIP-1002", customer_name: "Jaspreet Singh", phone: "+91 94191 33445", plan_name: "Signature Wash Club", billing_cycle: "Monthly", remaining_washes: 2, status: "ACTIVE", date: "2026-09-01" },
+      { id: 3, member_no: "TDC-VIP-1003", customer_name: "Tarun Sharma", phone: "+91 94191 66778", plan_name: "Elite Concierge Detail Pass", billing_cycle: "Annual", remaining_washes: 11, status: "ACTIVE", date: "2026-03-20" }
+    ],
+    customers: [
+      { name: "Vikram Sharma", phone: "+91 94191 22334", vehicles: "BMW M340i (JK 02 CK 9999)", visits: 4, spend: "₹1,85,000", notes: "VIP Client • PPF on both cars" },
+      { name: "Rohan Jamwal", phone: "+91 94191 77665", vehicles: "Thar Roxx (JK 02 CQ 7788)", visits: 2, spend: "₹38,000", notes: "Prefers Saturday morning bays" },
+      { name: "Dr. Ankur Gupta", phone: "+91 94191 44112", vehicles: "Audi A6 (JK 02 BW 0001)", visits: 6, spend: "₹65,000", notes: "Ceramic Care Annual Member" }
+    ]
+  };
+
+  // State initialization with localStorage fallback
+  function getCrmState() {
+    try {
+      const saved = localStorage.getItem('tdc_crm_master_state');
+      if (saved) return JSON.parse(saved);
+    } catch(e){}
+    return DEFAULT_STATE;
+  }
+
+  function saveCrmState(state) {
+    localStorage.setItem('tdc_crm_master_state', JSON.stringify(state));
+    renderAllCrmTables();
+  }
+
+  let state = getCrmState();
+
+  // Authentication check
+  function checkAuth() {
+    const user = sessionStorage.getItem('tdc_crm_logged_user');
+    const loginScreen = document.getElementById('crmLoginScreen');
+    const appShell = document.getElementById('crmAppShell');
+
+    if (user) {
+      if (loginScreen) loginScreen.style.display = 'none';
+      if (appShell) appShell.style.display = 'block';
+      const u = JSON.parse(user);
+      document.getElementById('crmUserName').textContent = u.name || 'Amit Kapoor';
+      renderAllCrmTables();
+    } else {
+      if (loginScreen) loginScreen.style.display = 'flex';
+      if (appShell) appShell.style.display = 'none';
+    }
+  }
+
+  window.handleCrmLogin = function(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmailInput').value.trim();
+    const pass = document.getElementById('loginPassInput').value.trim();
+
+    if ((email === 'owner@thedriveclinic.com' || email === 'admin@thedriveclinic.com' || email === 'rohan@thedriveclinic.com') && (pass === 'clinic2026' || pass === 'admin123')) {
+      sessionStorage.setItem('tdc_crm_logged_user', JSON.stringify({
+        email: email,
+        name: email.includes('rohan') ? 'Rohan Sharma' : 'Amit Kapoor',
+        role: email.includes('rohan') ? 'technician' : 'owner'
+      }));
+      document.getElementById('loginErrorBox').style.display = 'none';
+      checkAuth();
+    } else {
+      document.getElementById('loginErrorBox').style.display = 'block';
+    }
+  };
+
+  window.quickLogin = function(email, pass) {
+    document.getElementById('loginEmailInput').value = email;
+    document.getElementById('loginPassInput').value = pass;
+    document.getElementById('crmLoginForm').dispatchEvent(new Event('submit'));
+  };
+
+  window.handleCrmLogout = function() {
+    sessionStorage.removeItem('tdc_crm_logged_user');
+    checkAuth();
+  };
+
+  // Tab switching
+  window.switchCrmTab = function(tabId, linkEl) {
+    document.querySelectorAll('.crm-tab-pane').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.crm-nav-link').forEach(l => l.classList.remove('active'));
+    
+    const target = document.getElementById('tab-' + tabId);
+    if (target) target.style.display = 'block';
+    if (linkEl) linkEl.classList.add('active');
+
+    // Title update
+    const titles = {
+      'overview': ['STUDIO BAY OPERATIONS', 'Live detailing bay workload, paint correction & coating status in Jammu.'],
+      'leads': ['LEADS & INQUIRIES PIPELINE', 'Manage incoming leads from website and studio walk-ins.'],
+      'job-cards': ['CUSTOMER JOB CARDS (OFFLINE JOURNEY)', 'Create quotations, deduct product inventory & track payment status.'],
+      'inventory': ['STUDIO INVENTORY MANAGER', 'Live stock management with auto-deduction on job cards.'],
+      'invoices': ['INVOICES & STUDIO BILLING', 'Tax invoices, receipts, and payment status verification.'],
+      'memberships': ['VIP SUBSCRIPTION PASSES', 'Track recurring detailing packages and member wash allowances.'],
+      'customers': ['CUSTOMER & VEHICLE DATABASE', 'Comprehensive registry of studio clients and service history.']
+    };
+
+    if (titles[tabId]) {
+      document.getElementById('crmViewTitle').textContent = titles[tabId][0];
+      document.getElementById('crmViewSubtitle').textContent = titles[tabId][1];
+    }
+  };
+
+  // Render Functions
+  function renderAllCrmTables() {
+    // Check for any public website leads saved in localStorage and merge
+    try {
+      const publicLeads = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
+      if (publicLeads.length) {
+        publicLeads.forEach(pl => {
+          if (!state.leads.some(l => l.id === pl.id)) {
+            state.leads.unshift(pl);
+          }
+        });
+      }
+      const publicMemberships = JSON.parse(localStorage.getItem('tdc_crm_memberships') || '[]');
+      if (publicMemberships.length) {
+        publicMemberships.forEach(pm => {
+          if (!state.memberships.some(m => m.id === pm.id)) {
+            state.memberships.unshift(pm);
+          }
+        });
+      }
+    } catch(e){}
+
+    // Update Badges & Stats
+    document.getElementById('badgeLeadCount').textContent = state.leads.length;
+    document.getElementById('statPendingLeads').textContent = state.leads.filter(l => l.stage === 'NEW').length;
+    document.getElementById('statActiveJobs').textContent = state.jobCards.length;
+    document.getElementById('statMembersCount').textContent = state.memberships.length;
+
+    // 1. Leads Table
+    const leadsTbody = document.getElementById('leadsTableBody');
+    leadsTbody.innerHTML = state.leads.map(l => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#ffffff;">${l.customer_name}</div>
+          <div style="font-size:12px; color:#888888;">${l.phone}</div>
+        </td>
+        <td style="padding:12px 16px; color:#cccccc;">${l.vehicle_model} <span style="font-size:11px; color:#888888;">(${l.vehicle_reg || 'N/A'})</span></td>
+        <td style="padding:12px 16px; color:#ffffff; font-weight:600;">${l.service_name}</td>
+        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:4px;">${l.source}</span></td>
+        <td style="padding:12px 16px;">
+          <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#1a1a1a; color:#ffffff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:4px 8px; font-size:11.5px;">
+            <option value="NEW" ${l.stage === 'NEW' ? 'selected' : ''}>NEW LEAD</option>
+            <option value="CONTACTED" ${l.stage === 'CONTACTED' ? 'selected' : ''}>CONTACTED</option>
+            <option value="BAY_SCHEDULED" ${l.stage === 'BAY_SCHEDULED' ? 'selected' : ''}>BAY SCHEDULED</option>
+            <option value="WON" ${l.stage === 'WON' ? 'selected' : ''}>CONVERTED (WON)</option>
+            <option value="LOST" ${l.stage === 'LOST' ? 'selected' : ''}>LOST</option>
+          </select>
+        </td>
+        <td style="padding:12px 16px; text-align:right;">
+          <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Convert to Job Card &rarr;</button>
+        </td>
+      </tr>
+    `).join('');
+
+    // 2. Job Cards Table
+    const jobsTbody = document.getElementById('jobCardsTableBody');
+    jobsTbody.innerHTML = state.jobCards.map(j => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#E50914;">${j.id}</td>
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#ffffff;">${j.customer_name}</div>
+          <div style="font-size:12px; color:#888888;">${j.vehicle_model} • ${j.vehicle_reg}</div>
+        </td>
+        <td style="padding:12px 16px; color:#ffffff;">${j.service_name}</td>
+        <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#ffffff;">₹${Number(j.total_amount).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px;">
+          <select onchange="updateJobStatus('${j.id}', this.value)" style="background:#1a1a1a; color:#ffffff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:4px 8px; font-size:11.5px;">
+            <option value="UNDER_SERVICE" ${j.service_status === 'UNDER_SERVICE' ? 'selected' : ''}>UNDER SERVICE</option>
+            <option value="QUALITY_CHECK" ${j.service_status === 'QUALITY_CHECK' ? 'selected' : ''}>QUALITY CHECK</option>
+            <option value="COMPLETED" ${j.service_status === 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+          </select>
+        </td>
+        <td style="padding:12px 16px;">
+          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${j.payment_status === 'PAID' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}; color:${j.payment_status === 'PAID' ? '#22c55e' : '#ef4444'};">
+            ${j.payment_status} (${j.payment_mode || 'Pending'})
+          </span>
+        </td>
+        <td style="padding:12px 16px; text-align:right;">
+          ${j.payment_status !== 'PAID' ? `<button onclick="markJobPaid('${j.id}')" style="background:#22c55e; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Mark Paid ✓</button>` : `<span style="font-size:12px; color:#888888;">Invoiced</span>`}
+        </td>
+      </tr>
+    `).join('');
+
+    // 3. Inventory Table & Select Dropdowns
+    const invTbody = document.getElementById('inventoryTableBody');
+    const jobProductSelect = document.getElementById('jobProductSelect');
+    
+    invTbody.innerHTML = state.inventory.map(item => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#ffffff;">${item.name}</div>
+          <div style="font-family:monospace; font-size:11px; color:#E50914;">${item.sku}</div>
+        </td>
+        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:4px;">${item.category}</span></td>
+        <td style="padding:12px 16px;">
+          <strong style="font-size:14px; color:${item.stock <= 3 ? '#ef4444' : '#22c55e'};">${item.stock}</strong> <span style="font-size:12px; color:#888888;">${item.unit}</span>
+        </td>
+        <td style="padding:12px 16px; color:#cccccc;">₹${Number(item.cost).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; font-weight:700; color:#ffffff;">₹${Number(item.price).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; text-align:right;">
+          <button onclick="quickDeductStock(${item.id}, 1)" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">-1 Use</button>
+          <button onclick="quickAddStock(${item.id}, 5)" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:4px;">+5 Restock</button>
+        </td>
+      </tr>
+    `).join('');
+
+    if (jobProductSelect) {
+      jobProductSelect.innerHTML = `<option value="">-- None (Labor only) --</option>` + 
+        state.inventory.map(it => `<option value="${it.id}">[${it.sku}] ${it.name} (Avail: ${it.stock} ${it.unit})</option>`).join('');
+    }
+
+    // 4. Invoices Table
+    const invTableTbody = document.getElementById('invoicesTableBody');
+    invTableTbody.innerHTML = state.invoices.map(inv => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#ffffff;">${inv.id}</td>
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#ffffff;">${inv.customer_name}</div>
+          <div style="font-size:12px; color:#888888;">${inv.vehicle_reg} • ${inv.date}</div>
+        </td>
+        <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#ffffff;">₹${Number(inv.amount).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; color:#cccccc;">${inv.payment_mode}</td>
+        <td style="padding:12px 16px;">
+          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${inv.status === 'PAID' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}; color:${inv.status === 'PAID' ? '#22c55e' : '#ef4444'};">
+            ${inv.status}
+          </span>
+        </td>
+        <td style="padding:12px 16px; text-align:right;">
+          <button onclick="alert('Printing Tax Invoice: ${inv.id}\\nCustomer: ${inv.customer_name}\\nAmount: ₹${Number(inv.amount).toLocaleString('en-IN')}')" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:5px 12px; border-radius:4px; font-size:11.5px; cursor:pointer;">Print Invoice 🖨️</button>
+        </td>
+      </tr>
+    `).join('');
+
+    // 5. Memberships Table
+    const memTbody = document.getElementById('membershipsTableBody');
+    memTbody.innerHTML = state.memberships.map(m => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px; font-family:monospace; font-weight:800; color:#E50914;">${m.member_no}</td>
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#ffffff;">${m.customer_name}</div>
+          <div style="font-size:12px; color:#888888;">${m.phone}</div>
+        </td>
+        <td style="padding:12px 16px;">
+          <div style="color:#ffffff; font-weight:600;">${m.plan_name}</div>
+          <div style="font-size:11.5px; color:#888888;">${m.billing_cycle} Recurring</div>
+        </td>
+        <td style="padding:12px 16px;">
+          <span style="font-size:14px; font-weight:800; color:#fbbf24;">${m.remaining_washes} Washes</span> Remaining
+        </td>
+        <td style="padding:12px 16px;">
+          <span style="font-size:11px; font-weight:800; padding:3px 8px; border-radius:10px; background:rgba(34,197,94,0.15); color:#22c55e;">${m.status}</span>
+        </td>
+        <td style="padding:12px 16px; text-align:right;">
+          <button onclick="deductMemberWash(${m.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">-1 Wash Visit</button>
+        </td>
+      </tr>
+    `).join('');
+
+    // 6. Customers Table
+    const custTbody = document.getElementById('customersTableBody');
+    custTbody.innerHTML = state.customers.map(c => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#ffffff;">${c.name}</div>
+          <div style="font-size:12px; color:#888888;">${c.phone}</div>
+        </td>
+        <td style="padding:12px 16px; color:#cccccc;">${c.vehicles}</td>
+        <td style="padding:12px 16px; font-weight:700; color:#ffffff;">${c.visits} visits</td>
+        <td style="padding:12px 16px; font-weight:800; color:#22c55e;">${c.spend}</td>
+        <td style="padding:12px 16px; font-size:12.5px; color:#888888;">${c.notes}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Action Handlers
+  window.updateLeadStage = function(id, stage) {
+    const lead = state.leads.find(l => l.id === id);
+    if (lead) {
+      lead.stage = stage;
+      saveCrmState(state);
+    }
+  };
+
+  window.convertLeadToJobCard = function(id) {
+    const lead = state.leads.find(l => l.id === id);
+    if (!lead) return;
+    
+    const newJcId = 'JC-2026-0' + (40 + state.jobCards.length + 1);
+    state.jobCards.unshift({
+      id: newJcId,
+      customer_name: lead.customer_name,
+      phone: lead.phone,
+      vehicle_model: lead.vehicle_model,
+      vehicle_reg: lead.vehicle_reg || 'JK 02 TEMP',
+      service_name: lead.service_name,
+      total_amount: 35000,
+      service_status: "UNDER_SERVICE",
+      payment_status: "UNPAID",
+      payment_mode: "Pending",
+      created_at: new Date().toISOString().slice(0, 10)
+    });
+
+    lead.stage = 'WON';
+    saveCrmState(state);
+    alert('🎉 Lead successfully converted to Job Card #' + newJcId + '! Viewing Job Cards tab.');
+    switchCrmTab('job-cards', document.querySelector('a[href="#job-cards"]'));
+  };
+
+  window.handleCreateJobCard = function(e) {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const productId = fd.get('product_id');
+    const productQty = parseFloat(fd.get('product_qty') || '0');
+
+    // Deduct stock if product selected
+    if (productId && productQty > 0) {
+      const prod = state.inventory.find(i => i.id == productId);
+      if (prod) {
+        prod.stock = Math.max(0, parseFloat((prod.stock - productQty).toFixed(2)));
+      }
+    }
+
+    const newJcId = 'JC-2026-0' + (40 + state.jobCards.length + 1);
+    state.jobCards.unshift({
+      id: newJcId,
+      customer_name: fd.get('customer_name'),
+      phone: fd.get('phone'),
+      vehicle_model: fd.get('vehicle_model'),
+      vehicle_reg: fd.get('vehicle_reg'),
+      service_name: fd.get('service_name'),
+      total_amount: parseFloat(fd.get('total_amount')),
+      service_status: "UNDER_SERVICE",
+      payment_status: fd.get('payment_status'),
+      payment_mode: fd.get('payment_mode'),
+      created_at: new Date().toISOString().slice(0, 10)
+    });
+
+    // Also add to invoice list
+    state.invoices.unshift({
+      id: 'INV-2026-0' + (90 + state.invoices.length + 1),
+      customer_name: fd.get('customer_name'),
+      vehicle_reg: fd.get('vehicle_reg'),
+      amount: parseFloat(fd.get('total_amount')),
+      payment_mode: fd.get('payment_mode'),
+      status: fd.get('payment_status'),
+      date: new Date().toISOString().slice(0, 10)
+    });
+
+    saveCrmState(state);
+    closeModal('modalCreateJobCard');
+    e.target.reset();
+    alert('✅ Job Card #' + newJcId + ' created & inventory stock updated!');
+  };
+
+  window.markJobPaid = function(jcId) {
+    const jc = state.jobCards.find(j => j.id === jcId);
+    if (jc) {
+      jc.payment_status = 'PAID';
+      jc.service_status = 'COMPLETED';
+      saveCrmState(state);
+      alert('✓ Job Card #' + jcId + ' marked as PAID and COMPLETED.');
+    }
+  };
+
+  window.handleManualAddLead = function(e) {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    state.leads.unshift({
+      id: Date.now(),
+      customer_name: fd.get('name'),
+      phone: fd.get('phone'),
+      vehicle_model: fd.get('vehicle'),
+      vehicle_reg: fd.get('vehicle_reg'),
+      service_name: fd.get('service'),
+      notes: fd.get('notes'),
+      source: "MANUAL",
+      stage: "NEW",
+      created_at: new Date().toISOString().slice(0, 16).replace('T', ' ')
+    });
+    saveCrmState(state);
+    closeModal('modalAddLead');
+    e.target.reset();
+  };
+
+  window.handleAddInventoryProduct = function(e) {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    state.inventory.push({
+      id: Date.now(),
+      sku: fd.get('sku'),
+      name: fd.get('name'),
+      category: fd.get('category'),
+      stock: parseFloat(fd.get('stock')),
+      unit: fd.get('unit'),
+      cost: parseFloat(fd.get('cost')),
+      price: parseFloat(fd.get('price'))
+    });
+    saveCrmState(state);
+    closeModal('modalAddProduct');
+    e.target.reset();
+  };
+
+  window.quickDeductStock = function(id, qty) {
+    const item = state.inventory.find(i => i.id === id);
+    if (item && item.stock >= qty) {
+      item.stock = parseFloat((item.stock - qty).toFixed(2));
+      saveCrmState(state);
+    }
+  };
+
+  window.quickAddStock = function(id, qty) {
+    const item = state.inventory.find(i => i.id === id);
+    if (item) {
+      item.stock = parseFloat((item.stock + qty).toFixed(2));
+      saveCrmState(state);
+    }
+  };
+
+  window.deductMemberWash = function(id) {
+    const m = state.memberships.find(mem => mem.id === id);
+    if (m && m.remaining_washes > 0) {
+      m.remaining_washes -= 1;
+      saveCrmState(state);
+      alert('✓ 1 Signature wash deducted for member: ' + m.customer_name + ' (Remaining: ' + m.remaining_washes + ')');
+    }
+  };
+
+  window.handleManualEnrollMember = function(e) {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const newPass = 'TDC-VIP-' + Math.floor(1000 + Math.random() * 9000);
+    state.memberships.unshift({
+      id: Date.now(),
+      member_no: newPass,
+      customer_name: fd.get('customer_name'),
+      phone: fd.get('phone'),
+      plan_name: fd.get('plan_name'),
+      billing_cycle: fd.get('billing_cycle'),
+      remaining_washes: fd.get('billing_cycle') === 'Annual' ? 12 : 3,
+      status: "ACTIVE",
+      date: new Date().toISOString().slice(0, 10)
+    });
+    saveCrmState(state);
+    closeModal('modalEnrollMember');
+    e.target.reset();
+    alert('🎉 VIP Member Enrolled! Generated Pass Code: ' + newPass);
+  };
+
+  // CSV Exporter
+  window.exportCurrentTableCsv = function() {
+    let csvContent = "data:text/csv;charset=utf-8,";
+    const activeTab = document.querySelector('.crm-tab-pane[style*="block"]') || document.getElementById('tab-overview');
+    const table = activeTab.querySelector('table');
+    
+    if (table) {
+      const rows = table.querySelectorAll('tr');
+      rows.forEach(r => {
+        const cols = r.querySelectorAll('th, td');
+        const rowData = Array.from(cols).map(c => `"${c.innerText.replace(/"/g, '""').replace(/\\n/g, ' ')}"`).join(',');
+        csvContent += rowData + "\r\n";
+      });
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "the_drive_clinic_crm_export.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert('Select Leads, Job Cards, Inventory, Invoices, or Memberships tab to export CSV.');
+    }
+  };
+
+  // Modal helpers
+  window.openModal = function(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  };
+
+  window.closeModal = function(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  };
+
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('crm-modal-backdrop')) {
+      e.target.classList.remove('active');
+    }
+  });
+
+  // Init
+  checkAuth();
+  </script>
+</body>
+</html>

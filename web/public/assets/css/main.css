@@ -1,0 +1,624 @@
+/* THE DRIVE CLINIC — Main Consolidated Stylesheet */
+
+@import url('tokens.css');
+@import url('reset.css');
+@import url('navigation.css');
+@import url('components.css');
+@import url('animations.css');
+
+/* Typography Utilities */
+.h1-hero {
+  font-family: var(--font-display);
+  font-size: var(--h1-size);
+  line-height: var(--h1-line-height);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.h2-section {
+  font-family: var(--font-display);
+  font-size: var(--h2-size);
+  line-height: var(--h2-line-height);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.h3-title {
+  font-family: var(--font-display);
+  font-size: var(--h3-size);
+  line-height: var(--h3-line-height);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.lead-text {
+  font-size: clamp(18px, 1.3vw, 22px);
+  line-height: 1.5;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Grids & Layout Utilities */
+.grid-5-7 {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.grid-50-50 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.grid-3-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.grid-4-col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.grid-5-col {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .grid-5-7, .grid-50-50 {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .grid-3-col, .grid-4-col, .grid-5-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-3-col, .grid-4-col, .grid-5-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   MEMBERSHIP CLUB PUBLIC SECTION (Luminous Dark Studio Theme)
+   ========================================================================== */
+.memberships-page-hero {
+  text-align: center;
+  padding: 140px 0 55px;
+  background: radial-gradient(circle at 50% 0%, rgba(229, 9, 20, 0.22) 0%, rgba(20, 26, 42, 0.95) 55%, #0f1422 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   PUBLIC MEMBERSHIP PAGE & VIP TIERS (BLACK & WHITE COMBINATION THEME)
+   ========================================================================== */
+.membership-page-wrap {
+  background: var(--black);
+  min-height: 100vh;
+}
+
+.memberships-hero-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.m-hero-pill {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 8px 18px;
+  border-radius: 24px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.memberships-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.membership-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 38px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6);
+}
+
+.membership-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(229, 9, 20, 0.7);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(229, 9, 20, 0.2);
+}
+
+.membership-card-featured {
+  background: #161616;
+  border: 2px solid var(--red);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(229, 9, 20, 0.3);
+  transform: scale(1.02);
+}
+
+.membership-card-featured:hover {
+  transform: scale(1.02) translateY(-8px);
+}
+
+.featured-ribbon {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--red);
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  padding: 5px 16px;
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.95);
+  white-space: nowrap;
+}
+
+.membership-card-top {
+  margin-bottom: 14px;
+}
+
+.membership-card-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #888888;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.featured-badge-kicker {
+  color: #ff8080;
+}
+
+.membership-plan-name {
+  font-family: var(--font-display);
+  font-size: 30px;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.featured-title {
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+}
+
+.membership-tagline {
+  font-size: 13.5px;
+  color: #cccccc;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.membership-price-wrap {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 20px 0 16px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.membership-currency {
+  font-size: 28px;
+  color: var(--red);
+  font-weight: 800;
+}
+
+.membership-cycle {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #888888;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
+.membership-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 24px;
+}
+
+.membership-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.membership-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 14px;
+  color: #f1f1f1;
+  line-height: 1.45;
+}
+
+.m-check {
+  color: var(--red);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.m-check-gold {
+  color: #fbbf24;
+}
+
+.membership-cta-wrap {
+  margin-top: auto;
+}
+
+.membership-cta {
+  width: 100%;
+  padding: 14px 22px;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.featured-btn {
+  box-shadow: 0 0 25px rgba(229, 9, 20, 0.6);
+}
+
+/* ==========================================================================
+   PUBLIC MEMBERSHIP ENROLLMENT MODAL & FORM (BLACK & WHITE THEME)
+   ========================================================================== */
+.crm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.25s ease;
+}
+
+.crm-modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.crm-modal {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 3px solid var(--red);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.95), 0 0 45px rgba(229, 9, 20, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.95) translateY(14px);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.crm-modal-backdrop.active .crm-modal {
+  transform: scale(1) translateY(0);
+}
+
+.crm-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  flex-shrink: 0;
+}
+
+.crm-modal-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  margin: 0;
+  line-height: 1;
+}
+
+.crm-modal-sub {
+  font-size: 12.5px;
+  color: #888888;
+  margin: 6px 0 0;
+}
+
+.crm-modal-close {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.crm-modal-close:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.crm-modal-body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.enroll-plan-banner {
+  background: linear-gradient(135deg, rgba(229, 9, 20, 0.15) 0%, rgba(20, 20, 20, 0.95) 100%);
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.enroll-plan-kicker {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  color: #ff8080;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  display: block;
+}
+
+.enroll-plan-name-display {
+  font-weight: 800;
+  font-size: 17px;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+.enroll-plan-price-display {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(229, 9, 20, 0.6);
+}
+
+.crm-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 560px) {
+  .crm-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.crm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.crm-label {
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #aaaaaa;
+}
+
+.crm-input {
+  width: 100%;
+  height: 46px;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  padding: 0 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.crm-input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.25);
+  background: #202020;
+}
+
+.crm-input::placeholder {
+  color: #666666;
+}
+
+.crm-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d0d0d;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .memberships-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .membership-card-featured {
+    transform: none;
+  }
+  .membership-card-featured:hover {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .memberships-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .membership-card-featured {
+    transform: none;
+  }
+  .membership-card-featured:hover {
+    transform: translateY(-8px);
+  }
+}
+
+
+/* ==========================================================================
+   UNIVERSAL MOBILE RESPONSIVE ENHANCEMENTS (<= 768px & <= 480px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  :root {
+    --container-padding: 16px;
+  }
+  
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Typography Scaling */
+  .h1-hero {
+    font-size: clamp(34px, 8.5vw, 48px);
+    line-height: 1.05;
+  }
+
+  .h2-section {
+    font-size: clamp(26px, 7vw, 36px);
+    line-height: 1.1;
+  }
+
+  .page-hero-title {
+    font-size: clamp(32px, 8vw, 52px) !important;
+  }
+
+  .page-hero {
+    padding: 100px 0 40px !important;
+  }
+
+  .section {
+    padding: 50px 0 !important;
+  }
+
+  /* Touch-friendly buttons and inputs */
+  .btn, .crm-btn, .mobile-bottom-bar-cell {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Membership card mobile padding */
+  .membership-card {
+    padding: 24px 20px !important;
+  }
+
+  .membership-price-wrap {
+    font-size: 32px !important;
+  }
+
+  /* Modals on mobile */
+  .crm-modal-backdrop {
+    padding: 10px !important;
+    align-items: flex-end;
+  }
+
+  .crm-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 85vh !important;
+    border-radius: 12px 12px 0 0 !important;
+    margin: 0 !important;
+  }
+
+  .crm-form-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* Table Horizontal Scrolling Safe Area */
+  .table-responsive, .crm-table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-logo-img {
+    height: 30px !important;
+    max-width: 160px !important;
+  }
+
+  .mobile-menu-inner {
+    padding: 85px 16px 30px !important;
+  }
+
+  .mobile-menu-link {
+    font-size: 28px !important;
+  }
+}
+
+

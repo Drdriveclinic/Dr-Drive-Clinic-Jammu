@@ -1,0 +1,12 @@
+{
+  "name": "the-drive-clinic-jammu",
+  "version": "2.0.0",
+  "description": "The Drive Clinic — Luxury Automotive Detailing Studio in Jammu",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-netlify.js",
+    "start": "node api/server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

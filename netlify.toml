@@ -1,0 +1,22 @@
+# Netlify Deployment Configuration for The Drive Clinic
+[build]
+  publish = "dist"
+  command = "node scripts/build-netlify.js"
+
+[[redirects]]
+  from = "/crm/login"
+  to = "/crm/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/crm/*"
+  to = "/crm/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
