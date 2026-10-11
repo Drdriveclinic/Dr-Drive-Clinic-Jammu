@@ -79,10 +79,35 @@ export function initBookingFlow() {
   const serviceCards = container.querySelectorAll('.booking-service-card');
 
   function updateSidebar() {
+    const sidebarImg = container.querySelector('.booking-sidebar-img');
+    const sidebarPhotoCaption = container.querySelector('.booking-sidebar-photo-caption');
+
+    let targetImg = '/assets/img/studio/studio-showcase.png';
+    let targetCaption = 'STUDIO DETAILING BAY';
+
+    if (state.serviceSlug) {
+      const activeCard = container.querySelector(`.booking-service-card[data-slug="${state.serviceSlug}"]`);
+      if (activeCard && activeCard.dataset.image) {
+        targetImg = activeCard.dataset.image;
+        targetCaption = (state.serviceName || 'STUDIO DETAILING BAY').toUpperCase();
+      }
+    } else if (state.vehicleType === 'bike') {
+      targetImg = '/assets/img/studio/bike-detailing.png';
+      targetCaption = 'MOTORCYCLE PRECISION BAY';
+    }
+
+    if (sidebarImg && targetImg && sidebarImg.getAttribute('src') !== targetImg) {
+      sidebarImg.style.opacity = '0.35';
+      sidebarImg.style.transform = 'scale(0.97)';
+      setTimeout(() => {
+        sidebarImg.src = targetImg;
+        sidebarImg.style.opacity = '1';
+        sidebarImg.style.transform = 'scale(1)';
+      }, 140);
+    }
+
     if (sidebarPhotoCaption) {
-      sidebarPhotoCaption.textContent = state.vehicleType === 'bike'
-        ? 'PHOTO — Motorcycle Precision Detailing Bay'
-        : 'PHOTO — Premium Automotive Clean Bay & PPF Studio';
+      sidebarPhotoCaption.textContent = targetCaption;
     }
 
     if (summaryList) {
@@ -225,8 +250,17 @@ export function initBookingFlow() {
   const typeTiles = container.querySelectorAll('.type-tile');
   typeTiles.forEach((tile) => {
     tile.addEventListener('click', () => {
-      typeTiles.forEach((t) => t.classList.remove('is-selected'));
+      typeTiles.forEach((t) => {
+        t.classList.remove('is-selected');
+        t.style.borderColor = 'rgba(255,255,255,0.15)';
+        const check = t.querySelector('.type-tile-check');
+        if (check) check.style.opacity = '0';
+      });
       tile.classList.add('is-selected');
+      tile.style.borderColor = 'var(--red)';
+      const currentCheck = tile.querySelector('.type-tile-check');
+      if (currentCheck) currentCheck.style.opacity = '1';
+
       state.vehicleType = tile.dataset.type;
       
       // If selected service doesn't match new vehicle type, clear it

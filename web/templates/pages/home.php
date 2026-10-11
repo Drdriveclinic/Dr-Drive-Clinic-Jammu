@@ -11,80 +11,127 @@ $faqs = $faqs ?? [];
 $protectServices = array_filter($services, fn($s) => $s['category'] === 'protect');
 $detailServices = array_filter($services, fn($s) => $s['category'] === 'detail');
 $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
+
+// Hero Dynamic Service Slides
+$textSlides = [
+  [
+    'tag' => 'PPF Armor',
+    'badge' => '01 / PAINT PROTECTION FILM',
+    'lead_keyword' => 'SELF-HEALING PPF ARMOR.',
+    'supporting' => "Instant self-healing TPU armor defending original factory paint against highway gravel, micro-scratches, and Jammu's scorching UV sun.",
+    'service_slug' => 'ppf',
+    'cta_label' => 'EXPLORE PPF SPECS →'
+  ],
+  [
+    'tag' => '9H Ceramic',
+    'badge' => '02 / 9H NANO CERAMIC COATING',
+    'lead_keyword' => '9H CERAMIC GLASS MATRIX.',
+    'supporting' => 'Nanotechnology liquid quartz bonding permanently to clear coat for intense candy reflections, chemical resistance, and water repellency.',
+    'service_slug' => 'ceramic-coating',
+    'cta_label' => 'EXPLORE 9H CERAMIC →'
+  ],
+  [
+    'tag' => 'Full Detailing',
+    'badge' => '03 / FULL CAR RESTORATION',
+    'lead_keyword' => 'COMPLETE CAR RESET.',
+    'supporting' => 'Two-stage machine paint correction, dry steam interior sterilization, leather feeding, and engine bay detailing for total vehicle rejuvenation.',
+    'service_slug' => 'full-car-detailing',
+    'cta_label' => 'VIEW DETAILING SPECS →'
+  ],
+  [
+    'tag' => 'Studio Wash',
+    'badge' => '04 / CERAMIC & STEAM WASH',
+    'lead_keyword' => 'SWIRL-FREE STUDIO WASH.',
+    'supporting' => 'Dual-bucket grit-guarded washes with SiO2 ceramic gloss boosters, spot-free filtered water, and hospital-grade interior steam sanitization.',
+    'service_slug' => 'ceramic-wash',
+    'cta_label' => 'VIEW WASH PROGRAMS →'
+  ],
+  [
+    'tag' => 'Superbikes',
+    'badge' => '05 / BIKE & SUPERBIKE CARE',
+    'lead_keyword' => 'PRECISION TWO-WHEEL CARE.',
+    'supporting' => 'Bespoke precision detailing tailored for superbikes and performance machines — engine fin degreasing, fairing PPF, and ceramic shields.',
+    'service_slug' => 'bike-detailing',
+    'cta_label' => 'EXPLORE BIKE CARE →'
+  ]
+];
 ?>
 
 <!-- ========================================================================
-     01. HERO SLIDER (96vh desktop, 86vh mobile, Black Background)
+     01. CINEMATIC VIDEO HERO (Clean, Dynamic & Minimalist Architecture)
      ======================================================================== -->
-<section class="hero-slider" aria-roledescription="carousel" aria-label="The Drive Clinic Featured Showcase">
-  <?php foreach ($heroSlides as $idx => $slide): 
-    $lines = json_decode($slide['headline_lines_json'], true) ?: ["YOUR CAR.", "REDEFINED."];
-  ?>
-    <div class="hero-slide <?= $idx === 0 ? 'is-active' : '' ?>" data-slide-index="<?= $idx ?>" aria-hidden="<?= $idx === 0 ? 'false' : 'true' ?>">
-      <div class="hero-slide-bg">
-        <picture>
-          <source media="(max-width: 768px)" srcset="<?= htmlspecialchars($slide['image_mobile']) ?>">
-          <img src="<?= htmlspecialchars($slide['image_desktop']) ?>" alt="<?= htmlspecialchars($slide['label']) ?>" class="hero-slide-img" fetchpriority="<?= $idx === 0 ? 'high' : 'auto' ?>" loading="<?= $idx === 0 ? 'eager' : 'lazy' ?>" width="1920" height="900">
-        </picture>
-        <div class="hero-slide-overlay"></div>
+<section class="hero-cinema" aria-label="The Drive Clinic Automotive Studio">
+  <!-- Persistent Ambient Video Background -->
+  <div class="hero-video-wrap">
+    <video class="hero-bg-video" autoplay loop muted playsinline preload="auto" poster="/assets/img/hero/hero-1-ppf.jpg">
+      <source src="/assets/video/hero-cinematic.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay-gradient"></div>
+    <div class="hero-video-vignette"></div>
+  </div>
+
+  <div class="container hero-cinema-container">
+    <div class="hero-cinema-main">
+      <!-- Minimalist Studio Eyebrow -->
+      <div class="hero-eyebrow" data-anim="fade-up">
+        <span class="eyebrow-pulse-dot"></span>
+        <span class="hero-eyebrow-badge" id="heroBadge">01 / PAINT PROTECTION FILM</span>
+        <span class="hero-eyebrow-sep">•</span>
+        <span class="hero-eyebrow-loc">NANAK NAGAR, JAMMU</span>
       </div>
 
-      <div class="container hero-slide-content">
-        <div class="eyebrow hero-label"><?= htmlspecialchars($slide['label']) ?></div>
-        
-        <h1 class="hero-headline" style="margin-bottom: 24px;">
-          <?php foreach ($lines as $lIdx => $line): ?>
-            <span class="hero-headline-line">
-              <span class="hero-headline-inner <?= $lIdx === count($lines) - 1 ? 'text-red' : '' ?>">
-                <?= htmlspecialchars($line) ?>
-              </span>
-            </span>
-          <?php endforeach; ?>
-        </h1>
+      <!-- Main Clean Dynamic Headline -->
+      <h1 class="hero-cinema-title" data-anim="text-reveal">
+        <span class="hero-title-static">ARCHITECTS OF</span>
+        <span class="hero-title-dynamic text-red" id="heroDynamicTitle">SELF-HEALING PPF ARMOR.</span>
+      </h1>
 
-        <div class="redline" style="max-width: 140px; margin-bottom: 28px;"></div>
+      <div class="redline hero-clean-redline" data-anim="redline"></div>
 
-        <?php if (!empty($slide['supporting'])): ?>
-          <p class="hero-supporting lead-text" style="max-width: 620px; margin-bottom: 36px;">
-            <?= htmlspecialchars($slide['supporting']) ?>
-          </p>
-        <?php endif; ?>
+      <!-- Single Clear Descriptive Statement -->
+      <p class="hero-cinema-lead lead-text" id="heroDynamicDesc" data-anim="fade-up">
+        Instant self-healing TPU armor defending original factory paint against highway gravel, micro-scratches, and Jammu's scorching UV sun.
+      </p>
 
-        <div class="hero-ctas" style="display:flex; gap:18px; flex-wrap:wrap;">
-          <a href="<?= htmlspecialchars($slide['cta_href']) ?>" class="btn btn-red" data-cursor="BOOK">
-            <?= htmlspecialchars($slide['cta_label']) ?>
-          </a>
-          <?php if (!empty($slide['secondary_cta_label'])): ?>
-            <a href="<?= htmlspecialchars($slide['secondary_cta_href'] ?: '/services') ?>" class="btn btn-ghost" data-cursor="EXPLORE">
-              <?= htmlspecialchars($slide['secondary_cta_label']) ?>
-            </a>
-          <?php endif; ?>
-        </div>
+      <!-- Crisp Dual Action Buttons -->
+      <div class="hero-cinema-actions" data-anim="fade-up">
+        <a href="/book?service=ppf" id="heroBookBtn" class="btn btn-red hero-btn-main" data-cursor="BOOK">
+          BOOK APPOINTMENT →
+        </a>
+        <a href="/services/ppf" id="heroDetailBtn" class="btn btn-ghost hero-btn-sub" data-cursor="EXPLORE">
+          EXPLORE PPF SPECS →
+        </a>
       </div>
     </div>
-  <?php endforeach; ?>
 
-  <!-- Controls Bar -->
-  <div class="hero-controls">
-    <div class="container hero-controls-inner">
-      <div class="hero-counter">
-        <span class="hero-counter-current text-red">01</span> / <span class="hero-counter-total">05</span>
+    <!-- Minimalist Dynamic Slide Nav Dock -->
+    <div class="hero-nav-dock" data-anim="fade-up">
+      <div class="hero-dock-counter">
+        <span class="dock-current" id="heroDockCurrent">01</span>
+        <span class="dock-sep">/</span>
+        <span class="dock-total">05</span>
       </div>
 
-      <div class="hero-progress-group" aria-hidden="true">
-        <?php for ($i = 0; $i < count($heroSlides); $i++): ?>
-          <div class="hero-progress-track">
-            <div class="hero-progress-fill" style="width: <?= $i === 0 ? '0%' : '0%' ?>;"></div>
-          </div>
-        <?php endfor; ?>
+      <div class="hero-dock-items" role="tablist" aria-label="Featured Studio Services">
+        <?php foreach ($textSlides as $idx => $s): ?>
+          <button type="button" class="hero-dock-btn <?= $idx === 0 ? 'is-active' : '' ?>" data-index="<?= $idx ?>" role="tab" aria-selected="<?= $idx === 0 ? 'true' : 'false' ?>" aria-label="<?= htmlspecialchars($s['tag']) ?>">
+            <span class="dock-btn-label"><?= htmlspecialchars($s['tag']) ?></span>
+            <span class="dock-btn-bar"><span class="dock-btn-fill"></span></span>
+          </button>
+        <?php endforeach; ?>
       </div>
 
-      <div class="hero-arrows">
-        <button class="hero-arrow-btn hero-arrow-prev" aria-label="Previous Slide">←</button>
-        <button class="hero-arrow-btn hero-arrow-next" aria-label="Next Slide">→</button>
+      <div class="hero-dock-arrows">
+        <button type="button" class="dock-arrow-btn" id="heroPrevBtn" aria-label="Previous Service">←</button>
+        <button type="button" class="dock-arrow-btn" id="heroNextBtn" aria-label="Next Service">→</button>
       </div>
     </div>
   </div>
+
+  <!-- Hidden JSON Data for Smooth Dynamic Switcher -->
+  <script id="heroSlidesData" type="application/json">
+    <?= json_encode($textSlides, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
+  </script>
 </section>
 
 <!-- ========================================================================
@@ -123,8 +170,8 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
       </div>
     </div>
     <div>
-      <div class="img-placeholder" style="min-height: 460px;" data-anim="mask-reveal">
-        PHOTO — Studio clean bay and technician applying precision ceramic protection
+      <div style="border-radius:8px; overflow:hidden; min-height:460px; height:100%; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
+        <img src="/assets/img/studio/studio-showcase.png" alt="The DDC Detailing Studio Bay" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </div>
   </div>
@@ -133,6 +180,21 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 <!-- ========================================================================
      03. WHAT DOES YOUR RIDE NEED? (Service Explorer)
      ======================================================================== -->
+<?php
+$serviceStudioImages = [
+  'ppf'                 => '/assets/img/studio/ppf-install.png',
+  'ceramic-coating'     => '/assets/img/studio/ceramic-coating.png',
+  'full-car-detailing'  => '/assets/img/studio/full-detailing.png',
+  'interior-deep-clean' => '/assets/img/studio/interior-clean.png',
+  'bike-detailing'      => '/assets/img/studio/bike-detailing.png',
+  'ceramic-wash'        => '/assets/img/studio/ceramic-wash.png',
+  'steam-wash'          => '/assets/img/studio/steam-wash.png',
+  'basic-car-wash'      => '/assets/img/studio/basic-wash.png',
+  'engine-detailing'    => '/assets/img/studio/engine-bay.png',
+  'polishing-waxing'    => '/assets/img/studio/polishing-waxing.png',
+  'tyre-rim-care'       => '/assets/img/studio/wheel-care.png'
+];
+?>
 <section class="section section-white service-explorer">
   <div class="container">
     <div class="eyebrow" data-anim="fade-up">SERVICE EXPLORER</div>
@@ -152,17 +214,23 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
       <div>
         <!-- Group 1: PROTECT -->
         <div class="explorer-group-list is-active" data-category="protect">
-          <?php foreach ($protectServices as $svc): ?>
-            <div class="explorer-service-item" data-name="<?= htmlspecialchars($svc['name']) ?>" data-caption="PHOTO — <?= htmlspecialchars($svc['name']) ?> in studio bay">
+          <?php foreach ($protectServices as $idx => $svc): 
+            $svcImg = $serviceStudioImages[$svc['slug']] ?? '/assets/img/studio/ppf-install.png';
+          ?>
+            <div class="explorer-service-item <?= $idx === 0 ? 'is-active is-expanded' : '' ?>" 
+                 data-slug="<?= htmlspecialchars($svc['slug']) ?>"
+                 data-image="<?= htmlspecialchars($svcImg) ?>"
+                 data-name="<?= htmlspecialchars($svc['name']) ?>" 
+                 data-caption="<?= htmlspecialchars($svc['name']) ?> — Studio Bay Treatment">
               <div class="explorer-service-header">
                 <span class="explorer-service-title"><?= htmlspecialchars($svc['name']) ?></span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p><?= htmlspecialchars($svc['short_desc']) ?></p>
                   <div style="margin-top:16px;">
-                    <a href="/services/<?= htmlspecialchars($svc['slug']) ?>" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/<?= htmlspecialchars($svc['slug']) ?>" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
@@ -172,17 +240,23 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 
         <!-- Group 2: DETAIL -->
         <div class="explorer-group-list" data-category="detail">
-          <?php foreach ($detailServices as $svc): ?>
-            <div class="explorer-service-item" data-name="<?= htmlspecialchars($svc['name']) ?>" data-caption="PHOTO — <?= htmlspecialchars($svc['name']) ?> detailing in progress">
+          <?php foreach ($detailServices as $idx => $svc): 
+            $svcImg = $serviceStudioImages[$svc['slug']] ?? '/assets/img/studio/full-detailing.png';
+          ?>
+            <div class="explorer-service-item" 
+                 data-slug="<?= htmlspecialchars($svc['slug']) ?>"
+                 data-image="<?= htmlspecialchars($svcImg) ?>"
+                 data-name="<?= htmlspecialchars($svc['name']) ?>" 
+                 data-caption="<?= htmlspecialchars($svc['name']) ?> — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title"><?= htmlspecialchars($svc['name']) ?></span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p><?= htmlspecialchars($svc['short_desc']) ?></p>
                   <div style="margin-top:16px;">
-                    <a href="/services/<?= htmlspecialchars($svc['slug']) ?>" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/<?= htmlspecialchars($svc['slug']) ?>" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
@@ -192,17 +266,23 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 
         <!-- Group 3: CLEAN -->
         <div class="explorer-group-list" data-category="clean">
-          <?php foreach ($cleanServices as $svc): ?>
-            <div class="explorer-service-item" data-name="<?= htmlspecialchars($svc['name']) ?>" data-caption="PHOTO — <?= htmlspecialchars($svc['name']) ?> studio wash">
+          <?php foreach ($cleanServices as $idx => $svc): 
+            $svcImg = $serviceStudioImages[$svc['slug']] ?? '/assets/img/studio/ceramic-wash.png';
+          ?>
+            <div class="explorer-service-item" 
+                 data-slug="<?= htmlspecialchars($svc['slug']) ?>"
+                 data-image="<?= htmlspecialchars($svcImg) ?>"
+                 data-name="<?= htmlspecialchars($svc['name']) ?>" 
+                 data-caption="<?= htmlspecialchars($svc['name']) ?> — Studio Wash Program">
               <div class="explorer-service-header">
                 <span class="explorer-service-title"><?= htmlspecialchars($svc['name']) ?></span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p><?= htmlspecialchars($svc['short_desc']) ?></p>
                   <div style="margin-top:16px;">
-                    <a href="/services/<?= htmlspecialchars($svc['slug']) ?>" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/<?= htmlspecialchars($svc['slug']) ?>" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
@@ -211,10 +291,17 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
         </div>
       </div>
 
-      <!-- Right Column: Sticky Image Preview -->
+      <!-- Right Column: Dynamic Sticky Image Preview -->
       <div>
-        <div class="explorer-sticky-card">
-          <img src="/assets/img/services/ppf.jpg" alt="The Drive Clinic Detailing Service" class="explorer-preview-img" style="width:100%; height:480px; object-fit:cover; border:1px solid var(--line); display:block;">
+        <div class="explorer-sticky-card" style="position:sticky; top:110px; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.14); box-shadow:0 20px 48px rgba(0,0,0,0.55); background:#0F131D;">
+          <div style="position:relative; width:100%; height:480px; overflow:hidden;">
+            <img src="/assets/img/studio/ppf-install.png" alt="The DDC Detailing Service" class="explorer-preview-img" style="width:100%; height:100%; object-fit:cover; display:block; transition: opacity 0.25s ease, transform 0.35s ease;">
+            <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.1) 40%, rgba(9,11,16,0.92) 100%); pointer-events:none;"></div>
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:24px 22px; pointer-events:none;">
+              <div style="font-size:11px; font-weight:800; color:var(--red); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:4px;">THE DDC STUDIO BAY</div>
+              <div class="explorer-preview-title" style="font-family:var(--font-display); font-size:26px; color:#FFFFFF; text-shadow:0 2px 10px rgba(0,0,0,0.85); line-height:1.1;">PAINT PROTECTION FILM</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -227,8 +314,8 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 <section class="section section-dark">
   <div class="container grid-50-50">
     <div>
-      <div style="overflow:hidden; height:100%; min-height:440px; border:1px solid rgba(255,255,255,0.1);" data-anim="mask-reveal">
-        <img src="/assets/img/services/ppf-feature.jpg" alt="Self-healing Paint Protection Film installation" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div style="overflow:hidden; height:100%; min-height:440px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
+        <img src="/assets/img/studio/ppf-install.png" alt="Self-healing Paint Protection Film installation at The DDC" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </div>
     <div>
@@ -352,15 +439,15 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 
     <!-- 3-Image Mosaic -->
     <div class="bike-mosaic-grid" data-anim="mask-reveal">
-      <div style="overflow:hidden; height:100%; min-height:420px; border:1px solid var(--line);">
-        <img src="/assets/img/bike/bike-1.jpg" alt="Superbike Detailing Profile" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div style="overflow:hidden; height:100%; min-height:420px; border-radius:6px; border:1px solid rgba(255,255,255,0.12);">
+        <img src="/assets/img/studio/bike-detailing.png" alt="Superbike Detailing Profile at The DDC" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="bike-mosaic-stacked">
-        <div style="overflow:hidden; height:200px; border:1px solid var(--line);">
-          <img src="/assets/img/bike/bike-2.jpg" alt="Motorcycle Engine & Exhaust Detail" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <div style="overflow:hidden; height:200px; border-radius:6px; border:1px solid rgba(255,255,255,0.12);">
+          <img src="/assets/img/bike/superbike-detailing-india.jpg" alt="Motorcycle Engine & Exhaust Detail" style="width:100%; height:100%; object-fit:cover; display:block;">
         </div>
-        <div style="overflow:hidden; height:200px; border:1px solid var(--line);">
-          <img src="/assets/img/bike/bike-3.jpg" alt="Polished Superbike Fuel Tank Gloss" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <div style="overflow:hidden; height:200px; border-radius:6px; border:1px solid rgba(255,255,255,0.12);">
+          <img src="/assets/img/studio/workshop-studio.png" alt="Studio Workshop Detailing Bay" style="width:100%; height:100%; object-fit:cover; display:block;">
         </div>
       </div>
     </div>
@@ -382,7 +469,7 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
       <!-- Wash 1: Ceramic Wash -->
       <div class="wash-trio-card" data-anim="fade-up">
         <div class="wash-trio-img-wrap">
-          <img src="/assets/img/wash/ceramic-wash.jpg" alt="Ceramic Wash Foam Bath" class="wash-trio-img">
+          <img src="/assets/img/studio/ceramic-wash.png" alt="Ceramic Wash Foam Bath at The DDC" class="wash-trio-img">
         </div>
         <div class="wash-trio-body">
           <div>
@@ -401,7 +488,7 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
       <!-- Wash 2: Steam Wash -->
       <div class="wash-trio-card" data-anim="fade-up" style="transition-delay: 0.1s;">
         <div class="wash-trio-img-wrap">
-          <img src="/assets/img/wash/steam-wash.jpg" alt="High Pressure Thermal Steam Wash" class="wash-trio-img">
+          <img src="/assets/img/studio/steam-wash.png" alt="High Pressure Thermal Steam Wash at The DDC" class="wash-trio-img">
         </div>
         <div class="wash-trio-body">
           <div>
@@ -417,22 +504,22 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
         </div>
       </div>
 
-      <!-- Wash 3: Maintenance Wash -->
+      <!-- Wash 3: Basic Car Wash -->
       <div class="wash-trio-card" data-anim="fade-up" style="transition-delay: 0.2s;">
         <div class="wash-trio-img-wrap">
-          <img src="/assets/img/wash/maintenance-wash.jpg" alt="Hand Wash Maintenance Buffing" class="wash-trio-img">
+          <img src="/assets/img/studio/basic-wash.png" alt="Basic Car Wash Express Care at The DDC" class="wash-trio-img">
         </div>
         <div class="wash-trio-body">
           <div>
             <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">
-              MAINTENANCE WASH
+              BASIC CAR WASH
             </div>
-            <h3 class="h3-title" style="font-size:28px; margin-bottom:12px;">KEEP THE SHINE ALIVE.</h3>
+            <h3 class="h3-title" style="font-size:28px; margin-bottom:12px;">CLEAN INSIDE & OUT.</h3>
             <p style="color:var(--text-2); font-size:14px; line-height:1.6; margin-bottom:24px;">
-              Fast, scratch-free routine upkeep calibrated to preserve existing ceramic coatings and PPF films.
+              Thorough scratch-free dual-bucket hand wash, wheel face clean, and complete interior cabin vacuuming.
             </p>
           </div>
-          <a href="/services/maintenance-wash" class="text-link">EXPLORE MAINTENANCE WASH →</a>
+          <a href="/services/basic-car-wash" class="text-link">EXPLORE BASIC CAR WASH →</a>
         </div>
       </div>
     </div>
@@ -578,18 +665,6 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
           <div class="card-arrow-box">→</div>
         </div>
       </div>
-
-      <!-- Wide Card: Odor Removal -->
-      <div class="other-service-card card-wide" data-anim="fade-up">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-          <div>
-            <div style="font-size:11px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:6px;">06 / STERILIZATION</div>
-            <h4 style="font-family:var(--font-display); font-size:28px;">ODOR REMOVAL & OZONE TREATMENT</h4>
-            <p style="color:var(--text-2); font-size:14px; margin-top:4px;">Medical Ozone gas shock destroying organic odor molecules at the cellular level.</p>
-          </div>
-          <a href="/services/odor-removal" class="btn btn-red">EXPLORE ODOR REMOVAL →</a>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -608,14 +683,13 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
       Select your primary automotive goal to receive an immediate studio recommendation:
     </p>
 
-    <!-- 7 Options Grid -->
+    <!-- Options Grid -->
     <div class="diagnosis-options-grid" data-anim="fade-up">
       <button class="diagnosis-option-btn is-selected" data-key="protect-paint">Protect my paint →</button>
       <button class="diagnosis-option-btn" data-key="remove-dirt">Remove dirt / contamination →</button>
       <button class="diagnosis-option-btn" data-key="refresh-interior">Refresh interior →</button>
-      <button class="diagnosis-option-btn" data-key="remove-odor">Remove odor →</button>
       <button class="diagnosis-option-btn" data-key="detail-bike">Detail my bike →</button>
-      <button class="diagnosis-option-btn" data-key="maintain-vehicle">Maintain my vehicle →</button>
+      <button class="diagnosis-option-btn" data-key="basic-wash">Basic routine wash →</button>
       <button class="diagnosis-option-btn" data-key="full-transformation">Full transformation →</button>
     </div>
 
@@ -642,9 +716,9 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 </section>
 
 <!-- ========================================================================
-     13. BEFORE / AFTER (DARK)
+     13. BEFORE / AFTER (DARK) — Hidden as requested
      ======================================================================== -->
-<section class="section section-dark before-after-section">
+<section class="section section-dark before-after-section" style="display:none;" aria-hidden="true">
   <div class="container">
     <div class="eyebrow" data-anim="fade-up">PROVEN RESULTS</div>
     <h2 class="h2-section" style="margin-bottom: 24px;" data-anim="text-reveal">
@@ -687,7 +761,7 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
         <div class="before-after-container">
           <img src="/assets/img/bike/bike-2.jpg" alt="Before: Grimy motorcycle exhaust and engine" class="before-after-media">
           <div class="before-after-layer-after">
-            <img src="/assets/img/bike/bike-1.jpg" alt="After: Precision detailed superbike finish" class="before-after-media">
+            <img src="/assets/img/bike/superbike-detailing-india.jpg" alt="After: Precision detailed superbike finish" class="before-after-media">
           </div>
           <div class="before-after-divider">
             <div class="before-after-knob">DRAG</div>
@@ -785,11 +859,11 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 
       <div class="built-jammu-card">
         <div>
-          <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">05 / EVERY WEEK</div>
-          <h4 style="font-size:24px; font-family:var(--font-display); margin-bottom:12px;">MAINTENANCE</h4>
-          <p style="font-size:14px; color:var(--text-2); line-height:1.6;">Scheduled recurring washes to keep your vehicle spotless all year.</p>
+          <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">05 / ROUTINE CARE</div>
+          <h4 style="font-size:24px; font-family:var(--font-display); margin-bottom:12px;">BASIC CAR WASH</h4>
+          <p style="font-size:14px; color:var(--text-2); line-height:1.6;">Essential scratch-free dual-bucket wash and interior vacuum for routine weekly driving.</p>
         </div>
-        <a href="/services/maintenance-wash" class="text-link" style="margin-top:16px;">MAINTENANCE →</a>
+        <a href="/services/basic-car-wash" class="text-link" style="margin-top:16px;">BASIC CAR WASH →</a>
       </div>
     </div>
   </div>
@@ -1007,7 +1081,7 @@ $cleanServices = array_filter($services, fn($s) => $s['category'] === 'clean');
 
     <!-- Lazy Google Map Embed -->
     <div>
-      <div style="border:1px solid var(--line); overflow:hidden; min-height:420px; background:var(--white);" data-anim="mask-reveal">
+      <div style="border:1px solid var(--line); overflow:hidden; min-height:420px; background:#151A26;" data-anim="mask-reveal">
         <iframe 
           src="<?= htmlspecialchars($settings['map_embed_url'] ?? 'https://maps.google.com') ?>" 
           width="100%" 

@@ -26,6 +26,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/assets/css/main.css">
 
@@ -71,8 +74,8 @@
   <!-- Global Header / Navigation -->
   <header class="site-header header-transparent">
   <div class="container nav-container">
-    <a href="/" class="nav-brand" aria-label="The Drive Clinic - Home" data-major-nav>
-              <img src="/assets/brand/logo-white.svg" alt="The Drive Clinic Logo" class="nav-logo-img" width="180" height="36">
+    <a href="/" class="nav-brand" aria-label="THE DDC - Home" data-major-nav>
+              <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
           </a>
 
     <!-- Desktop Navigation Links -->
@@ -244,11 +247,11 @@
               <div class="mobile-sublink-badge-icon">💧</div>
               <div class="sublink-text">
                 <strong>Ceramic SiO2 Foam Wash</strong>
-                <small>pH-neutral gloss maintenance wash</small>
+                <small>pH-neutral SiO2 hydrophobic wash</small>
               </div>
             </a>
             <a href="/services" class="mobile-sublink-all" data-major-nav>
-              <span>Explore All 15 Detailing Packages &rarr;</span>
+              <span>Explore All Detailing Packages &rarr;</span>
             </a>
           </div>
         </div>
@@ -276,221 +279,93 @@
   <main id="main-content">
     
 <!-- ========================================================================
-     01. HERO SLIDER (96vh desktop, 86vh mobile, Black Background)
+     01. CINEMATIC VIDEO HERO (Clean, Dynamic & Minimalist Architecture)
      ======================================================================== -->
-<section class="hero-slider" aria-roledescription="carousel" aria-label="The Drive Clinic Featured Showcase">
-      <div class="hero-slide is-active" data-slide-index="0" aria-hidden="false">
-      <div class="hero-slide-bg">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/assets/img/hero/slide-1-mobile.jpg">
-          <img src="/assets/img/hero/slide-1-desktop.jpg" alt="PPF • DETAILING • CAR CARE" class="hero-slide-img" fetchpriority="high" loading="eager" width="1920" height="900">
-        </picture>
-        <div class="hero-slide-overlay"></div>
+<section class="hero-cinema" aria-label="The Drive Clinic Automotive Studio">
+  <!-- Persistent Ambient Video Background -->
+  <div class="hero-video-wrap">
+    <video class="hero-bg-video" autoplay loop muted playsinline preload="auto" poster="/assets/img/hero/hero-1-ppf.jpg">
+      <source src="/assets/video/hero-cinematic.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay-gradient"></div>
+    <div class="hero-video-vignette"></div>
+  </div>
+
+  <div class="container hero-cinema-container">
+    <div class="hero-cinema-main">
+      <!-- Minimalist Studio Eyebrow -->
+      <div class="hero-eyebrow" data-anim="fade-up">
+        <span class="eyebrow-pulse-dot"></span>
+        <span class="hero-eyebrow-badge" id="heroBadge">01 / PAINT PROTECTION FILM</span>
+        <span class="hero-eyebrow-sep">•</span>
+        <span class="hero-eyebrow-loc">NANAK NAGAR, JAMMU</span>
       </div>
 
-      <div class="container hero-slide-content">
-        <div class="eyebrow hero-label">PPF • DETAILING • CAR CARE</div>
-        
-        <h1 class="hero-headline" style="margin-bottom: 24px;">
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner ">
-                YOUR CAR.              </span>
-            </span>
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner text-red">
-                REDEFINED.              </span>
-            </span>
-                  </h1>
+      <!-- Main Clean Dynamic Headline -->
+      <h1 class="hero-cinema-title" data-anim="text-reveal">
+        <span class="hero-title-static">ARCHITECTS OF</span>
+        <span class="hero-title-dynamic text-red" id="heroDynamicTitle">SELF-HEALING PPF ARMOR.</span>
+      </h1>
 
-        <div class="redline" style="max-width: 140px; margin-bottom: 28px;"></div>
+      <div class="redline hero-clean-redline" data-anim="redline"></div>
 
-                  <p class="hero-supporting lead-text" style="max-width: 620px; margin-bottom: 36px;">
-            Jammu&#039;s premier automotive detailing studio for paint protection and precision care.          </p>
-        
-        <div class="hero-ctas" style="display:flex; gap:18px; flex-wrap:wrap;">
-          <a href="/book" class="btn btn-red" data-cursor="BOOK">
-            BOOK YOUR SERVICE →          </a>
-                      <a href="/services" class="btn btn-ghost" data-cursor="EXPLORE">
-              EXPLORE SERVICES →            </a>
-                  </div>
-      </div>
-    </div>
-      <div class="hero-slide " data-slide-index="1" aria-hidden="true">
-      <div class="hero-slide-bg">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/assets/img/hero/slide-2-mobile.jpg">
-          <img src="/assets/img/hero/slide-2-desktop.jpg" alt="PAINT PROTECTION FILM" class="hero-slide-img" fetchpriority="auto" loading="lazy" width="1920" height="900">
-        </picture>
-        <div class="hero-slide-overlay"></div>
-      </div>
+      <!-- Single Clear Descriptive Statement -->
+      <p class="hero-cinema-lead lead-text" id="heroDynamicDesc" data-anim="fade-up">
+        Instant self-healing TPU armor defending original factory paint against highway gravel, micro-scratches, and Jammu's scorching UV sun.
+      </p>
 
-      <div class="container hero-slide-content">
-        <div class="eyebrow hero-label">PAINT PROTECTION FILM</div>
-        
-        <h1 class="hero-headline" style="margin-bottom: 24px;">
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner ">
-                PROTECT WHAT              </span>
-            </span>
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner text-red">
-                YOU DRIVE.              </span>
-            </span>
-                  </h1>
-
-        <div class="redline" style="max-width: 140px; margin-bottom: 28px;"></div>
-
-                  <p class="hero-supporting lead-text" style="max-width: 620px; margin-bottom: 36px;">
-            Self-healing optical armor safeguarding original factory paint from highway debris.          </p>
-        
-        <div class="hero-ctas" style="display:flex; gap:18px; flex-wrap:wrap;">
-          <a href="/services/ppf" class="btn btn-red" data-cursor="BOOK">
-            EXPLORE PPF →          </a>
-                      <a href="/book?service=ppf" class="btn btn-ghost" data-cursor="EXPLORE">
-              GET PPF QUOTE →            </a>
-                  </div>
+      <!-- Crisp Dual Action Buttons -->
+      <div class="hero-cinema-actions" data-anim="fade-up">
+        <a href="/book?service=ppf" id="heroBookBtn" class="btn btn-red hero-btn-main" data-cursor="BOOK">
+          BOOK APPOINTMENT →
+        </a>
+        <a href="/services/ppf" id="heroDetailBtn" class="btn btn-ghost hero-btn-sub" data-cursor="EXPLORE">
+          EXPLORE PPF SPECS →
+        </a>
       </div>
     </div>
-      <div class="hero-slide " data-slide-index="2" aria-hidden="true">
-      <div class="hero-slide-bg">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/assets/img/hero/slide-3-mobile.jpg">
-          <img src="/assets/img/hero/slide-3-desktop.jpg" alt="BIKE DETAILING" class="hero-slide-img" fetchpriority="auto" loading="lazy" width="1920" height="900">
-        </picture>
-        <div class="hero-slide-overlay"></div>
+
+    <!-- Minimalist Dynamic Slide Nav Dock -->
+    <div class="hero-nav-dock" data-anim="fade-up">
+      <div class="hero-dock-counter">
+        <span class="dock-current" id="heroDockCurrent">01</span>
+        <span class="dock-sep">/</span>
+        <span class="dock-total">05</span>
       </div>
 
-      <div class="container hero-slide-content">
-        <div class="eyebrow hero-label">BIKE DETAILING</div>
-        
-        <h1 class="hero-headline" style="margin-bottom: 24px;">
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner ">
-                TWO WHEELS.              </span>
-            </span>
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner text-red">
-                FULL ATTENTION.              </span>
-            </span>
-                  </h1>
-
-        <div class="redline" style="max-width: 140px; margin-bottom: 28px;"></div>
-
-                  <p class="hero-supporting lead-text" style="max-width: 620px; margin-bottom: 36px;">
-            Dedicated precision care tailored for superbikes and everyday performance rides.          </p>
-        
-        <div class="hero-ctas" style="display:flex; gap:18px; flex-wrap:wrap;">
-          <a href="/services/bike-detailing" class="btn btn-red" data-cursor="BOOK">
-            DETAIL MY BIKE →          </a>
-                      <a href="/book?service=bike-detailing" class="btn btn-ghost" data-cursor="EXPLORE">
-              BOOK BIKE SERVICE →            </a>
-                  </div>
-      </div>
-    </div>
-      <div class="hero-slide " data-slide-index="3" aria-hidden="true">
-      <div class="hero-slide-bg">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/assets/img/hero/slide-4-mobile.jpg">
-          <img src="/assets/img/hero/slide-4-desktop.jpg" alt="CERAMIC WASH" class="hero-slide-img" fetchpriority="auto" loading="lazy" width="1920" height="900">
-        </picture>
-        <div class="hero-slide-overlay"></div>
-      </div>
-
-      <div class="container hero-slide-content">
-        <div class="eyebrow hero-label">CERAMIC WASH</div>
-        
-        <h1 class="hero-headline" style="margin-bottom: 24px;">
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner ">
-                CLEAN. GLOSS.              </span>
-            </span>
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner text-red">
-                DRIVE.              </span>
-            </span>
-                  </h1>
-
-        <div class="redline" style="max-width: 140px; margin-bottom: 28px;"></div>
-
-                  <p class="hero-supporting lead-text" style="max-width: 620px; margin-bottom: 36px;">
-            Hydrophobic foam bath and gloss enhancement without swirl marks.          </p>
-        
-        <div class="hero-ctas" style="display:flex; gap:18px; flex-wrap:wrap;">
-          <a href="/book?service=ceramic-wash" class="btn btn-red" data-cursor="BOOK">
-            BOOK A WASH →          </a>
-                      <a href="/services/ceramic-wash" class="btn btn-ghost" data-cursor="EXPLORE">
-              LEARN MORE →            </a>
-                  </div>
-      </div>
-    </div>
-      <div class="hero-slide " data-slide-index="4" aria-hidden="true">
-      <div class="hero-slide-bg">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/assets/img/hero/slide-5-mobile.jpg">
-          <img src="/assets/img/hero/slide-5-desktop.jpg" alt="STEAM &amp; INTERIOR CARE" class="hero-slide-img" fetchpriority="auto" loading="lazy" width="1920" height="900">
-        </picture>
-        <div class="hero-slide-overlay"></div>
-      </div>
-
-      <div class="container hero-slide-content">
-        <div class="eyebrow hero-label">STEAM &amp; INTERIOR CARE</div>
-        
-        <h1 class="hero-headline" style="margin-bottom: 24px;">
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner ">
-                DETAILING WITHOUT              </span>
-            </span>
-                      <span class="hero-headline-line">
-              <span class="hero-headline-inner text-red">
-                COMPROMISE.              </span>
-            </span>
-                  </h1>
-
-        <div class="redline" style="max-width: 140px; margin-bottom: 28px;"></div>
-
-                  <p class="hero-supporting lead-text" style="max-width: 620px; margin-bottom: 36px;">
-            Hyper-clean cabin sterilization and showroom-grade surface finishing.          </p>
-        
-        <div class="hero-ctas" style="display:flex; gap:18px; flex-wrap:wrap;">
-          <a href="/services" class="btn btn-red" data-cursor="BOOK">
-            EXPLORE SERVICES →          </a>
-                      <a href="/book" class="btn btn-ghost" data-cursor="EXPLORE">
-              BOOK APPOINTMENT →            </a>
-                  </div>
-      </div>
-    </div>
-  
-  <!-- Controls Bar -->
-  <div class="hero-controls">
-    <div class="container hero-controls-inner">
-      <div class="hero-counter">
-        <span class="hero-counter-current text-red">01</span> / <span class="hero-counter-total">05</span>
-      </div>
-
-      <div class="hero-progress-group" aria-hidden="true">
-                  <div class="hero-progress-track">
-            <div class="hero-progress-fill" style="width: 0%;"></div>
-          </div>
-                  <div class="hero-progress-track">
-            <div class="hero-progress-fill" style="width: 0%;"></div>
-          </div>
-                  <div class="hero-progress-track">
-            <div class="hero-progress-fill" style="width: 0%;"></div>
-          </div>
-                  <div class="hero-progress-track">
-            <div class="hero-progress-fill" style="width: 0%;"></div>
-          </div>
-                  <div class="hero-progress-track">
-            <div class="hero-progress-fill" style="width: 0%;"></div>
-          </div>
+      <div class="hero-dock-items" role="tablist" aria-label="Featured Studio Services">
+                  <button type="button" class="hero-dock-btn is-active" data-index="0" role="tab" aria-selected="true" aria-label="PPF Armor">
+            <span class="dock-btn-label">PPF Armor</span>
+            <span class="dock-btn-bar"><span class="dock-btn-fill"></span></span>
+          </button>
+                  <button type="button" class="hero-dock-btn " data-index="1" role="tab" aria-selected="false" aria-label="9H Ceramic">
+            <span class="dock-btn-label">9H Ceramic</span>
+            <span class="dock-btn-bar"><span class="dock-btn-fill"></span></span>
+          </button>
+                  <button type="button" class="hero-dock-btn " data-index="2" role="tab" aria-selected="false" aria-label="Full Detailing">
+            <span class="dock-btn-label">Full Detailing</span>
+            <span class="dock-btn-bar"><span class="dock-btn-fill"></span></span>
+          </button>
+                  <button type="button" class="hero-dock-btn " data-index="3" role="tab" aria-selected="false" aria-label="Studio Wash">
+            <span class="dock-btn-label">Studio Wash</span>
+            <span class="dock-btn-bar"><span class="dock-btn-fill"></span></span>
+          </button>
+                  <button type="button" class="hero-dock-btn " data-index="4" role="tab" aria-selected="false" aria-label="Superbikes">
+            <span class="dock-btn-label">Superbikes</span>
+            <span class="dock-btn-bar"><span class="dock-btn-fill"></span></span>
+          </button>
               </div>
 
-      <div class="hero-arrows">
-        <button class="hero-arrow-btn hero-arrow-prev" aria-label="Previous Slide">←</button>
-        <button class="hero-arrow-btn hero-arrow-next" aria-label="Next Slide">→</button>
+      <div class="hero-dock-arrows">
+        <button type="button" class="dock-arrow-btn" id="heroPrevBtn" aria-label="Previous Service">←</button>
+        <button type="button" class="dock-arrow-btn" id="heroNextBtn" aria-label="Next Service">→</button>
       </div>
     </div>
   </div>
+
+  <!-- Hidden JSON Data for Smooth Dynamic Switcher -->
+  <script id="heroSlidesData" type="application/json">
+    [{"tag":"PPF Armor","badge":"01 / PAINT PROTECTION FILM","lead_keyword":"SELF-HEALING PPF ARMOR.","supporting":"Instant self-healing TPU armor defending original factory paint against highway gravel, micro-scratches, and Jammu's scorching UV sun.","service_slug":"ppf","cta_label":"EXPLORE PPF SPECS →"},{"tag":"9H Ceramic","badge":"02 / 9H NANO CERAMIC COATING","lead_keyword":"9H CERAMIC GLASS MATRIX.","supporting":"Nanotechnology liquid quartz bonding permanently to clear coat for intense candy reflections, chemical resistance, and water repellency.","service_slug":"ceramic-coating","cta_label":"EXPLORE 9H CERAMIC →"},{"tag":"Full Detailing","badge":"03 / FULL CAR RESTORATION","lead_keyword":"COMPLETE CAR RESET.","supporting":"Two-stage machine paint correction, dry steam interior sterilization, leather feeding, and engine bay detailing for total vehicle rejuvenation.","service_slug":"full-car-detailing","cta_label":"VIEW DETAILING SPECS →"},{"tag":"Studio Wash","badge":"04 / CERAMIC & STEAM WASH","lead_keyword":"SWIRL-FREE STUDIO WASH.","supporting":"Dual-bucket grit-guarded washes with SiO2 ceramic gloss boosters, spot-free filtered water, and hospital-grade interior steam sanitization.","service_slug":"ceramic-wash","cta_label":"VIEW WASH PROGRAMS →"},{"tag":"Superbikes","badge":"05 / BIKE & SUPERBIKE CARE","lead_keyword":"PRECISION TWO-WHEEL CARE.","supporting":"Bespoke precision detailing tailored for superbikes and performance machines — engine fin degreasing, fairing PPF, and ceramic shields.","service_slug":"bike-detailing","cta_label":"EXPLORE BIKE CARE →"}]  </script>
 </section>
 
 <!-- ========================================================================
@@ -529,8 +404,8 @@
       </div>
     </div>
     <div>
-      <div class="img-placeholder" style="min-height: 460px;" data-anim="mask-reveal">
-        PHOTO — Studio clean bay and technician applying precision ceramic protection
+      <div style="border-radius:8px; overflow:hidden; min-height:460px; height:100%; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
+        <img src="/assets/img/studio/studio-showcase.png" alt="The DDC Detailing Studio Bay" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </div>
   </div>
@@ -558,30 +433,38 @@
       <div>
         <!-- Group 1: PROTECT -->
         <div class="explorer-group-list is-active" data-category="protect">
-                      <div class="explorer-service-item" data-name="PAINT PROTECTION FILM" data-caption="PHOTO — PAINT PROTECTION FILM in studio bay">
+                      <div class="explorer-service-item is-active is-expanded" 
+                 data-slug="ppf"
+                 data-image="/assets/img/studio/ppf-install.png"
+                 data-name="PAINT PROTECTION FILM" 
+                 data-caption="PAINT PROTECTION FILM — Studio Bay Treatment">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">PAINT PROTECTION FILM</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Self-healing aliphatic polyurethane film designed to guard against stone chips, scratches, road debris, and UV oxidation.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/ppf" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/ppf" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="CERAMIC COATING" data-caption="PHOTO — CERAMIC COATING in studio bay">
+                      <div class="explorer-service-item " 
+                 data-slug="ceramic-coating"
+                 data-image="/assets/img/studio/ceramic-coating.png"
+                 data-name="CERAMIC COATING" 
+                 data-caption="CERAMIC COATING — Studio Bay Treatment">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">CERAMIC COATING</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Nanotechnology liquid glass matrix that permanently bonds to paint, delivering intense candy-like gloss and extreme water beading.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/ceramic-coating" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/ceramic-coating" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
@@ -590,114 +473,128 @@
 
         <!-- Group 2: DETAIL -->
         <div class="explorer-group-list" data-category="detail">
-                      <div class="explorer-service-item" data-name="BIKE DETAILING" data-caption="PHOTO — BIKE DETAILING detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="bike-detailing"
+                 data-image="/assets/img/studio/bike-detailing.png"
+                 data-name="BIKE DETAILING" 
+                 data-caption="BIKE DETAILING — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">BIKE DETAILING</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Complete multi-step deep cleaning, mechanical component degreasing, alloy restoration, and protective sealant for motorcycles.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/bike-detailing" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/bike-detailing" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="FULL CAR DETAILING" data-caption="PHOTO — FULL CAR DETAILING detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="full-car-detailing"
+                 data-image="/assets/img/studio/full-detailing.png"
+                 data-name="FULL CAR DETAILING" 
+                 data-caption="FULL CAR DETAILING — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">FULL CAR DETAILING</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Bumper-to-bumper bumper restoration combining multi-stage exterior paint correction with deep interior cabin decontamination.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/full-car-detailing" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/full-car-detailing" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="ENGINE DETAILING" data-caption="PHOTO — ENGINE DETAILING detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="engine-detailing"
+                 data-image="/assets/img/studio/engine-bay.png"
+                 data-name="ENGINE DETAILING" 
+                 data-caption="ENGINE DETAILING — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">ENGINE DETAILING</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Safe dry steam cleaning, grease removal, and OEM satin dressing for under-hood mechanical compartments.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/engine-detailing" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/engine-detailing" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="INTERIOR DEEP CLEAN" data-caption="PHOTO — INTERIOR DEEP CLEAN detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="interior-deep-clean"
+                 data-image="/assets/img/studio/interior-clean.png"
+                 data-name="INTERIOR DEEP CLEAN" 
+                 data-caption="INTERIOR DEEP CLEAN — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">INTERIOR DEEP CLEAN</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Comprehensive cabin detailing featuring heated carpet extraction, stain removal, leather treatment, and roof-liner cleansing.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/interior-deep-clean" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/interior-deep-clean" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="POLISHING &amp; WAXING" data-caption="PHOTO — POLISHING &amp; WAXING detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="polishing-waxing"
+                 data-image="/assets/img/studio/polishing-waxing.png"
+                 data-name="POLISHING &amp; WAXING" 
+                 data-caption="POLISHING &amp; WAXING — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">POLISHING &amp; WAXING</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Precision single-stage machine gloss enhancement followed by an ultra-slick carnauba or ceramic sealant top coat.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/polishing-waxing" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/polishing-waxing" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="TYRE &amp; RIM CARE" data-caption="PHOTO — TYRE &amp; RIM CARE detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="tyre-rim-care"
+                 data-image="/assets/img/studio/wheel-care.png"
+                 data-name="TYRE &amp; RIM CARE" 
+                 data-caption="TYRE &amp; RIM CARE — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">TYRE &amp; RIM CARE</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Deep iron fallout removal from alloy wheel barrels, brake caliper cleaning, and long-lasting non-sling tyre dressing.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/tyre-rim-care" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/tyre-rim-care" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="ODOR REMOVAL" data-caption="PHOTO — ODOR REMOVAL detailing in progress">
-              <div class="explorer-service-header">
-                <span class="explorer-service-title">ODOR REMOVAL</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
-              </div>
-              <div class="explorer-service-body">
-                <div class="explorer-service-content">
-                  <p>Advanced molecular ozone shock treatment and enzymatic fogging that permanently destroys smoke, dampness, and bacterial smells.</p>
-                  <div style="margin-top:16px;">
-                    <a href="/services/odor-removal" class="text-link">VIEW SERVICE →</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-                      <div class="explorer-service-item" data-name="INTERIOR DRY CLEANING" data-caption="PHOTO — INTERIOR DRY CLEANING detailing in progress">
+                      <div class="explorer-service-item" 
+                 data-slug="interior-dry-cleaning"
+                 data-image="/assets/img/studio/full-detailing.png"
+                 data-name="INTERIOR DRY CLEANING" 
+                 data-caption="INTERIOR DRY CLEANING — Detailing Bay Precision">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">INTERIOR DRY CLEANING</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Low-moisture foam cleaning for delicate fabrics, dashboard surfaces, and floor carpets.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/interior-dry-cleaning" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/interior-dry-cleaning" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
@@ -706,72 +603,74 @@
 
         <!-- Group 3: CLEAN -->
         <div class="explorer-group-list" data-category="clean">
-                      <div class="explorer-service-item" data-name="CERAMIC WASH" data-caption="PHOTO — CERAMIC WASH studio wash">
+                      <div class="explorer-service-item" 
+                 data-slug="ceramic-wash"
+                 data-image="/assets/img/studio/ceramic-wash.png"
+                 data-name="CERAMIC WASH" 
+                 data-caption="CERAMIC WASH — Studio Wash Program">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">CERAMIC WASH</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>High-lubricity pH-neutral foam wash infused with ceramic SiO2 polymers that cleans while topping up gloss and water repellency.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/ceramic-wash" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/ceramic-wash" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="STEAM WASH" data-caption="PHOTO — STEAM WASH studio wash">
+                      <div class="explorer-service-item" 
+                 data-slug="steam-wash"
+                 data-image="/assets/img/studio/steam-wash.png"
+                 data-name="STEAM WASH" 
+                 data-caption="STEAM WASH — Studio Wash Program">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">STEAM WASH</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>High-temperature vapor steam technology that sanitizes surfaces, dissolves stubborn grease, and purges hidden cabin contaminants.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/steam-wash" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/steam-wash" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="MAINTENANCE WASH" data-caption="PHOTO — MAINTENANCE WASH studio wash">
+                      <div class="explorer-service-item" 
+                 data-slug="basic-car-wash"
+                 data-image="/assets/img/studio/basic-wash.png"
+                 data-name="BASIC CAR WASH" 
+                 data-caption="BASIC CAR WASH — Studio Wash Program">
               <div class="explorer-service-header">
-                <span class="explorer-service-title">MAINTENANCE WASH</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-title">BASIC CAR WASH</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
-                  <p>Routine scheduled upkeep wash designed for coated, wrapped, and clean vehicles to preserve pristine exterior condition.</p>
+                  <p>Classic scratch-free dual-bucket hand wash and thorough interior vacuum for everyday driving freshness.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/maintenance-wash" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/basic-car-wash" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
             </div>
-                      <div class="explorer-service-item" data-name="PREMIUM CAR WASH" data-caption="PHOTO — PREMIUM CAR WASH studio wash">
-              <div class="explorer-service-header">
-                <span class="explorer-service-title">PREMIUM CAR WASH</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
-              </div>
-              <div class="explorer-service-body">
-                <div class="explorer-service-content">
-                  <p>Multi-step hand wash featuring pre-rinse, dual-bucket wash, wheel cleaning, and interior vacuum.</p>
-                  <div style="margin-top:16px;">
-                    <a href="/services/premium-car-wash" class="text-link">VIEW SERVICE →</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-                      <div class="explorer-service-item" data-name="EXPRESS EXTERIOR WASH" data-caption="PHOTO — EXPRESS EXTERIOR WASH studio wash">
+                      <div class="explorer-service-item" 
+                 data-slug="express-exterior-wash"
+                 data-image="/assets/img/studio/ceramic-wash.png"
+                 data-name="EXPRESS EXTERIOR WASH" 
+                 data-caption="EXPRESS EXTERIOR WASH — Studio Wash Program">
               <div class="explorer-service-header">
                 <span class="explorer-service-title">EXPRESS EXTERIOR WASH</span>
-                <span style="font-size:24px; color:var(--red);">+</span>
+                <span class="explorer-service-icon" style="font-size:24px; color:var(--red);">+</span>
               </div>
               <div class="explorer-service-body">
                 <div class="explorer-service-content">
                   <p>Fast touchless exterior foam wash and high-velocity air dry for vehicles on the move.</p>
                   <div style="margin-top:16px;">
-                    <a href="/services/express-exterior-wash" class="text-link">VIEW SERVICE →</a>
+                    <a href="/services/express-exterior-wash" class="text-link">VIEW SERVICE SPECS →</a>
                   </div>
                 </div>
               </div>
@@ -779,10 +678,17 @@
                   </div>
       </div>
 
-      <!-- Right Column: Sticky Image Preview -->
+      <!-- Right Column: Dynamic Sticky Image Preview -->
       <div>
-        <div class="explorer-sticky-card">
-          <img src="/assets/img/services/ppf.jpg" alt="The Drive Clinic Detailing Service" class="explorer-preview-img" style="width:100%; height:480px; object-fit:cover; border:1px solid var(--line); display:block;">
+        <div class="explorer-sticky-card" style="position:sticky; top:110px; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.14); box-shadow:0 20px 48px rgba(0,0,0,0.55); background:#0F131D;">
+          <div style="position:relative; width:100%; height:480px; overflow:hidden;">
+            <img src="/assets/img/studio/ppf-install.png" alt="The DDC Detailing Service" class="explorer-preview-img" style="width:100%; height:100%; object-fit:cover; display:block; transition: opacity 0.25s ease, transform 0.35s ease;">
+            <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.1) 40%, rgba(9,11,16,0.92) 100%); pointer-events:none;"></div>
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:24px 22px; pointer-events:none;">
+              <div style="font-size:11px; font-weight:800; color:var(--red); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:4px;">THE DDC STUDIO BAY</div>
+              <div class="explorer-preview-title" style="font-family:var(--font-display); font-size:26px; color:#FFFFFF; text-shadow:0 2px 10px rgba(0,0,0,0.85); line-height:1.1;">PAINT PROTECTION FILM</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -795,8 +701,8 @@
 <section class="section section-dark">
   <div class="container grid-50-50">
     <div>
-      <div style="overflow:hidden; height:100%; min-height:440px; border:1px solid rgba(255,255,255,0.1);" data-anim="mask-reveal">
-        <img src="/assets/img/services/ppf-feature.jpg" alt="Self-healing Paint Protection Film installation" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div style="overflow:hidden; height:100%; min-height:440px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
+        <img src="/assets/img/studio/ppf-install.png" alt="Self-healing Paint Protection Film installation at The DDC" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </div>
     <div>
@@ -920,15 +826,15 @@
 
     <!-- 3-Image Mosaic -->
     <div class="bike-mosaic-grid" data-anim="mask-reveal">
-      <div style="overflow:hidden; height:100%; min-height:420px; border:1px solid var(--line);">
-        <img src="/assets/img/bike/bike-1.jpg" alt="Superbike Detailing Profile" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div style="overflow:hidden; height:100%; min-height:420px; border-radius:6px; border:1px solid rgba(255,255,255,0.12);">
+        <img src="/assets/img/studio/bike-detailing.png" alt="Superbike Detailing Profile at The DDC" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
       <div class="bike-mosaic-stacked">
-        <div style="overflow:hidden; height:200px; border:1px solid var(--line);">
-          <img src="/assets/img/bike/bike-2.jpg" alt="Motorcycle Engine & Exhaust Detail" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <div style="overflow:hidden; height:200px; border-radius:6px; border:1px solid rgba(255,255,255,0.12);">
+          <img src="/assets/img/bike/superbike-detailing-india.jpg" alt="Motorcycle Engine & Exhaust Detail" style="width:100%; height:100%; object-fit:cover; display:block;">
         </div>
-        <div style="overflow:hidden; height:200px; border:1px solid var(--line);">
-          <img src="/assets/img/bike/bike-3.jpg" alt="Polished Superbike Fuel Tank Gloss" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <div style="overflow:hidden; height:200px; border-radius:6px; border:1px solid rgba(255,255,255,0.12);">
+          <img src="/assets/img/studio/workshop-studio.png" alt="Studio Workshop Detailing Bay" style="width:100%; height:100%; object-fit:cover; display:block;">
         </div>
       </div>
     </div>
@@ -950,7 +856,7 @@
       <!-- Wash 1: Ceramic Wash -->
       <div class="wash-trio-card" data-anim="fade-up">
         <div class="wash-trio-img-wrap">
-          <img src="/assets/img/wash/ceramic-wash.jpg" alt="Ceramic Wash Foam Bath" class="wash-trio-img">
+          <img src="/assets/img/studio/ceramic-wash.png" alt="Ceramic Wash Foam Bath at The DDC" class="wash-trio-img">
         </div>
         <div class="wash-trio-body">
           <div>
@@ -969,7 +875,7 @@
       <!-- Wash 2: Steam Wash -->
       <div class="wash-trio-card" data-anim="fade-up" style="transition-delay: 0.1s;">
         <div class="wash-trio-img-wrap">
-          <img src="/assets/img/wash/steam-wash.jpg" alt="High Pressure Thermal Steam Wash" class="wash-trio-img">
+          <img src="/assets/img/studio/steam-wash.png" alt="High Pressure Thermal Steam Wash at The DDC" class="wash-trio-img">
         </div>
         <div class="wash-trio-body">
           <div>
@@ -985,22 +891,22 @@
         </div>
       </div>
 
-      <!-- Wash 3: Maintenance Wash -->
+      <!-- Wash 3: Basic Car Wash -->
       <div class="wash-trio-card" data-anim="fade-up" style="transition-delay: 0.2s;">
         <div class="wash-trio-img-wrap">
-          <img src="/assets/img/wash/maintenance-wash.jpg" alt="Hand Wash Maintenance Buffing" class="wash-trio-img">
+          <img src="/assets/img/studio/basic-wash.png" alt="Basic Car Wash Express Care at The DDC" class="wash-trio-img">
         </div>
         <div class="wash-trio-body">
           <div>
             <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">
-              MAINTENANCE WASH
+              BASIC CAR WASH
             </div>
-            <h3 class="h3-title" style="font-size:28px; margin-bottom:12px;">KEEP THE SHINE ALIVE.</h3>
+            <h3 class="h3-title" style="font-size:28px; margin-bottom:12px;">CLEAN INSIDE & OUT.</h3>
             <p style="color:var(--text-2); font-size:14px; line-height:1.6; margin-bottom:24px;">
-              Fast, scratch-free routine upkeep calibrated to preserve existing ceramic coatings and PPF films.
+              Thorough scratch-free dual-bucket hand wash, wheel face clean, and complete interior cabin vacuuming.
             </p>
           </div>
-          <a href="/services/maintenance-wash" class="text-link">EXPLORE MAINTENANCE WASH →</a>
+          <a href="/services/basic-car-wash" class="text-link">EXPLORE BASIC CAR WASH →</a>
         </div>
       </div>
     </div>
@@ -1146,18 +1052,6 @@
           <div class="card-arrow-box">→</div>
         </div>
       </div>
-
-      <!-- Wide Card: Odor Removal -->
-      <div class="other-service-card card-wide" data-anim="fade-up">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
-          <div>
-            <div style="font-size:11px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:6px;">06 / STERILIZATION</div>
-            <h4 style="font-family:var(--font-display); font-size:28px;">ODOR REMOVAL & OZONE TREATMENT</h4>
-            <p style="color:var(--text-2); font-size:14px; margin-top:4px;">Medical Ozone gas shock destroying organic odor molecules at the cellular level.</p>
-          </div>
-          <a href="/services/odor-removal" class="btn btn-red">EXPLORE ODOR REMOVAL →</a>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1176,14 +1070,13 @@
       Select your primary automotive goal to receive an immediate studio recommendation:
     </p>
 
-    <!-- 7 Options Grid -->
+    <!-- Options Grid -->
     <div class="diagnosis-options-grid" data-anim="fade-up">
       <button class="diagnosis-option-btn is-selected" data-key="protect-paint">Protect my paint →</button>
       <button class="diagnosis-option-btn" data-key="remove-dirt">Remove dirt / contamination →</button>
       <button class="diagnosis-option-btn" data-key="refresh-interior">Refresh interior →</button>
-      <button class="diagnosis-option-btn" data-key="remove-odor">Remove odor →</button>
       <button class="diagnosis-option-btn" data-key="detail-bike">Detail my bike →</button>
-      <button class="diagnosis-option-btn" data-key="maintain-vehicle">Maintain my vehicle →</button>
+      <button class="diagnosis-option-btn" data-key="basic-wash">Basic routine wash →</button>
       <button class="diagnosis-option-btn" data-key="full-transformation">Full transformation →</button>
     </div>
 
@@ -1210,9 +1103,9 @@
 </section>
 
 <!-- ========================================================================
-     13. BEFORE / AFTER (DARK)
+     13. BEFORE / AFTER (DARK) — Hidden as requested
      ======================================================================== -->
-<section class="section section-dark before-after-section">
+<section class="section section-dark before-after-section" style="display:none;" aria-hidden="true">
   <div class="container">
     <div class="eyebrow" data-anim="fade-up">PROVEN RESULTS</div>
     <h2 class="h2-section" style="margin-bottom: 24px;" data-anim="text-reveal">
@@ -1255,7 +1148,7 @@
         <div class="before-after-container">
           <img src="/assets/img/bike/bike-2.jpg" alt="Before: Grimy motorcycle exhaust and engine" class="before-after-media">
           <div class="before-after-layer-after">
-            <img src="/assets/img/bike/bike-1.jpg" alt="After: Precision detailed superbike finish" class="before-after-media">
+            <img src="/assets/img/bike/superbike-detailing-india.jpg" alt="After: Precision detailed superbike finish" class="before-after-media">
           </div>
           <div class="before-after-divider">
             <div class="before-after-knob">DRAG</div>
@@ -1353,11 +1246,11 @@
 
       <div class="built-jammu-card">
         <div>
-          <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">05 / EVERY WEEK</div>
-          <h4 style="font-size:24px; font-family:var(--font-display); margin-bottom:12px;">MAINTENANCE</h4>
-          <p style="font-size:14px; color:var(--text-2); line-height:1.6;">Scheduled recurring washes to keep your vehicle spotless all year.</p>
+          <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">05 / ROUTINE CARE</div>
+          <h4 style="font-size:24px; font-family:var(--font-display); margin-bottom:12px;">BASIC CAR WASH</h4>
+          <p style="font-size:14px; color:var(--text-2); line-height:1.6;">Essential scratch-free dual-bucket wash and interior vacuum for routine weekly driving.</p>
         </div>
-        <a href="/services/maintenance-wash" class="text-link" style="margin-top:16px;">MAINTENANCE →</a>
+        <a href="/services/basic-car-wash" class="text-link" style="margin-top:16px;">BASIC CAR WASH →</a>
       </div>
     </div>
   </div>
@@ -1573,7 +1466,7 @@
 
     <!-- Lazy Google Map Embed -->
     <div>
-      <div style="border:1px solid var(--line); overflow:hidden; min-height:420px; background:var(--white);" data-anim="mask-reveal">
+      <div style="border:1px solid var(--line); overflow:hidden; min-height:420px; background:#151A26;" data-anim="mask-reveal">
         <iframe 
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13426.123456789!2d74.871234!3d32.701234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDQyJzA0LjQiTiA3NMKwNTInMTYuNCJF!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" 
           width="100%" 
@@ -1623,8 +1516,8 @@
     <div class="footer-top">
       <!-- Column 1: Brand & Tagline -->
       <div>
-        <a href="/" class="nav-brand" aria-label="The Drive Clinic">
-                      <img src="/assets/brand/logo-white.svg" alt="The Drive Clinic" class="nav-logo-img" width="180" height="36">
+        <a href="/" class="nav-brand" aria-label="THE DDC - Home">
+                      <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
                   </a>
         <h3 class="footer-brand-title">WHERE CARS GET<br>THEIR SHINE BACK.</h3>
         <p class="footer-tagline">Premium car and bike detailing, Paint Protection Film (PPF), and studio wash in Jammu.</p>
@@ -1639,7 +1532,7 @@
           <li><a href="/services/bike-detailing" class="footer-list-link">Bike Detailing</a></li>
           <li><a href="/services/ceramic-wash" class="footer-list-link">Ceramic Wash</a></li>
           <li><a href="/services/steam-wash" class="footer-list-link">Steam Wash</a></li>
-          <li><a href="/services/maintenance-wash" class="footer-list-link">Maintenance Wash</a></li>
+          <li><a href="/services/basic-car-wash" class="footer-list-link">Basic Car Wash</a></li>
           <li><a href="/services/full-car-detailing" class="footer-list-link">Full Car Detailing</a></li>
           <li><a href="/services" class="footer-list-link" style="color:var(--red);">View All Services →</a></li>
         </ul>
@@ -1715,17 +1608,28 @@
   <script type="module" src="/assets/js/main.js"></script>
 
         <script>
-        // Netlify Client-side Lead & Booking Sync to CRM Storage
+        // THE DDC — Cross-Domain Lead & Booking Sync Bridge
         (function() {
-          function saveToCrmStorage(key, item) {
+          const CRM_ENDPOINT = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 'https://crm.theddc.in/api';
+
+          function saveLead(lead) {
             try {
-              let existing = JSON.parse(localStorage.getItem(key) || '[]');
-              existing.unshift(item);
-              localStorage.setItem(key, JSON.stringify(existing));
+              let existing = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
+              existing.unshift(lead);
+              localStorage.setItem('tdc_crm_leads', JSON.stringify(existing));
+            } catch(e){}
+
+            // Post to CRM Domain if available
+            try {
+              fetch(CRM_ENDPOINT + '/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(lead),
+                mode: 'cors'
+              }).catch(function(){});
             } catch(e){}
           }
 
-          // Intercept Booking form submissions
           document.addEventListener('submit', function(e) {
             const form = e.target;
             if (form.matches('#formPublicEnroll, #modalBookingForm, form[action*="book"], form[action*="contact"], form[action*="leads"]')) {
@@ -1733,42 +1637,20 @@
               const data = Object.fromEntries(fd.entries());
               data.id = Date.now();
               data.created_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
-              data.source = form.id === 'formPublicEnroll' ? 'MEMBERSHIP_PAGE' : 'WEBSITE';
-              data.status = 'NEW';
-              
-              if (form.id === 'formPublicEnroll') {
-                saveToCrmStorage('tdc_crm_memberships', {
-                  id: Date.now(),
-                  member_no: 'TDC-VIP-' + Math.floor(1000 + Math.random() * 9000),
-                  customer_name: data.customer_name || 'VIP Member',
-                  phone: data.phone || '',
-                  email: data.email || '',
-                  plan_name: data.plan_name || 'Signature Wash Club',
-                  billing_cycle: data.billing_cycle || 'Monthly',
-                  price: data.price || '2999',
-                  vehicle_model: data.vehicle_model || '',
-                  vehicle_reg: data.vehicle_reg || '',
-                  remaining_washes: data.billing_cycle === 'Annual' ? 12 : 3,
-                  status: 'ACTIVE',
-                  created_at: new Date().toISOString().slice(0, 10)
-                });
-              } else {
-                saveToCrmStorage('tdc_crm_leads', {
-                  id: Date.now(),
-                  customer_name: data.name || data.customer_name || 'Website Inquiry',
-                  phone: data.phone || '',
-                  email: data.email || '',
-                  service_name: data.service_name || data.service || 'PPF & Ceramic Detailing',
-                  vehicle_model: data.vehicle || data.vehicle_model || '',
-                  vehicle_reg: data.vehicle_reg || '',
-                  preferred_date: data.date || '',
-                  preferred_time: data.time || '',
-                  notes: data.notes || data.message || '',
-                  source: 'WEBSITE',
-                  stage: 'NEW',
-                  created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
-                });
-              }
+              data.source = 'WEBSITE_DOMAIN';
+              data.stage = 'NEW';
+              saveLead({
+                id: data.id,
+                customer_name: data.name || data.customer_name || 'Website Lead',
+                phone: data.phone || '',
+                email: data.email || '',
+                service_name: data.service_name || data.service || 'Detailing & Protection',
+                vehicle_model: data.vehicle || data.vehicle_model || '',
+                notes: data.notes || data.message || '',
+                source: 'WEBSITE_DOMAIN',
+                stage: 'NEW',
+                created_at: data.created_at
+              });
             }
           }, true);
         })();

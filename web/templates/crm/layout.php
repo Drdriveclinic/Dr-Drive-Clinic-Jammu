@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= htmlspecialchars($pageTitle ?? 'THE DRIVE CLINIC — Studio CRM') ?></title>
+  <title><?= htmlspecialchars($pageTitle ?? 'THE DDC — Studio CRM') ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/crm.css">
-  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
 </head>
 <body class="crm-body">
   <div class="crm-app">

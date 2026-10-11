@@ -7,7 +7,7 @@ if (empty($relatedServicesList)) return;
 ?>
 <div class="grid-3-col" data-anim="fade-up">
   <?php foreach ($relatedServicesList as $rSvc): ?>
-    <div class="wash-trio-card" style="background:var(--white);">
+    <div class="wash-trio-card">
       <div class="wash-trio-img-wrap">
         <div class="img-placeholder" style="height:100%;">
           PHOTO — <?= htmlspecialchars($rSvc['name']) ?>

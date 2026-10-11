@@ -40,44 +40,54 @@ $customers = Database::query("
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($customers as $c): ?>
-          <tr>
-            <td>
-              <div class="crm-avatar-flex">
-                <div class="crm-customer-circle"><?= strtoupper(substr($c['name'], 0, 2)) ?></div>
-                <div>
-                  <strong><?= htmlspecialchars($c['name']) ?></strong>
-                  <div class="crm-text-muted" style="font-size:11px;">Member since <?= date('M Y', strtotime($c['created_at'])) ?></div>
+          <?php if (!empty($customers)): ?>
+            <?php foreach ($customers as $c): ?>
+            <tr>
+              <td>
+                <div class="crm-avatar-flex">
+                  <div class="crm-customer-circle"><?= strtoupper(substr($c['name'], 0, 2)) ?></div>
+                  <div>
+                    <strong><?= htmlspecialchars($c['name']) ?></strong>
+                    <div class="crm-text-muted" style="font-size:11px;">Member since <?= date('M Y', strtotime($c['created_at'])) ?></div>
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td>
-              <strong><?= htmlspecialchars($c['phone']) ?></strong>
-              <div class="crm-whatsapp-indicator">
-                <a href="https://wa.me/<?= preg_replace('/\D/', '', $c['whatsapp'] ?: $c['phone']) ?>" target="_blank" class="crm-wa-link">
-                  💬 Chat WhatsApp
-                </a>
-              </div>
-            </td>
-            <td>
-              <span><?= htmlspecialchars($c['email'] ?: '—') ?></span>
-            </td>
-            <td>
-              <span class="crm-pill crm-pill-info"><?= $c['vehicle_count'] ?> <?= $c['vehicle_count'] == 1 ? 'Vehicle' : 'Vehicles' ?></span>
-            </td>
-            <td>
-              <strong><?= $c['job_count'] ?> Services</strong>
-            </td>
-            <td>
-              <strong class="crm-amount-val">₹<?= number_format((float)$c['total_spent']) ?></strong>
-            </td>
-            <td>
-              <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="alert('Viewing garage records for <?= addslashes($c['name']) ?>')">
-                View Garage
-              </button>
-            </td>
-          </tr>
-          <?php endforeach; ?>
+              </td>
+              <td>
+                <strong><?= htmlspecialchars($c['phone']) ?></strong>
+                <div class="crm-whatsapp-indicator">
+                  <a href="https://wa.me/<?= preg_replace('/\D/', '', $c['whatsapp'] ?: $c['phone']) ?>" target="_blank" class="crm-wa-link">
+                    💬 Chat WhatsApp
+                  </a>
+                </div>
+              </td>
+              <td>
+                <span><?= htmlspecialchars($c['email'] ?: '—') ?></span>
+              </td>
+              <td>
+                <span class="crm-pill crm-pill-info"><?= $c['vehicle_count'] ?> <?= $c['vehicle_count'] == 1 ? 'Vehicle' : 'Vehicles' ?></span>
+              </td>
+              <td>
+                <strong><?= $c['job_count'] ?> Services</strong>
+              </td>
+              <td>
+                <strong class="crm-amount-val">₹<?= number_format((float)$c['total_spent']) ?></strong>
+              </td>
+              <td>
+                <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="alert('Viewing garage records for <?= addslashes($c['name']) ?>')">
+                  View Garage
+                </button>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr>
+              <td colspan="7" style="text-align:center; padding:44px 20px; color:#888888;">
+                <div style="font-size:32px; margin-bottom:10px;">👤</div>
+                <strong style="color:#ffffff; font-size:14px;">No Customer Records Yet</strong>
+                <p style="font-size:12px; margin:6px 0 0; color:#666666;">Customer profiles are created automatically as appointments and job cards are logged.</p>
+              </td>
+            </tr>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>

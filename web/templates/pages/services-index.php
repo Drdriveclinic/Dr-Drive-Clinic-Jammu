@@ -10,22 +10,21 @@ $bike = null;
 $otherServices = [];
 
 $serviceImages = [
-    'ppf' => '/assets/img/services/ppf.jpg',
-    'bike-detailing' => '/assets/img/bike/bike-1.jpg',
-    'ceramic-coating' => '/assets/img/services/ceramic-coating.jpg',
-    'full-car-detailing' => '/assets/img/services/full-detailing.jpg',
-    'interior-deep-clean' => '/assets/img/services/interior-detailing.jpg',
-    'ceramic-wash' => '/assets/img/wash/ceramic-wash.jpg',
-    'steam-wash' => '/assets/img/wash/steam-wash.jpg',
-    'maintenance-wash' => '/assets/img/wash/maintenance-wash.jpg',
+    'ppf'                   => '/assets/img/studio/ppf-install.png',
+    'ceramic-coating'       => '/assets/img/studio/ceramic-coating.png',
+    'bike-detailing'        => '/assets/img/studio/bike-detailing.png',
+    'full-car-detailing'    => '/assets/img/studio/full-detailing.png',
+    'interior-deep-clean'   => '/assets/img/studio/interior-clean.png',
+    'ceramic-wash'          => '/assets/img/studio/ceramic-wash.png',
+    'steam-wash'            => '/assets/img/studio/steam-wash.png',
+    'basic-car-wash'        => '/assets/img/studio/basic-wash.png',
+    'engine-detailing'      => '/assets/img/studio/engine-bay.png',
+    'polishing-waxing'      => '/assets/img/studio/polishing-waxing.png',
+    'tyre-rim-care'         => '/assets/img/studio/wheel-care.png',
     'headlight-restoration' => '/assets/img/services/headlight.jpg',
-    'engine-detailing' => '/assets/img/services/engine-bay.jpg',
-    'underbody-coating' => '/assets/img/services/underbody.jpg',
-    'glass-treatment' => '/assets/img/services/glass-treatment.jpg',
-    'polishing-waxing' => '/assets/img/services/rubbing-polishing.jpg',
-    'rubbing-compound' => '/assets/img/services/rubbing-polishing.jpg',
-    'odor-removal' => '/assets/img/services/interior-detailing.jpg',
-    'tyre-rim-care' => '/assets/img/bike/bike-2.jpg'
+    'underbody-coating'     => '/assets/img/services/underbody.jpg',
+    'glass-treatment'       => '/assets/img/services/glass-treatment.jpg',
+    'rubbing-compound'      => '/assets/img/studio/polishing-waxing.png',
 ];
 
 foreach ($services as $svc) {
@@ -67,9 +66,9 @@ foreach ($services as $svc) {
       <!-- Top Row: 2 Full-Width Hero Cards (PPF & Bike Detailing) -->
       <div class="grid-50-50 services-hero-pair">
         <?php if ($ppf): ?>
-          <div class="service-card-item" data-category="<?= htmlspecialchars($ppf['category']) ?>" style="background:var(--white); border:1px solid var(--line); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;">
-            <div style="overflow:hidden; height:320px; border-bottom:1px solid var(--line);" data-anim="mask-reveal">
-              <img src="/assets/img/services/ppf.jpg" alt="<?= htmlspecialchars($ppf['name']) ?>" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <div class="service-card-item" data-category="<?= htmlspecialchars($ppf['category']) ?>" style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="overflow:hidden; height:320px; border-bottom:1px solid var(--glass-border);" data-anim="mask-reveal">
+              <img src="<?= $serviceImages['ppf'] ?>" alt="<?= htmlspecialchars($ppf['name']) ?>" style="width:100%; height:100%; object-fit:cover; display:block;">
             </div>
             <div style="padding:36px;">
               <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">
@@ -87,9 +86,9 @@ foreach ($services as $svc) {
         <?php endif; ?>
 
         <?php if ($bike): ?>
-          <div class="service-card-item" data-category="<?= htmlspecialchars($bike['category']) ?>" style="background:var(--white); border:1px solid var(--line); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;">
-            <div style="overflow:hidden; height:320px; border-bottom:1px solid var(--line);" data-anim="mask-reveal">
-              <img src="/assets/img/bike/bike-1.jpg" alt="<?= htmlspecialchars($bike['name']) ?>" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <div class="service-card-item" data-category="<?= htmlspecialchars($bike['category']) ?>" style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="overflow:hidden; height:320px; border-bottom:1px solid var(--glass-border);" data-anim="mask-reveal">
+              <img src="<?= $serviceImages['bike-detailing'] ?>" alt="<?= htmlspecialchars($bike['name']) ?>" style="width:100%; height:100%; object-fit:cover; display:block;">
             </div>
             <div style="padding:36px;">
               <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">
@@ -113,8 +112,8 @@ foreach ($services as $svc) {
           $itemNumber = str_pad((string)($idx + 3), 2, '0', STR_PAD_LEFT);
           $imgSrc = $serviceImages[$svc['slug']] ?? '/assets/img/services/full-detailing.jpg';
         ?>
-          <div class="service-card-item" data-category="<?= htmlspecialchars($svc['category']) ?>" style="background:var(--white); border:1px solid var(--line); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; transition: transform var(--dur-fast) ease, border-color var(--dur-fast) ease;">
-            <div style="overflow:hidden; height:220px; border-bottom:1px solid var(--line);" data-anim="mask-reveal">
+          <div class="service-card-item" data-category="<?= htmlspecialchars($svc['category']) ?>" style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; transition: transform var(--dur-fast) ease, border-color var(--dur-fast) ease, background var(--dur-fast) ease;">
+            <div style="overflow:hidden; height:220px; border-bottom:1px solid var(--glass-border);" data-anim="mask-reveal">
               <img src="<?= $imgSrc ?>" alt="<?= htmlspecialchars($svc['name']) ?>" style="width:100%; height:100%; object-fit:cover; display:block;">
             </div>
             <div style="padding:28px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">

@@ -1,6 +1,58 @@
 <?php
 // THE DRIVE CLINIC — Studio Overview Dashboard
-// Displays real-time studio status, revenue metrics, live workshop bays, and today's appointments
+// Displays live studio status, dynamic metrics, workshop bays, and today's appointments
+
+$todayStr = date('Y-m-d');
+
+// Real KPI metrics from database
+$revRow = Database::queryOne("SELECT COALESCE(SUM(paid_amount), 0) as total FROM invoices WHERE payment_status = 'PAID'");
+$revenueCollected = (float)($revRow['total'] ?? 0);
+
+$bkgRow = Database::queryOne("SELECT COUNT(*) as count FROM appointments WHERE date = ?", [$todayStr]);
+$bookingsToday = (int)($bkgRow['count'] ?? 0);
+
+$enqRow = Database::queryOne("SELECT COUNT(*) as count FROM leads WHERE stage IN ('NEW', 'CONTACTED')");
+$activeEnquiries = (int)($enqRow['count'] ?? 0);
+
+$pendRow = Database::queryOne("SELECT COALESCE(SUM(grand_total - paid_amount), 0) as total FROM invoices WHERE payment_status != 'PAID'");
+$paymentsPending = (float)($pendRow['total'] ?? 0);
+
+// Active bay jobs
+$activeJobs = Database::query("
+  SELECT j.*, c.name as customer_name, v.brand, v.model, v.registration
+  FROM job_cards j
+  LEFT JOIN customers c ON j.customer_id = c.id
+  LEFT JOIN vehicles v ON j.vehicle_id = v.id
+  WHERE j.status = 'IN_PROGRESS'
+  ORDER BY j.bay_no ASC
+");
+$activeJobsCount = count($activeJobs);
+
+// Today's appointments
+$todayAppointments = Database::query("
+  SELECT a.*, c.name as customer_name, c.phone as customer_phone,
+         v.brand, v.model, v.registration, s.name as service_name
+  FROM appointments a
+  LEFT JOIN customers c ON a.customer_id = c.id
+  LEFT JOIN vehicles v ON a.vehicle_id = v.id
+  LEFT JOIN services s ON a.service_id = s.id
+  WHERE a.date = ?
+  ORDER BY a.time ASC
+", [$todayStr]);
+
+// Low stock items
+$lowStockItems = Database::query("SELECT id, name, sku, current_stock, min_stock_alert, unit FROM inventory_items WHERE current_stock <= min_stock_alert ORDER BY current_stock ASC LIMIT 3");
+
+// Open invoices
+$openInvoices = Database::query("
+  SELECT i.*, c.name as customer_name, v.brand, v.model
+  FROM invoices i
+  LEFT JOIN customers c ON i.customer_id = c.id
+  LEFT JOIN vehicles v ON i.vehicle_id = v.id
+  WHERE i.payment_status != 'PAID'
+  ORDER BY i.created_at DESC
+  LIMIT 3
+");
 ?>
 <div class="crm-overview-page">
   <!-- Studio Hero Greeting -->
@@ -23,7 +75,13 @@
   <div class="crm-sync-banner">
     <div class="crm-sync-content">
       <h3 class="crm-sync-title">Your studio, running in sync.</h3>
-      <p class="crm-sync-sub">3 cars in the workshop, 3 arrivals to look forward to.</p>
+      <p class="crm-sync-sub">
+        <?php if ($activeJobsCount > 0 || $bookingsToday > 0): ?>
+          <?= $activeJobsCount ?> <?= $activeJobsCount === 1 ? 'car' : 'cars' ?> in the workshop, <?= $bookingsToday ?> <?= $bookingsToday === 1 ? 'arrival' : 'arrivals' ?> to look forward to.
+        <?php else: ?>
+          Studio bays calibrated and clean. Ready for new vehicle arrivals.
+        <?php endif; ?>
+      </p>
     </div>
     <div class="crm-sync-tag"><?= strtoupper(date('l')) ?> AT THE CLINIC</div>
   </div>
@@ -37,8 +95,8 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
         </div>
       </div>
-      <div class="crm-stat-value">₹1,13,500</div>
-      <div class="crm-stat-footer">All recorded demo payments</div>
+      <div class="crm-stat-value">₹<?= number_format($revenueCollected) ?></div>
+      <div class="crm-stat-footer"><?= $revenueCollected > 0 ? 'Recorded studio collections' : 'No payments collected yet' ?></div>
     </div>
 
     <div class="crm-stat-card">
@@ -48,8 +106,8 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
         </div>
       </div>
-      <div class="crm-stat-value">6</div>
-      <div class="crm-stat-footer">3 jobs in progress</div>
+      <div class="crm-stat-value"><?= $bookingsToday ?></div>
+      <div class="crm-stat-footer"><?= $activeJobsCount ?> active in-bay jobs</div>
     </div>
 
     <div class="crm-stat-card">
@@ -59,8 +117,8 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
         </div>
       </div>
-      <div class="crm-stat-value">8</div>
-      <div class="crm-stat-footer">Your next great customer starts here</div>
+      <div class="crm-stat-value"><?= $activeEnquiries ?></div>
+      <div class="crm-stat-footer">Live leads awaiting consultation</div>
     </div>
 
     <div class="crm-stat-card">
@@ -70,8 +128,8 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         </div>
       </div>
-      <div class="crm-stat-value">₹26,500</div>
-      <div class="crm-stat-footer">2 open invoices</div>
+      <div class="crm-stat-value">₹<?= number_format($paymentsPending) ?></div>
+      <div class="crm-stat-footer"><?= count($openInvoices) ?> open invoices</div>
     </div>
   </div>
 
@@ -89,39 +147,22 @@
 
       <div class="crm-chart-container">
         <div class="crm-bar-chart">
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill" style="height: 12%;" data-val="₹14,000"></div>
-            <span class="crm-bar-day">Sat</span>
-          </div>
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill" style="height: 8%;" data-val="₹9,500"></div>
-            <span class="crm-bar-day">Sun</span>
-          </div>
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill crm-bar-highlight" style="height: 92%;" data-val="₹1,13,500"></div>
-            <span class="crm-bar-day">Mon</span>
-          </div>
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill" style="height: 18%;" data-val="₹22,000"></div>
-            <span class="crm-bar-day">Tue</span>
-          </div>
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill" style="height: 15%;" data-val="₹18,500"></div>
-            <span class="crm-bar-day">Wed</span>
-          </div>
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill" style="height: 6%;" data-val="₹7,000"></div>
-            <span class="crm-bar-day">Thu</span>
-          </div>
-          <div class="crm-bar-col">
-            <div class="crm-bar-fill crm-bar-active-day" style="height: 25%;" data-val="₹32,500"></div>
-            <span class="crm-bar-day">Fri</span>
-          </div>
+          <?php
+          $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+          $currentDay = date('D');
+          foreach ($days as $d):
+            $isToday = ($d === $currentDay);
+          ?>
+            <div class="crm-bar-col">
+              <div class="crm-bar-fill <?= $isToday ? 'crm-bar-active-day' : '' ?>" style="height: <?= $isToday ? '35%' : '10%' ?>;" data-val="₹0"></div>
+              <span class="crm-bar-day"><?= $d ?></span>
+            </div>
+          <?php endforeach; ?>
         </div>
       </div>
       <div class="crm-chart-legend">
         <span class="crm-legend-dot"></span>
-        <span class="crm-legend-text">Collected revenue &bull; 26 Sep &ndash; 2 Oct &bull; INR</span>
+        <span class="crm-legend-text">Real-time daily collected revenue &bull; INR</span>
       </div>
     </div>
 
@@ -129,49 +170,40 @@
     <div class="crm-card">
       <div class="crm-card-header">
         <h2 class="crm-card-title">Live workshop</h2>
-        <span class="crm-badge-active-jobs">3 active jobs</span>
+        <span class="crm-badge-active-jobs"><?= $activeJobsCount ?> active jobs</span>
       </div>
 
       <div class="crm-bays-list">
-        <!-- Bay 01 -->
-        <div class="crm-bay-item">
-          <div class="crm-bay-num">01</div>
-          <div class="crm-bay-info">
-            <div class="crm-bay-car">BMW 320d</div>
-            <div class="crm-bay-service">Ceramic shield &bull; Rohan</div>
-          </div>
-          <a href="/crm/job-cards?id=1" class="crm-btn crm-btn-sm crm-btn-ghost">View</a>
-        </div>
-
-        <!-- Bay 02 -->
-        <div class="crm-bay-item">
-          <div class="crm-bay-num">02</div>
-          <div class="crm-bay-info">
-            <div class="crm-bay-car">Hyundai Creta</div>
-            <div class="crm-bay-service">Signature detailing &bull; Arjun</div>
-          </div>
-          <a href="/crm/job-cards?id=2" class="crm-btn crm-btn-sm crm-btn-ghost">View</a>
-        </div>
-
-        <!-- Bay 03 -->
-        <div class="crm-bay-item">
-          <div class="crm-bay-num">03</div>
-          <div class="crm-bay-info">
-            <div class="crm-bay-car">Kia Seltos</div>
-            <div class="crm-bay-service">Premium wash &bull; Sameer</div>
-          </div>
-          <a href="/crm/job-cards?id=3" class="crm-btn crm-btn-sm crm-btn-ghost">View</a>
-        </div>
-
-        <!-- Bay 04 -->
-        <div class="crm-bay-item crm-bay-available">
-          <div class="crm-bay-num">04</div>
-          <div class="crm-bay-info">
-            <div class="crm-bay-car">Ready for the next arrival</div>
-            <div class="crm-bay-service">Keep the day moving beautifully.</div>
-          </div>
-          <span class="crm-pill-available">Available</span>
-        </div>
+        <?php for ($bay = 1; $bay <= 4; $bay++): ?>
+          <?php 
+          $job = null;
+          foreach ($activeJobs as $j) {
+            if ((int)$j['bay_no'] === $bay) {
+              $job = $j;
+              break;
+            }
+          }
+          ?>
+          <?php if ($job): ?>
+            <div class="crm-bay-item">
+              <div class="crm-bay-num"><?= sprintf('%02d', $bay) ?></div>
+              <div class="crm-bay-info">
+                <div class="crm-bay-car"><?= htmlspecialchars(($job['brand'] ?? '') . ' ' . ($job['model'] ?? 'Vehicle')) ?></div>
+                <div class="crm-bay-service"><?= htmlspecialchars($job['service_names'] ?? 'Detailing') ?> &bull; <?= htmlspecialchars($job['assigned_tech'] ?? 'Tech') ?></div>
+              </div>
+              <a href="/crm/job-cards?id=<?= $job['id'] ?>" class="crm-btn crm-btn-sm crm-btn-ghost">View</a>
+            </div>
+          <?php else: ?>
+            <div class="crm-bay-item crm-bay-available">
+              <div class="crm-bay-num"><?= sprintf('%02d', $bay) ?></div>
+              <div class="crm-bay-info">
+                <div class="crm-bay-car">Ready for arrival</div>
+                <div class="crm-bay-service">Bay cleanroom calibrated & available</div>
+              </div>
+              <span class="crm-pill-available">Available</span>
+            </div>
+          <?php endif; ?>
+        <?php endfor; ?>
       </div>
     </div>
   </div>
@@ -186,113 +218,37 @@
       </div>
 
       <div class="crm-appointments-list">
-        <!-- Row 1 -->
-        <div class="crm-appt-row">
-          <div class="crm-appt-time">
-            <strong>10:00</strong>
-            <span><?= date('Y-m-d') ?></span>
+        <?php if (!empty($todayAppointments)): ?>
+          <?php foreach ($todayAppointments as $apt): ?>
+            <div class="crm-appt-row">
+              <div class="crm-appt-time">
+                <strong><?= htmlspecialchars(substr($apt['time'], 0, 5)) ?></strong>
+                <span><?= htmlspecialchars($apt['date']) ?></span>
+              </div>
+              <div class="crm-appt-avatar"><?= strtoupper(substr($apt['customer_name'] ?? 'C', 0, 2)) ?></div>
+              <div class="crm-appt-customer">
+                <div class="crm-customer-name"><?= htmlspecialchars($apt['customer_name'] ?? 'Walk-in') ?></div>
+                <div class="crm-customer-reg"><?= htmlspecialchars($apt['registration'] ?: 'Reg N/A') ?></div>
+              </div>
+              <div class="crm-appt-service">
+                <div class="crm-car-name"><?= htmlspecialchars(($apt['brand'] ?? '') . ' ' . ($apt['model'] ?? '')) ?></div>
+                <div class="crm-service-name"><?= htmlspecialchars($apt['service_name'] ?? 'Studio Service') ?></div>
+              </div>
+              <div class="crm-appt-status">
+                <span class="crm-pill crm-pill-confirmed"><?= htmlspecialchars($apt['status']) ?></span>
+              </div>
+              <div class="crm-appt-action">
+                <button class="crm-btn crm-btn-sm crm-btn-ghost" onclick="quickCheckIn('<?= addslashes($apt['customer_name'] ?? 'Client') ?>', '<?= addslashes(($apt['brand'] ?? '') . ' ' . ($apt['model'] ?? '')) ?>', '<?= addslashes($apt['service_name'] ?? '') ?>')">Check in</button>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <div style="padding:40px 20px; text-align:center; color:#888888;">
+            <div style="font-size:32px; margin-bottom:10px;">📅</div>
+            <strong style="color:#ffffff; font-size:14px;">No Appointments Scheduled For Today</strong>
+            <p style="font-size:12px; margin:6px 0 0; color:#666666;">New bookings submitted on the website will populate here automatically.</p>
           </div>
-          <div class="crm-appt-avatar">RN</div>
-          <div class="crm-appt-customer">
-            <div class="crm-customer-name">Rahul Nair</div>
-            <div class="crm-customer-reg">MH 02 GN 1648</div>
-          </div>
-          <div class="crm-appt-service">
-            <div class="crm-car-name">Kia Seltos</div>
-            <div class="crm-service-name">Premium wash</div>
-          </div>
-          <div class="crm-appt-status">
-            <span class="crm-pill crm-pill-progress">In progress</span>
-          </div>
-          <div class="crm-appt-tech">
-            <div class="crm-tech-avatar">S</div>
-            <span>Sameer</span>
-          </div>
-          <div class="crm-appt-action">
-            <a href="/crm/job-cards?id=3" class="crm-btn crm-btn-sm crm-btn-ghost">View job</a>
-          </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="crm-appt-row">
-          <div class="crm-appt-time">
-            <strong>14:00</strong>
-            <span><?= date('Y-m-d') ?></span>
-          </div>
-          <div class="crm-appt-avatar">SK</div>
-          <div class="crm-appt-customer">
-            <div class="crm-customer-name">Sneha Kapoor</div>
-            <div class="crm-customer-reg">MH 01 DJ 9009</div>
-          </div>
-          <div class="crm-appt-service">
-            <div class="crm-car-name">Mercedes GLC</div>
-            <div class="crm-service-name">Full-body PPF</div>
-          </div>
-          <div class="crm-appt-status">
-            <span class="crm-pill crm-pill-confirmed">Confirmed</span>
-          </div>
-          <div class="crm-appt-tech">
-            <div class="crm-tech-avatar">R</div>
-            <span>Rohan</span>
-          </div>
-          <div class="crm-appt-action">
-            <button class="crm-btn crm-btn-sm crm-btn-ghost" onclick="quickCheckIn('Sneha Kapoor', 'Mercedes GLC', 'PPF')">Check in</button>
-          </div>
-        </div>
-
-        <!-- Row 3 -->
-        <div class="crm-appt-row">
-          <div class="crm-appt-time">
-            <strong>15:00</strong>
-            <span><?= date('Y-m-d') ?></span>
-          </div>
-          <div class="crm-appt-avatar">VD</div>
-          <div class="crm-appt-customer">
-            <div class="crm-customer-name">Vikram Desai</div>
-            <div class="crm-customer-reg">JK 02 BB 1020</div>
-          </div>
-          <div class="crm-appt-service">
-            <div class="crm-car-name">Toyota Fortuner</div>
-            <div class="crm-service-name">Ceramic Coating</div>
-          </div>
-          <div class="crm-appt-status">
-            <span class="crm-pill crm-pill-confirmed">Confirmed</span>
-          </div>
-          <div class="crm-appt-tech">
-            <div class="crm-tech-avatar">A</div>
-            <span>Arjun</span>
-          </div>
-          <div class="crm-appt-action">
-            <button class="crm-btn crm-btn-sm crm-btn-ghost" onclick="quickCheckIn('Vikram Desai', 'Toyota Fortuner', 'Ceramic')">Check in</button>
-          </div>
-        </div>
-
-        <!-- Row 4 -->
-        <div class="crm-appt-row">
-          <div class="crm-appt-time">
-            <strong>17:00</strong>
-            <span><?= date('Y-m-d') ?></span>
-          </div>
-          <div class="crm-appt-avatar">KS</div>
-          <div class="crm-appt-customer">
-            <div class="crm-customer-name">Kabir Singh</div>
-            <div class="crm-customer-reg">JK 02 AC 4004</div>
-          </div>
-          <div class="crm-appt-service">
-            <div class="crm-car-name">BMW 320d</div>
-            <div class="crm-service-name">Ceramic Shield</div>
-          </div>
-          <div class="crm-appt-status">
-            <span class="crm-pill crm-pill-progress">In progress</span>
-          </div>
-          <div class="crm-appt-tech">
-            <div class="crm-tech-avatar">R</div>
-            <span>Rohan</span>
-          </div>
-          <div class="crm-appt-action">
-            <a href="/crm/job-cards?id=1" class="crm-btn crm-btn-sm crm-btn-ghost">View job</a>
-          </div>
-        </div>
+        <?php endif; ?>
       </div>
     </div>
 
@@ -304,45 +260,39 @@
       </div>
 
       <div class="crm-radar-list">
-        <!-- Stock Alert -->
-        <div class="crm-radar-item crm-radar-alert">
-          <div class="crm-radar-icon">⚠️</div>
-          <div class="crm-radar-content">
-            <div class="crm-radar-title">Low Stock Alert: STEK DYNOshield PPF</div>
-            <div class="crm-radar-desc">Only 2.5 rolls remaining (Min alert: 2.0). 2 full-body wraps scheduled this weekend.</div>
-          </div>
-          <button class="crm-btn crm-btn-xs crm-btn-danger" onclick="openStockInModal(1)">Restock</button>
-        </div>
+        <?php if (!empty($lowStockItems)): ?>
+          <?php foreach ($lowStockItems as $item): ?>
+            <div class="crm-radar-item crm-radar-alert">
+              <div class="crm-radar-icon">⚠️</div>
+              <div class="crm-radar-content">
+                <div class="crm-radar-title">Low Stock Alert: <?= htmlspecialchars($item['name']) ?></div>
+                <div class="crm-radar-desc">Only <?= $item['current_stock'] ?> <?= htmlspecialchars($item['unit']) ?> remaining (Min alert: <?= $item['min_stock_alert'] ?>).</div>
+              </div>
+              <button class="crm-btn crm-btn-xs crm-btn-danger" onclick="openStockInModal(<?= $item['id'] ?>)">Restock</button>
+            </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
 
-        <!-- Decline Log Notice -->
-        <div class="crm-radar-item crm-radar-decline">
-          <div class="crm-radar-icon">📋</div>
-          <div class="crm-radar-content">
-            <div class="crm-radar-title">Recent Decline: 0.5 Roll Scrapped (₹24,250 loss)</div>
-            <div class="crm-radar-desc">Logged by Rohan Sharma &bull; Creased film during front fender stretch &bull; Ref #JC-2026-001</div>
-          </div>
-          <a href="/crm/inventory#declines" class="crm-btn crm-btn-xs crm-btn-ghost">Audit</a>
-        </div>
+        <?php if (!empty($openInvoices)): ?>
+          <?php foreach ($openInvoices as $inv): ?>
+            <div class="crm-radar-item">
+              <div class="crm-radar-icon">💳</div>
+              <div class="crm-radar-content">
+                <div class="crm-radar-title">Pending Payment: ₹<?= number_format((float)($inv['grand_total'] - $inv['paid_amount'])) ?> (Invoice #<?= htmlspecialchars($inv['invoice_no']) ?>)</div>
+                <div class="crm-radar-desc"><?= htmlspecialchars($inv['customer_name'] ?? 'Client') ?> &bull; <?= htmlspecialchars(($inv['brand'] ?? '') . ' ' . ($inv['model'] ?? '')) ?> &bull; Awaiting payment.</div>
+              </div>
+              <a href="/crm/invoices" class="crm-btn crm-btn-xs crm-btn-ghost">Collect</a>
+            </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
 
-        <!-- PPF Warranty Inspection -->
-        <div class="crm-radar-item">
-          <div class="crm-radar-icon">🛡️</div>
-          <div class="crm-radar-content">
-            <div class="crm-radar-title">Annual PPF Inspection Due: Aman Gupta</div>
-            <div class="crm-radar-desc">Audi A6 (JK 02 AB 1234) &bull; 1-Year Top-coat inspection reminder sent.</div>
+        <?php if (empty($lowStockItems) && empty($openInvoices)): ?>
+          <div style="padding:40px 20px; text-align:center; color:#888888;">
+            <div style="font-size:32px; margin-bottom:10px;">✨</div>
+            <strong style="color:#ffffff; font-size:14px;">Studio Operations All Clear</strong>
+            <p style="font-size:12px; margin:6px 0 0; color:#666666;">No urgent stock warnings or pending payment escalations.</p>
           </div>
-          <a href="/crm/warranty" class="crm-btn crm-btn-xs crm-btn-ghost">View Cert</a>
-        </div>
-
-        <!-- Unpaid Invoice -->
-        <div class="crm-radar-item">
-          <div class="crm-radar-icon">💳</div>
-          <div class="crm-radar-content">
-            <div class="crm-radar-title">Pending Payment: ₹26,500 (Invoice #INV-2026-004)</div>
-            <div class="crm-radar-desc">Pooja Sharma &bull; Jeep Compass Paint Enhancement &bull; Awaiting UPI confirmation.</div>
-          </div>
-          <a href="/crm/invoices" class="crm-btn crm-btn-xs crm-btn-ghost">Collect</a>
-        </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>

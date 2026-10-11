@@ -61,11 +61,13 @@ html.js [data-anim="fade-up"].is-revealed {
 .marquee-strip {
   width: 100%;
   overflow: hidden;
-  background-color: var(--white);
-  color: var(--black);
+  background: rgba(14, 18, 28, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--white);
   padding: 24px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   white-space: nowrap;
 }
 
@@ -88,7 +90,7 @@ html.js [data-anim="fade-up"].is-revealed {
 }
 
 .marquee-item.outline {
-  -webkit-text-stroke: 1.5px var(--black);
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
   color: transparent;
 }
 

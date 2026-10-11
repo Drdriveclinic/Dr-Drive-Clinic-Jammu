@@ -18,7 +18,7 @@ export async function getServices(req, res, next) {
         { slug: 'full-car-detailing', name: 'FULL CAR DETAILING', category: 'detail', vehicle_types: 'car' },
         { slug: 'ceramic-wash', name: 'CERAMIC WASH', category: 'clean', vehicle_types: 'car,bike' },
         { slug: 'steam-wash', name: 'STEAM WASH', category: 'clean', vehicle_types: 'car' },
-        { slug: 'maintenance-wash', name: 'MAINTENANCE WASH', category: 'clean', vehicle_types: 'car,bike' }
+        { slug: 'basic-car-wash', name: 'BASIC CAR WASH', category: 'clean', vehicle_types: 'car,bike' }
       ];
     }
 

@@ -1,5 +1,31 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import db from '../db.js';
 import { notify } from './notify.service.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_DIR = path.resolve(__dirname, '../../data');
+const APPT_FILE = path.join(DATA_DIR, 'appointments.json');
+
+function getFileAppointments() {
+  try {
+    if (fs.existsSync(APPT_FILE)) {
+      return JSON.parse(fs.readFileSync(APPT_FILE, 'utf8'));
+    }
+  } catch (e) {}
+  return [];
+}
+
+function saveFileAppointment(appt) {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    const list = getFileAppointments();
+    list.unshift(appt);
+    fs.writeFileSync(APPT_FILE, JSON.stringify(list, null, 2), 'utf8');
+  } catch (e) {}
+}
 
 export async function bookAppointment(payload) {
   const {
@@ -20,6 +46,26 @@ export async function bookAppointment(payload) {
 
   const cleanTime = time.length === 5 ? `${time}:00` : time;
 
+  const apptRecord = {
+    ref,
+    date,
+    time: cleanTime,
+    service_slug,
+    service_name: service_slug.replace(/-/g, ' ').toUpperCase(),
+    customer_name: customer.name,
+    customer_phone: customer.phone,
+    customer_email: customer.email || null,
+    vehicle_brand: vehicle?.brand || '',
+    vehicle_model: vehicle?.model || '',
+    vehicle_registration: vehicle?.registration || null,
+    notes,
+    source,
+    status: 'CONFIRMED',
+    created_at: new Date().toISOString()
+  };
+
+  saveFileAppointment(apptRecord);
+
   const isDbReady = await db.checkConnection();
 
   if (!isDbReady) {
@@ -29,7 +75,10 @@ export async function bookAppointment(payload) {
       type: 'booking',
       ref,
       customer,
-      service: service_slug,
+      vehicle,
+      service: { name: service_slug.replace(/-/g, ' ').toUpperCase() },
+      message: notes,
+      source,
       date,
       time: cleanTime
     });
@@ -143,12 +192,15 @@ export async function bookAppointment(payload) {
       [customerId, vehicleId, serviceRecord.id, date]
     );
 
-    // 8. Trigger Console Notification
+    // 8. Trigger Email & CRM Notification
     await notify({
       type: 'booking',
       ref,
       customer,
+      vehicle,
       service: serviceRecord,
+      message: notes,
+      source,
       date,
       time: cleanTime
     });
@@ -188,3 +240,22 @@ export async function getAppointmentByRef(ref) {
 
   return rows.length > 0 ? rows[0] : null;
 }
+
+export async function getAllAppointments() {
+  const isDbReady = await db.checkConnection();
+  if (!isDbReady) {
+    return getFileAppointments();
+  }
+
+  const rows = await db.query(
+    `SELECT a.ref, a.date, a.time, a.status, a.source, s.name as service_name, c.name as customer_name, c.phone, c.email, v.brand as vehicle_brand, v.model as vehicle_model, v.registration as vehicle_registration
+     FROM appointments a
+     LEFT JOIN services s ON a.service_id = s.id
+     LEFT JOIN customers c ON a.customer_id = c.id
+     LEFT JOIN vehicles v ON a.vehicle_id = v.id
+     ORDER BY a.date DESC, a.time ASC`
+  );
+
+  return rows;
+}
+

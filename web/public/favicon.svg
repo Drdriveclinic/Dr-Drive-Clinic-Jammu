@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" aria-label="THE DDC Favicon">
+  <defs>
+    <linearGradient id="favRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF1E27" />
+      <stop offset="100%" stop-color="#C4050E" />
+    </linearGradient>
+    <linearGradient id="favSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#090B10" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.5" />
+
+  <!-- Outer Speed Shield -->
+  <path d="M12 16 L32 7 L52 16 L46 48 L32 57 L18 48 Z" 
+        fill="rgba(15, 23, 42, 0.85)" 
+        stroke="url(#favRed)" 
+        stroke-width="2.2" 
+        stroke-linejoin="round" />
+
+  <!-- DDC Monogram Inside -->
+  <path d="M22 23 L28 23 C33 23 35 26 35 29 C35 32 33 35 28 35 L22 35 Z" 
+        fill="none" 
+        stroke="url(#favSilver)" 
+        stroke-width="2.4" 
+        stroke-linecap="round" />
+  
+  <path d="M26 19 L36 41" 
+        stroke="url(#favRed)" 
+        stroke-width="2.5" 
+        stroke-linecap="round" />
+
+  <path d="M42 24 C38 22 34 23 32 26 C30 30 31 34 35 36 C39 37 43 35 45 32" 
+        fill="none" 
+        stroke="url(#favSilver)" 
+        stroke-width="2.2" 
+        stroke-linecap="round" />
+
+  <polygon points="32,4 33.5,7 36.5,8.5 33.5,10 32,13 30.5,10 27.5,8.5 30.5,7" fill="#FF1E27" />
+</svg>

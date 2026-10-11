@@ -11,11 +11,11 @@ $year = date('Y');
     <div class="footer-top">
       <!-- Column 1: Brand & Tagline -->
       <div>
-        <a href="/" class="nav-brand" aria-label="The Drive Clinic">
+        <a href="/" class="nav-brand" aria-label="THE DDC - Home">
           <?php if ($hasLogo): ?>
-            <img src="/assets/brand/logo-white.svg" alt="The Drive Clinic" class="nav-logo-img" width="180" height="36">
+            <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
           <?php else: ?>
-            <div class="logo-fallback">[ OFFICIAL LOGO ]</div>
+            <div class="logo-fallback">[ THE DDC ]</div>
           <?php endif; ?>
         </a>
         <h3 class="footer-brand-title">WHERE CARS GET<br>THEIR SHINE BACK.</h3>
@@ -31,7 +31,7 @@ $year = date('Y');
           <li><a href="/services/bike-detailing" class="footer-list-link">Bike Detailing</a></li>
           <li><a href="/services/ceramic-wash" class="footer-list-link">Ceramic Wash</a></li>
           <li><a href="/services/steam-wash" class="footer-list-link">Steam Wash</a></li>
-          <li><a href="/services/maintenance-wash" class="footer-list-link">Maintenance Wash</a></li>
+          <li><a href="/services/basic-car-wash" class="footer-list-link">Basic Car Wash</a></li>
           <li><a href="/services/full-car-detailing" class="footer-list-link">Full Car Detailing</a></li>
           <li><a href="/services" class="footer-list-link" style="color:var(--red);">View All Services →</a></li>
         </ul>

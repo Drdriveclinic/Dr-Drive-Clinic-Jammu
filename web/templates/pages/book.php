@@ -8,6 +8,26 @@ $bookingSource = $bookingSource ?? 'booking_flow';
 $isRecurring = isset($_GET['recurring']) && $_GET['recurring'] === '1';
 ?>
 
+<?php
+$serviceImages = [
+    'ppf'                   => '/assets/img/studio/ppf-install.png',
+    'ceramic-coating'       => '/assets/img/studio/ceramic-coating.png',
+    'bike-detailing'        => '/assets/img/studio/bike-detailing.png',
+    'full-car-detailing'    => '/assets/img/studio/full-detailing.png',
+    'interior-deep-clean'   => '/assets/img/studio/interior-clean.png',
+    'ceramic-wash'          => '/assets/img/studio/ceramic-wash.png',
+    'steam-wash'            => '/assets/img/studio/steam-wash.png',
+    'basic-car-wash'        => '/assets/img/studio/basic-wash.png',
+    'engine-detailing'      => '/assets/img/studio/engine-bay.png',
+    'polishing-waxing'      => '/assets/img/studio/polishing-waxing.png',
+    'tyre-rim-care'         => '/assets/img/studio/wheel-care.png',
+    'headlight-restoration' => '/assets/img/services/headlight.jpg',
+    'underbody-coating'     => '/assets/img/services/underbody.jpg',
+    'glass-treatment'       => '/assets/img/services/glass-treatment.jpg',
+    'rubbing-compound'      => '/assets/img/studio/polishing-waxing.png',
+];
+?>
+
 <div class="booking-flow-container" 
      data-preselected-service="<?= htmlspecialchars($preselectedService) ?>" 
      data-booking-source="<?= htmlspecialchars($bookingSource) ?>"
@@ -26,9 +46,14 @@ $isRecurring = isset($_GET['recurring']) && $_GET['recurring'] === '1';
         </h1>
         <div class="redline" style="max-width: 100px; margin-bottom: 36px;"></div>
 
-        <!-- Live Visual Placeholder Tile -->
-        <div class="img-placeholder" style="min-height: 220px; margin-bottom: 36px; border: 1px solid rgba(255,255,255,0.12);">
-          <span class="booking-sidebar-photo-caption">PHOTO — Premium Automotive Clean Bay & PPF Studio</span>
+        <!-- Live Visual Showcase Tile -->
+        <div class="booking-sidebar-visual" style="min-height: 220px; height: 220px; margin-bottom: 32px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); position: relative; box-shadow: 0 16px 36px rgba(0,0,0,0.45); background: #0E121C;">
+          <img src="/assets/img/studio/studio-showcase.png" alt="The DDC Detailing Studio Bay" class="booking-sidebar-img" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.25s ease, transform 0.35s ease;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgba(9,11,16,0.92) 100%); pointer-events: none;"></div>
+          <div style="position: absolute; bottom: 12px; left: 16px; right: 16px; pointer-events: none;">
+            <div style="font-size: 10px; font-weight: 800; color: var(--red); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 2px;">THE DDC RESERVATION</div>
+            <div class="booking-sidebar-photo-caption" style="font-family: var(--font-display); font-size: 19px; color: #FFFFFF; text-shadow: 0 2px 8px rgba(0,0,0,0.85); line-height: 1.2;">STUDIO DETAILING BAY</div>
+          </div>
         </div>
 
         <!-- Live Summary List -->
@@ -48,7 +73,7 @@ $isRecurring = isset($_GET['recurring']) && $_GET['recurring'] === '1';
     </aside>
 
     <!-- RIGHT 7/12: Step Area -->
-    <main class="booking-step-area" style="flex: 1; padding: 60px 48px; background-color: var(--white); display: flex; flex-direction: column; justify-content: space-between;">
+    <main class="booking-step-area" style="flex: 1; padding: 60px 48px; background: rgba(14, 18, 28, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <!-- Top Progress Bar (7 Segments) -->
         <div class="booking-top-bar" style="margin-bottom: 40px;">
@@ -82,15 +107,25 @@ $isRecurring = isset($_GET['recurring']) && $_GET['recurring'] === '1';
           <h2 class="h2-section" style="font-size:36px; margin-bottom:12px;">SELECT VEHICLE TYPE</h2>
           <p style="color:var(--text-2); margin-bottom:32px;">Choose whether you are bringing in a four-wheeler or a two-wheeler.</p>
           
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:600px;">
-            <button type="button" class="type-tile is-selected" data-type="car" style="padding:40px 24px; border:2px solid var(--black); background:var(--off); text-align:center; cursor:pointer; transition:all 0.2s ease;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin:0 auto 16px; display:block;"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 3c-.1.2-.1.4-.1.7V16c0 .6.4 1 1 1h2m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
-              <span style="font-family:var(--font-display); font-size:28px; text-transform:uppercase; display:block;">CAR / 4-WHEELER</span>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:680px;">
+            <button type="button" class="type-tile is-selected" data-type="car" style="position:relative; overflow:hidden; border-radius:8px; padding:0; border:2px solid var(--red); cursor:pointer; transition:all 0.25s ease; background:#0B0E17; min-height:180px; text-align:left; box-shadow:0 12px 28px rgba(0,0,0,0.35);">
+              <div style="height:120px; overflow:hidden;">
+                <img src="/assets/img/studio/studio-showcase.png" alt="Car Detailing" style="width:100%; height:100%; object-fit:cover; display:block;">
+              </div>
+              <div style="padding:14px 18px; display:flex; align-items:center; justify-content:space-between; background:rgba(15,23,42,0.95);">
+                <span style="font-family:var(--font-display); font-size:20px; color:#FFFFFF; text-transform:uppercase;">CAR / 4-WHEELER</span>
+                <span class="type-tile-check" style="color:var(--red); font-size:18px; font-weight:900;">✓</span>
+              </div>
             </button>
 
-            <button type="button" class="type-tile" data-type="bike" style="padding:40px 24px; border:1px solid var(--line); background:var(--off); text-align:center; cursor:pointer; transition:all 0.2s ease;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin:0 auto 16px; display:block;"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 9l3-3 2 3h4"/></svg>
-              <span style="font-family:var(--font-display); font-size:28px; text-transform:uppercase; display:block;">BIKE / 2-WHEELER</span>
+            <button type="button" class="type-tile" data-type="bike" style="position:relative; overflow:hidden; border-radius:8px; padding:0; border:1px solid rgba(255,255,255,0.15); cursor:pointer; transition:all 0.25s ease; background:#0B0E17; min-height:180px; text-align:left; box-shadow:0 12px 28px rgba(0,0,0,0.35);">
+              <div style="height:120px; overflow:hidden;">
+                <img src="/assets/img/studio/bike-detailing.png" alt="Bike Detailing" style="width:100%; height:100%; object-fit:cover; display:block;">
+              </div>
+              <div style="padding:14px 18px; display:flex; align-items:center; justify-content:space-between; background:rgba(15,23,42,0.95);">
+                <span style="font-family:var(--font-display); font-size:20px; color:#FFFFFF; text-transform:uppercase;">BIKE / 2-WHEELER</span>
+                <span class="type-tile-check" style="color:var(--red); font-size:18px; font-weight:900; opacity:0;">✓</span>
+              </div>
             </button>
           </div>
         </div>
@@ -102,31 +137,41 @@ $isRecurring = isset($_GET['recurring']) && $_GET['recurring'] === '1';
           <h2 class="h2-section" style="font-size:36px; margin-bottom:12px;">CHOOSE SERVICE</h2>
           <p style="color:var(--text-2); margin-bottom:28px;">Select from our detailing packages, PPF films, or studio wash treatments.</p>
 
-          <div class="booking-services-list" style="display:flex; flex-direction:column; gap:16px; max-height:480px; overflow-y:auto; padding-right:12px;">
-            <?php foreach ($services as $svc): ?>
+          <div class="booking-services-list" style="display:flex; flex-direction:column; gap:16px; max-height:500px; overflow-y:auto; padding-right:12px;">
+            <?php foreach ($services as $svc): 
+              $svcThumb = $serviceImages[$svc['slug']] ?? '/assets/img/studio/workshop-studio.png';
+            ?>
               <div class="booking-service-card <?= $svc['slug'] === $preselectedService ? 'is-selected' : '' ?>"
                    data-slug="<?= htmlspecialchars($svc['slug']) ?>"
                    data-name="<?= htmlspecialchars($svc['name']) ?>"
+                   data-image="<?= htmlspecialchars($svcThumb) ?>"
                    data-category="<?= htmlspecialchars($svc['category']) ?>"
                    data-vehicle-types="<?= htmlspecialchars($svc['vehicle_types']) ?>"
                    data-duration="<?= htmlspecialchars($svc['duration_note'] ?: '[CONFIRM DURATION]') ?>"
-                   style="border:1px solid var(--line); padding:24px; background:var(--off); cursor:pointer; transition:all 0.2s ease;">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
-                  <div>
-                    <span style="font-size:11px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase;">
-                      <?= htmlspecialchars(strtoupper($svc['category'])) ?>
-                    </span>
-                    <h4 style="font-family:var(--font-display); font-size:26px; text-transform:uppercase; margin-top:2px;">
-                      <?= htmlspecialchars($svc['name']) ?>
-                    </h4>
-                  </div>
-                  <span style="font-size:12px; font-weight:700; color:var(--text-3); font-family:monospace;">
-                    <?= htmlspecialchars($svc['duration_note'] ?: 'Variable') ?>
-                  </span>
+                   style="padding:16px 20px; cursor:pointer; transition:all 0.2s ease; border-radius:8px; display:flex; gap:20px; align-items:center;">
+                
+                <div style="width:96px; height:80px; border-radius:6px; overflow:hidden; flex-shrink:0; border:1px solid rgba(255,255,255,0.12);">
+                  <img src="<?= htmlspecialchars($svcThumb) ?>" alt="<?= htmlspecialchars($svc['name']) ?>" style="width:100%; height:100%; object-fit:cover; display:block;">
                 </div>
-                <p style="font-size:14px; color:var(--text-2); line-height:1.5;">
-                  <?= htmlspecialchars($svc['short_desc']) ?>
-                </p>
+
+                <div style="flex:1;">
+                  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+                    <div>
+                      <span style="font-size:11px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase;">
+                        <?= htmlspecialchars(strtoupper($svc['category'])) ?>
+                      </span>
+                      <h4 style="font-family:var(--font-display); font-size:24px; text-transform:uppercase; margin-top:2px; line-height:1.15;">
+                        <?= htmlspecialchars($svc['name']) ?>
+                      </h4>
+                    </div>
+                    <span style="font-size:12px; font-weight:700; color:var(--text-3); font-family:monospace; background:rgba(255,255,255,0.06); padding:4px 8px; border-radius:4px;">
+                      <?= htmlspecialchars($svc['duration_note'] ?: 'Variable') ?>
+                    </span>
+                  </div>
+                  <p style="font-size:13px; color:var(--text-2); line-height:1.45; margin:0;">
+                    <?= htmlspecialchars($svc['short_desc']) ?>
+                  </p>
+                </div>
               </div>
             <?php endforeach; ?>
           </div>

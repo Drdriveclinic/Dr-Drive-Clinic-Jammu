@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" aria-label="THE DDC Favicon">
+  <defs>
+    <linearGradient id="iconRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF1E27" />
+      <stop offset="100%" stop-color="#C4050E" />
+    </linearGradient>
+    <linearGradient id="iconSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#090B10" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.5" />
+
+  <!-- Pure Typographic Monogram "DDC" (No Shield) -->
+  <text x="32" y="42" 
+        font-family="'Impact', 'Arial Black', sans-serif" 
+        font-size="25" 
+        font-weight="900" 
+        font-style="italic" 
+        letter-spacing="0.02em" 
+        text-anchor="middle">
+    <tspan fill="url(#iconSilver)">D</tspan>
+    <tspan fill="url(#iconRed)" dx="1">D</tspan>
+    <tspan fill="url(#iconSilver)" dx="1">C</tspan>
+  </text>
+  <rect x="15" y="47" width="34" height="2.5" rx="1.2" fill="url(#iconRed)" />
+</svg>

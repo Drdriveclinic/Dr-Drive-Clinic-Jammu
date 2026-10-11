@@ -1,18 +1,31 @@
 /* THE DRIVE CLINIC — Design Tokens */
 :root {
-  /* Colors */
+  /* Colors — Luxury Dark Studio with Glassmorphism */
   --white: #FFFFFF;
-  --off: #F5F5F2;
-  --grey: #E9E9E7;
-  --line: #DCDCD8;
-  --black: #080808;
-  --ink: #111111;
-  --dark: #292929;
+  --black: #06080D;
+  --body-bg: #090B10;
+  --off: #0E121C;             /* Elevated dark graphite studio panel */
+  --panel-bg: #151A26;        /* Dark titanium surface background */
+  --grey: #CBD5E1;            /* Crisp readable slate silver for secondary text */
+  --line: rgba(255, 255, 255, 0.09); /* Frosted hairline border */
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --ink: #F8FAFC;             /* Radiant clean white text */
+  --dark: #080A0E;
   --red: #E50914;
-  --red-bright: #FF1E27;
+  --red-bright: #FF2E36;
   --red-hover: #B8060F;
-  --text-2: #4A4A48;
-  --text-3: #6B6B68;
+  --red-glow: rgba(229, 9, 20, 0.3);
+  --text-2: #E2E8F0;          /* High-contrast slate silver text */
+  --text-3: #94A3B8;          /* Clear secondary slate text */
+
+  /* Glassmorphism Design Tokens */
+  --glass-bg: rgba(18, 24, 38, 0.6);
+  --glass-bg-hover: rgba(26, 35, 54, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-border-hover: rgba(229, 9, 20, 0.5);
+  --glass-blur: blur(16px);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --glass-shadow-hover: 0 24px 55px rgba(0, 0, 0, 0.65), 0 0 30px rgba(229, 9, 20, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   /* Typography */
   --font-display: 'Bebas Neue', 'Impact', sans-serif;

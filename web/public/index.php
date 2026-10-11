@@ -398,6 +398,212 @@ if ($requestUri === '/crm/api/invoices/pay' && $requestMethod === 'POST') {
     exit;
 }
 
+// GoDaddy Business Email Dispatcher (care@thedriveclinic.com)
+function dispatchGoDaddyEmail(string $type, array $data): void {
+    global $config;
+    $recipient = $config['mail']['to'] ?? 'care@thedriveclinic.com';
+    $name = $data['name'] ?? $data['customer_name'] ?? 'Website Client';
+    $service = $data['service'] ?? $data['service_name'] ?? 'Studio Detailing';
+    $ref = $data['ref'] ?? $data['lead_no'] ?? ('DRC-' . rand(1000, 9999));
+
+    $subject = ($type === 'booking')
+        ? "⚡ New Studio Booking Confirmed [{$ref}]: {$name} — {$service}"
+        : "🔥 New Lead Received [{$ref}]: {$name} — {$service}";
+
+    $cleanPhone = preg_replace('/\D/', '', (string)($data['phone'] ?? ''));
+    $waLink = $cleanPhone ? "https://wa.me/" . (str_starts_with($cleanPhone, '91') ? $cleanPhone : "91" . $cleanPhone) : 'N/A';
+
+    $body = "THE DRIVE CLINIC // STUDIO MANAGEMENT // JAMMU\n";
+    $body .= "Target Mailbox: care@thedriveclinic.com\n";
+    $body .= "====================================================\n";
+    $body .= "EVENT: " . strtoupper($type) . "\n";
+    $body .= "REFERENCE: {$ref}\n";
+    $body .= "CUSTOMER: {$name}\n";
+    $body .= "PHONE: " . ($data['phone'] ?? 'N/A') . " (WhatsApp: {$waLink})\n";
+    $body .= "EMAIL: " . ($data['email'] ?? 'Not provided') . "\n";
+    $body .= "VEHICLE: " . ($data['vehicle'] ?? $data['vehicle_model'] ?? 'Vehicle') . "\n";
+    $body .= "SERVICE: {$service}\n";
+    if (!empty($data['date'])) $body .= "SCHEDULE: " . $data['date'] . " at " . ($data['time'] ?? '10:00') . "\n";
+    if (!empty($data['message']) || !empty($data['notes'])) $body .= "MESSAGE: " . ($data['message'] ?? $data['notes'] ?? '') . "\n";
+    $body .= "SOURCE: " . ($data['source'] ?? 'Website') . "\n";
+    $body .= "TIMESTAMP: " . date('Y-m-d H:i:s') . " IST\n";
+    $body .= "====================================================\n";
+    $body .= "Open CRM: " . ($config['site_url'] ?? 'http://localhost:8000') . "/crm\n";
+
+    $headers = "From: " . ($config['mail']['from'] ?? 'care@thedriveclinic.com') . "\r\n" .
+               "Reply-To: " . ($data['email'] ?? 'care@thedriveclinic.com') . "\r\n" .
+               "X-Mailer: PHP/" . phpversion();
+
+    @mail($recipient, $subject, $body, $headers);
+
+    // Audit log
+    $logDir = dirname(__DIR__, 2) . '/api/logs';
+    if (!is_dir($logDir)) @mkdir($logDir, 0777, true);
+    @file_put_contents($logDir . '/godaddy_mail_outbox.log', "[" . date('c') . "] [PHP] TYPE: {$type} | TO: {$recipient} | SUBJECT: {$subject}\n" . json_encode($data, JSON_PRETTY_PRINT) . "\n------------------------------------------------------------\n", FILE_APPEND);
+}
+
+// ==========================================
+// UNIFIED PUBLIC API (LEADS & APPOINTMENTS)
+// ==========================================
+if ($requestUri === '/api/leads' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $name = trim($input['name'] ?? $input['customer_name'] ?? '');
+    $phone = trim($input['phone'] ?? '');
+    $email = trim($input['email'] ?? '');
+    $vehicleType = trim($input['vehicle_type'] ?? 'car');
+    $vehicleModel = trim($input['vehicle_model'] ?? ($vehicleType === 'bike' ? 'Superbike' : 'Car'));
+    $serviceSlug = trim($input['service_slug'] ?? '');
+    $serviceName = trim($input['service_name'] ?? ($serviceSlug ? ucwords(str_replace('-', ' ', $serviceSlug)) : 'Studio Consultation'));
+    $message = trim($input['message'] ?? '');
+    $source = trim($input['source'] ?? 'website_contact');
+
+    if (empty($name) || empty($phone)) {
+        http_response_code(422);
+        echo json_encode(['ok' => false, 'error' => ['message' => 'Name and phone are required']]);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $leadNo = 'LEAD-' . rand(1000, 9999);
+        $now = date('Y-m-d H:i:s');
+
+        $stmt = $db->prepare("
+            INSERT INTO leads (
+                lead_no, customer_name, phone, email, vehicle_brand, vehicle_model,
+                service_name, estimated_amount, source, stage, remarks,
+                quote_total, payment_status, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, 'Other', ?, ?, 0, ?, 'NEW', ?, 0, 'UNPAID', ?, ?)
+        ");
+        $stmt->execute([$leadNo, $name, $phone, $email ?: null, $vehicleModel, $serviceName, $source, $message, $now, $now]);
+        $leadId = (int)$db->lastInsertId();
+
+        // Dispatch to GoDaddy Business Mail
+        dispatchGoDaddyEmail('lead', [
+            'ref' => $leadNo,
+            'lead_no' => $leadNo,
+            'name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'vehicle_model' => $vehicleModel,
+            'service_name' => $serviceName,
+            'message' => $message,
+            'source' => $source
+        ]);
+
+        echo json_encode(['ok' => true, 'data' => ['lead_id' => $leadId, 'ref' => $leadNo, 'message' => 'Your enquiry has been received.']]);
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'error' => ['message' => $e->getMessage()]]);
+    }
+    exit;
+}
+
+if ($requestUri === '/api/leads' && $requestMethod === 'GET') {
+    header('Content-Type: application/json');
+    $leads = Database::query("SELECT id, lead_no as ref, customer_name, phone, email, vehicle_model, vehicle_reg, service_name, source, stage, created_at FROM leads ORDER BY created_at DESC");
+    echo json_encode(['ok' => true, 'data' => $leads]);
+    exit;
+}
+
+if ($requestUri === '/api/appointments' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $customer = $input['customer'] ?? [];
+    $vehicle = $input['vehicle'] ?? [];
+    $name = trim($customer['name'] ?? $input['name'] ?? '');
+    $phone = trim($customer['phone'] ?? $input['phone'] ?? '');
+    $email = trim($customer['email'] ?? $input['email'] ?? '');
+    $serviceSlug = trim($input['service_slug'] ?? '');
+    $serviceName = trim($input['service_name'] ?? ($serviceSlug ? ucwords(str_replace('-', ' ', $serviceSlug)) : 'Studio Detailing'));
+    $date = trim($input['date'] ?? date('Y-m-d'));
+    $time = trim($input['time'] ?? '10:00:00');
+    $notes = trim($input['notes'] ?? '');
+    $source = trim($input['source'] ?? 'booking_flow');
+
+    if (empty($name) || empty($phone)) {
+        http_response_code(422);
+        echo json_encode(['ok' => false, 'error' => ['message' => 'Customer name and phone are required']]);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $ref = 'DRC-' . rand(10000, 99999);
+        $cleanTime = strlen($time) === 5 ? "{$time}:00" : $time;
+        $now = date('Y-m-d H:i:s');
+
+        // Customer upsert
+        $db->prepare("INSERT OR IGNORE INTO customers (name, phone, whatsapp, email, created_at) VALUES (?, ?, ?, ?, ?)")
+           ->execute([$name, $phone, $phone, $email ?: null, $now]);
+        $custRow = Database::queryOne("SELECT id FROM customers WHERE phone = ?", [$phone]);
+        $customerId = (int)($custRow['id'] ?? 1);
+
+        // Vehicle
+        $vBrand = $vehicle['brand'] ?? 'Car';
+        $vModel = $vehicle['model'] ?? 'Standard';
+        $vReg = $vehicle['registration'] ?? null;
+        $vColor = $vehicle['color'] ?? null;
+        $db->prepare("INSERT INTO vehicles (customer_id, type, brand, model, registration, color, created_at) VALUES (?, 'car', ?, ?, ?, ?, ?)")
+           ->execute([$customerId, $vBrand, $vModel, $vReg, $vColor, $now]);
+        $vehicleId = (int)$db->lastInsertId();
+
+        // Appointment
+        $db->prepare("INSERT INTO appointments (ref, customer_id, vehicle_id, date, time, status, notes, source, created_at) VALUES (?, ?, ?, ?, ?, 'CONFIRMED', ?, ?, ?)")
+           ->execute([$ref, $customerId, $vehicleId, $date, $cleanTime, $notes, $source, $now]);
+
+        // Lead record
+        $db->prepare("INSERT INTO leads (lead_no, customer_name, phone, email, vehicle_model, vehicle_reg, service_name, source, stage, remarks, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'booking', 'NEW', ?, ?, ?)")
+           ->execute([$ref, $name, $phone, $email ?: null, "{$vBrand} {$vModel}", $vReg, $serviceName, "Booking on {$date} at {$cleanTime}", $now, $now]);
+
+        // Dispatch GoDaddy Business Mail
+        dispatchGoDaddyEmail('booking', [
+            'ref' => $ref,
+            'name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'vehicle' => "{$vBrand} {$vModel} (" . ($vReg ?: 'N/A') . ")",
+            'service' => $serviceName,
+            'date' => $date,
+            'time' => $cleanTime,
+            'notes' => $notes,
+            'source' => $source
+        ]);
+
+        echo json_encode([
+            'ok' => true,
+            'data' => [
+                'ref' => $ref,
+                'date' => $date,
+                'time' => $cleanTime,
+                'service_slug' => $serviceSlug,
+                'service_name' => $serviceName,
+                'customer_name' => $name,
+                'customer_phone' => $phone
+            ]
+        ]);
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'error' => ['message' => $e->getMessage()]]);
+    }
+    exit;
+}
+
+if ($requestUri === '/api/appointments' && $requestMethod === 'GET') {
+    header('Content-Type: application/json');
+    $appointments = Database::query("
+        SELECT a.ref, a.date, a.time, a.status, a.source, s.name as service_name, c.name as customer_name, c.phone, c.email, v.brand as vehicle_brand, v.model as vehicle_model, v.registration as vehicle_registration
+        FROM appointments a
+        LEFT JOIN services s ON a.service_id = s.id
+        LEFT JOIN customers c ON a.customer_id = c.id
+        LEFT JOIN vehicles v ON a.vehicle_id = v.id
+        ORDER BY a.date DESC, a.time ASC
+    ");
+    echo json_encode(['ok' => true, 'data' => $appointments]);
+    exit;
+}
+
 // ==========================================
 // LEADS PIPELINE API & CSV EXPORT
 // ==========================================
@@ -436,6 +642,18 @@ if ($requestUri === '/crm/api/leads/create' && $requestMethod === 'POST') {
             $leadNo, $name, $phone, $email, $vehicleModel, $vehicleReg,
             $serviceName, $estimatedAmount, $source, $stage, $remarks,
             $estimatedAmount, $now, $now
+        ]);
+
+        // Dispatch GoDaddy notification
+        dispatchGoDaddyEmail('lead', [
+            'ref' => $leadNo,
+            'name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'vehicle_model' => $vehicleModel,
+            'service_name' => $serviceName,
+            'message' => $remarks,
+            'source' => $source
         ]);
 
         echo json_encode(['success' => true, 'message' => "Enquiry {$leadNo} created for {$name}!"]);

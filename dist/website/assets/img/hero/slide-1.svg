@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="spotlight1" cx="65%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#2a2a2a" />
+      <stop offset="60%" stop-color="#0e0e0e" />
+      <stop offset="100%" stop-color="#050505" />
+    </radialGradient>
+    <linearGradient id="redGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E50914" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#E50914" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#222" />
+      <stop offset="50%" stop-color="#111" />
+      <stop offset="100%" stop-color="#050505" />
+    </linearGradient>
+    <linearGradient id="reflection" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Studio Background -->
+  <rect width="1920" height="1080" fill="url(#spotlight1)" />
+  
+  <!-- Red Studio Floor Glow -->
+  <ellipse cx="1200" cy="850" rx="600" ry="120" fill="url(#redGlow)" />
+
+  <!-- Studio Grid Lines -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+    <line x1="0" y1="750" x2="1920" y2="750" />
+    <line x1="0" y1="850" x2="1920" y2="850" />
+    <line x1="0" y1="950" x2="1920" y2="950" />
+    <line x1="600" y1="750" x2="300" y2="1080" />
+    <line x1="900" y1="750" x2="800" y2="1080" />
+    <line x1="1200" y1="750" x2="1300" y2="1080" />
+    <line x1="1500" y1="750" x2="1800" y2="1080" />
+  </g>
+
+  <!-- Modern Hypercar Silhouette & Gloss Highlights -->
+  <g transform="translate(620, 260)">
+    <!-- Shadow -->
+    <ellipse cx="650" cy="480" rx="550" ry="35" fill="#000000" opacity="0.8" />
+    
+    <!-- Car Body Base -->
+    <path d="M 120 400 Q 250 340 450 320 Q 700 240 920 270 Q 1100 290 1220 380 Q 1240 420 1180 440 L 150 440 Z" fill="url(#bodyGrad)" stroke="#333" stroke-width="2" />
+    
+    <!-- Roofline & Glass -->
+    <path d="M 460 315 Q 620 160 850 170 Q 1000 180 1060 280 Z" fill="#050505" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+    <path d="M 520 300 Q 640 180 820 190 Q 940 200 1000 280 Z" fill="url(#reflection)" />
+    
+    <!-- Redline Precision Detailing Accent -->
+    <path d="M 220 395 Q 480 340 780 345 Q 1050 350 1160 410" fill="none" stroke="#E50914" stroke-width="4" stroke-linecap="round" />
+    
+    <!-- Headlight Laser Strip -->
+    <path d="M 160 380 L 260 375" stroke="#00d2ff" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 8px #00d2ff)" />
+    <path d="M 170 395 L 290 390" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Wheels -->
+    <g transform="translate(300, 420)">
+      <circle cx="0" cy="0" r="75" fill="#0a0a0a" stroke="#444" stroke-width="6" />
+      <circle cx="0" cy="0" r="50" fill="#151515" stroke="#E50914" stroke-width="3" />
+      <circle cx="0" cy="0" r="20" fill="#222" />
+      <line x1="-40" y1="0" x2="40" y2="0" stroke="#777" stroke-width="4" />
+      <line x1="0" y1="-40" x2="0" y2="40" stroke="#777" stroke-width="4" />
+      <line x1="-28" y1="-28" x2="28" y2="28" stroke="#777" stroke-width="4" />
+      <line x1="-28" y1="28" x2="28" y2="-28" stroke="#777" stroke-width="4" />
+    </g>
+    <g transform="translate(980, 420)">
+      <circle cx="0" cy="0" r="75" fill="#0a0a0a" stroke="#444" stroke-width="6" />
+      <circle cx="0" cy="0" r="50" fill="#151515" stroke="#E50914" stroke-width="3" />
+      <circle cx="0" cy="0" r="20" fill="#222" />
+      <line x1="-40" y1="0" x2="40" y2="0" stroke="#777" stroke-width="4" />
+      <line x1="0" y1="-40" x2="0" y2="40" stroke="#777" stroke-width="4" />
+      <line x1="-28" y1="-28" x2="28" y2="28" stroke="#777" stroke-width="4" />
+      <line x1="-28" y1="28" x2="28" y2="-28" stroke="#777" stroke-width="4" />
+    </g>
+
+    <!-- Mirror Gloss Reflection Highlight -->
+    <path d="M 380 330 Q 700 280 1100 320" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.6" />
+  </g>
+
+  <!-- Ambient Detailing Studio Lights -->
+  <line x1="600" y1="60" x2="1600" y2="60" stroke="#ffffff" stroke-width="3" opacity="0.4" />
+  <line x1="700" y1="90" x2="1500" y2="90" stroke="#ffffff" stroke-width="1.5" opacity="0.2" />
+</svg>

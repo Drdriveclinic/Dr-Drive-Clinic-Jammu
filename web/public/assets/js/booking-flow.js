@@ -4,7 +4,10 @@ export function initBookingFlow() {
   const container = document.querySelector('.booking-flow-container');
   if (!container) return;
 
-  const API_BASE = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 'http://localhost:5000/api';
+  const API_BASE = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? (window.location.port === '5000' || window.location.port === '8000' ? '/api' : 'http://localhost:5000/api') 
+      : '/api');
 
   // State
   let state = {
@@ -79,10 +82,35 @@ export function initBookingFlow() {
   const serviceCards = container.querySelectorAll('.booking-service-card');
 
   function updateSidebar() {
+    const sidebarImg = container.querySelector('.booking-sidebar-img');
+    const sidebarPhotoCaption = container.querySelector('.booking-sidebar-photo-caption');
+
+    let targetImg = '/assets/img/studio/studio-showcase.png';
+    let targetCaption = 'STUDIO DETAILING BAY';
+
+    if (state.serviceSlug) {
+      const activeCard = container.querySelector(`.booking-service-card[data-slug="${state.serviceSlug}"]`);
+      if (activeCard && activeCard.dataset.image) {
+        targetImg = activeCard.dataset.image;
+        targetCaption = (state.serviceName || 'STUDIO DETAILING BAY').toUpperCase();
+      }
+    } else if (state.vehicleType === 'bike') {
+      targetImg = '/assets/img/studio/bike-detailing.png';
+      targetCaption = 'MOTORCYCLE PRECISION BAY';
+    }
+
+    if (sidebarImg && targetImg && sidebarImg.getAttribute('src') !== targetImg) {
+      sidebarImg.style.opacity = '0.35';
+      sidebarImg.style.transform = 'scale(0.97)';
+      setTimeout(() => {
+        sidebarImg.src = targetImg;
+        sidebarImg.style.opacity = '1';
+        sidebarImg.style.transform = 'scale(1)';
+      }, 140);
+    }
+
     if (sidebarPhotoCaption) {
-      sidebarPhotoCaption.textContent = state.vehicleType === 'bike'
-        ? 'PHOTO — Motorcycle Precision Detailing Bay'
-        : 'PHOTO — Premium Automotive Clean Bay & PPF Studio';
+      sidebarPhotoCaption.textContent = targetCaption;
     }
 
     if (summaryList) {
@@ -225,8 +253,17 @@ export function initBookingFlow() {
   const typeTiles = container.querySelectorAll('.type-tile');
   typeTiles.forEach((tile) => {
     tile.addEventListener('click', () => {
-      typeTiles.forEach((t) => t.classList.remove('is-selected'));
+      typeTiles.forEach((t) => {
+        t.classList.remove('is-selected');
+        t.style.borderColor = 'rgba(255,255,255,0.15)';
+        const check = t.querySelector('.type-tile-check');
+        if (check) check.style.opacity = '0';
+      });
       tile.classList.add('is-selected');
+      tile.style.borderColor = 'var(--red)';
+      const currentCheck = tile.querySelector('.type-tile-check');
+      if (currentCheck) currentCheck.style.opacity = '1';
+
       state.vehicleType = tile.dataset.type;
       
       // If selected service doesn't match new vehicle type, clear it
@@ -563,6 +600,27 @@ export function initBookingFlow() {
       // Success: Render Confirmation Screen
       renderSuccessScreen(json.data);
       sessionStorage.removeItem('tdc_booking_state');
+
+      // Sync with local CRM state
+      try {
+        const raw = localStorage.getItem('tdc_crm_master_state');
+        const crmState = raw ? JSON.parse(raw) : { leads: [], jobCards: [], inventory: [], invoices: [], memberships: [], customers: [] };
+        crmState.leads = crmState.leads || [];
+        crmState.leads.unshift({
+          id: json.data?.id || Date.now(),
+          ref: json.data?.ref || ('DRC-BK-' + Math.floor(1000 + Math.random() * 9000)),
+          customer_name: state.name,
+          phone: state.phone,
+          email: state.email || '',
+          service_name: json.data?.service_name || state.serviceName || state.serviceSlug,
+          vehicle_model: `${state.brand || ''} ${state.model || ''}`.trim() || 'Vehicle',
+          vehicle_reg: state.registration || 'N/A',
+          source: 'ONLINE_BOOKING',
+          stage: 'BAY_SCHEDULED',
+          created_at: `${state.date} ${state.time}`
+        });
+        localStorage.setItem('tdc_crm_master_state', JSON.stringify(crmState));
+      } catch (storageErr) {}
     } catch (err) {
       showError('Network error connecting to booking server. Please check your connection.');
       submitBtn.disabled = false;

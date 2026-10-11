@@ -8,11 +8,11 @@ $hasLogo = file_exists($logoPath);
 ?>
 <header class="site-header header-transparent">
   <div class="container nav-container">
-    <a href="/" class="nav-brand" aria-label="The Drive Clinic - Home" data-major-nav>
+    <a href="/" class="nav-brand" aria-label="THE DDC - Home" data-major-nav>
       <?php if ($hasLogo): ?>
-        <img src="/assets/brand/logo-white.svg" alt="The Drive Clinic Logo" class="nav-logo-img" width="180" height="36">
+        <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
       <?php else: ?>
-        <div class="logo-fallback">[ THE DRIVE CLINIC ]</div>
+        <div class="logo-fallback">[ THE DDC ]</div>
       <?php endif; ?>
     </a>
 
@@ -185,11 +185,11 @@ $hasLogo = file_exists($logoPath);
               <div class="mobile-sublink-badge-icon">💧</div>
               <div class="sublink-text">
                 <strong>Ceramic SiO2 Foam Wash</strong>
-                <small>pH-neutral gloss maintenance wash</small>
+                <small>pH-neutral SiO2 hydrophobic wash</small>
               </div>
             </a>
             <a href="/services" class="mobile-sublink-all" data-major-nav>
-              <span>Explore All 15 Detailing Packages &rarr;</span>
+              <span>Explore All Detailing Packages &rarr;</span>
             </a>
           </div>
         </div>

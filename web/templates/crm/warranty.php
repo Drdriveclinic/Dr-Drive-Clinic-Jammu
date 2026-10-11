@@ -38,35 +38,45 @@ $warranties = Database::query("
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($warranties as $w): ?>
-          <tr>
-            <td><strong class="crm-ref-code"><?= htmlspecialchars($w['cert_no']) ?></strong></td>
-            <td>
-              <strong><?= htmlspecialchars($w['customer_name'] ?? 'Client') ?></strong>
-              <div class="crm-text-muted" style="font-size:11px;"><?= htmlspecialchars(($w['brand'] ?? '') . ' ' . ($w['model'] ?? '')) ?> (<?= htmlspecialchars($w['registration'] ?? '') ?>)</div>
-            </td>
-            <td>
-              <strong><?= htmlspecialchars($w['product_brand']) ?></strong>
-              <div class="crm-text-muted" style="font-size:11px;"><?= htmlspecialchars($w['service_slug']) ?></div>
-            </td>
-            <td>
-              <span class="crm-sku-badge"><?= htmlspecialchars($w['roll_batch_no']) ?></span>
-            </td>
-            <td><strong><?= $w['warranty_years'] ?> Years Official</strong></td>
-            <td><?= date('d M Y', strtotime($w['install_date'])) ?></td>
-            <td>
-              <strong class="crm-text-amber"><?= date('d M Y', strtotime($w['next_inspection_date'])) ?></strong>
-            </td>
-            <td>
-              <span class="crm-pill crm-pill-success"><?= htmlspecialchars($w['status']) ?></span>
-            </td>
-            <td>
-              <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="alert('Viewing digital QR certificate: <?= htmlspecialchars($w['cert_no']) ?>')">
-                🛡️ View QR Pass
-              </button>
-            </td>
-          </tr>
-          <?php endforeach; ?>
+          <?php if (!empty($warranties)): ?>
+            <?php foreach ($warranties as $w): ?>
+            <tr>
+              <td><strong class="crm-ref-code"><?= htmlspecialchars($w['cert_no']) ?></strong></td>
+              <td>
+                <strong><?= htmlspecialchars($w['customer_name'] ?? 'Client') ?></strong>
+                <div class="crm-text-muted" style="font-size:11px;"><?= htmlspecialchars(($w['brand'] ?? '') . ' ' . ($w['model'] ?? '')) ?> (<?= htmlspecialchars($w['registration'] ?? '') ?>)</div>
+              </td>
+              <td>
+                <strong><?= htmlspecialchars($w['product_brand']) ?></strong>
+                <div class="crm-text-muted" style="font-size:11px;"><?= htmlspecialchars($w['service_slug']) ?></div>
+              </td>
+              <td>
+                <span class="crm-sku-badge"><?= htmlspecialchars($w['roll_batch_no']) ?></span>
+              </td>
+              <td><strong><?= $w['warranty_years'] ?> Years Official</strong></td>
+              <td><?= date('d M Y', strtotime($w['install_date'])) ?></td>
+              <td>
+                <strong class="crm-text-amber"><?= date('d M Y', strtotime($w['next_inspection_date'])) ?></strong>
+              </td>
+              <td>
+                <span class="crm-pill crm-pill-success"><?= htmlspecialchars($w['status']) ?></span>
+              </td>
+              <td>
+                <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="alert('Viewing digital QR certificate: <?= htmlspecialchars($w['cert_no']) ?>')">
+                  🛡️ View QR Pass
+                </button>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr>
+              <td colspan="9" style="text-align:center; padding:44px 20px; color:#888888;">
+                <div style="font-size:32px; margin-bottom:10px;">🛡️</div>
+                <strong style="color:#ffffff; font-size:14px;">No Digital Warranties Issued Yet</strong>
+                <p style="font-size:12px; margin:6px 0 0; color:#666666;">Official warranties for STEK PPF and ceramic coatings will appear here.</p>
+              </td>
+            </tr>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>

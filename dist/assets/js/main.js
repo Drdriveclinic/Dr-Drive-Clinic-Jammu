@@ -59,4 +59,33 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Cinematic Hero Video Background Autoplay Assurance & Performance Optimization
+  const heroVideo = document.querySelector('.hero-bg-video');
+  if (heroVideo) {
+    const playPromise = heroVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        const startOnInteract = () => {
+          heroVideo.play().catch(() => {});
+        };
+        window.addEventListener('click', startOnInteract, { once: true });
+        window.addEventListener('touchstart', startOnInteract, { once: true });
+      });
+    }
+
+    if ('IntersectionObserver' in window) {
+      const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            heroVideo.play().catch(() => {});
+          } else {
+            heroVideo.pause();
+          }
+        });
+      }, { threshold: 0.1 });
+      const heroSection = document.querySelector('.hero-cinema');
+      if (heroSection) heroObserver.observe(heroSection);
+    }
+  }
 });

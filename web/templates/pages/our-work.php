@@ -26,16 +26,33 @@ $galleryItems = $galleryItems ?? [];
     <div class="grid-3-col">
       <?php if (!empty($galleryItems)): ?>
         <?php foreach ($galleryItems as $idx => $item): ?>
-          <div class="gallery-item-card" style="background:var(--white); border:1px solid var(--line); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;" data-anim="mask-reveal">
-            <div class="img-placeholder" style="min-height:280px;">
-              PHOTO — <?= htmlspecialchars($item['alt']) ?>
+          <?php 
+          $cardImg = $item['after_image'] ?? $item['image'] ?? null;
+          if (!$cardImg) {
+              $fallbackImages = [
+                  '/assets/img/services/fortuner-ppf-india.jpg',
+                  '/assets/img/services/ceramic-coating-india.jpg',
+                  '/assets/img/bike/superbike-detailing-india.jpg',
+                  '/assets/img/services/full-detailing.jpg',
+                  '/assets/img/wash/ceramic-wash.jpg',
+                  '/assets/img/before-after/interior-after.jpg'
+              ];
+              $cardImg = $fallbackImages[$idx % count($fallbackImages)];
+          }
+          ?>
+          <div class="gallery-item-card" style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:8px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;" data-anim="mask-reveal">
+            <div class="gallery-card-thumb" style="height:270px; overflow:hidden; position:relative;">
+              <img src="<?= htmlspecialchars($cardImg) ?>" alt="<?= htmlspecialchars($item['alt']) ?>" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease;" loading="lazy" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              <span style="position:absolute; top:14px; right:14px; background:rgba(8,11,18,0.85); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.18); color:var(--white); font-size:10px; font-weight:800; padding:4px 9px; border-radius:4px; letter-spacing:0.12em; text-transform:uppercase;">
+                0<?= $idx + 1 ?> / TRANSFORM
+              </span>
             </div>
             <div style="padding:24px;">
               <div style="font-size:11px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:6px;">
-                0<?= $idx + 1 ?> / TRANSFORMATION
+                STUDIO CRAFTSMANSHIP
               </div>
-              <h3 class="h3-title" style="font-size:24px; text-transform:uppercase; margin-bottom:8px;">
-                <?= htmlspecialchars($item['vehicle_label'] ?: 'Studio Project') ?>
+              <h3 class="h3-title" style="font-size:22px; text-transform:uppercase; margin-bottom:8px; color:var(--white);">
+                <?= htmlspecialchars($item['vehicle_label'] ?: 'Studio Transformation') ?>
               </h3>
               <p style="color:var(--text-2); font-size:13px; line-height:1.5;">
                 <?= htmlspecialchars($item['alt']) ?>
@@ -44,8 +61,8 @@ $galleryItems = $galleryItems ?? [];
           </div>
         <?php endforeach; ?>
       <?php else: ?>
-        <div style="grid-column: 1 / -1; padding:80px 20px; text-align:center; background:var(--white); border:1px solid var(--line);">
-          <div class="logo-fallback dark" style="margin-bottom:16px;">[ GALLERY EMPTY STATE ]</div>
+        <div style="grid-column: 1 / -1; padding:80px 20px; text-align:center; background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);">
+          <div class="logo-fallback" style="margin-bottom:16px;">[ GALLERY EMPTY STATE ]</div>
           <p style="color:var(--text-2); font-size:15px;">Real customer vehicle transformations and project photos will appear here.</p>
         </div>
       <?php endif; ?>

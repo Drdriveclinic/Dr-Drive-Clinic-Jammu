@@ -23,7 +23,7 @@
     <div class="crm-login-card" style="background:#111111; border:1px solid rgba(255,255,255,0.14); border-top:3px solid #E50914;">
       <div class="crm-login-header">
         <div class="crm-login-logo-box">
-          <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:#ffffff; letter-spacing:0.06em;">THE DRIVE CLINIC</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:#ffffff; letter-spacing:0.06em;">THE DDC</div>
           <span style="font-size:10px; font-weight:800; color:#E50914; letter-spacing:0.18em; text-transform:uppercase;">STUDIO CRM WORKSPACE // JAMMU</span>
         </div>
         <h2 class="crm-login-title" style="margin-top:16px; font-size:20px; font-weight:700;">Admin & Studio Sign In</h2>
@@ -75,7 +75,7 @@
       <div class="crm-sidebar-header" style="padding:22px 20px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between;">
         <div>
           <a href="/" target="_blank" style="text-decoration:none;">
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:#ffffff; letter-spacing:0.06em; line-height:1;">THE DRIVE CLINIC</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:#ffffff; letter-spacing:0.06em; line-height:1;">THE DDC</div>
             <div style="font-size:9.5px; font-weight:800; color:#E50914; letter-spacing:0.18em;">STUDIO CRM // JAMMU</div>
           </a>
         </div>
@@ -148,6 +148,9 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:12px;">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="syncServerData(true)" style="background:#1a1a1a; border:1px solid rgba(229,9,20,0.5); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <span style="color:#22c55e;">●</span> <span>🔄 Live Sync</span>
+          </button>
           <a href="/" target="_blank" class="crm-btn crm-btn-secondary" style="background:#141414; border:1px solid rgba(255,255,255,0.14); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
             <span>🌐 View Public Site</span>
           </a>
@@ -162,68 +165,30 @@
         <div class="crm-stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;">
           <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
             <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE IN-BAY VEHICLES</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statInBay">4</div>
-            <div style="font-size:12px; color:#22c55e;">● All 4 detailing bays active</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statInBay">0</div>
+            <div style="font-size:12px; color:#22c55e;">● Detailing bays status</div>
           </div>
           <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
             <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">PENDING LEADS</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#E50914; margin-top:6px;" id="statPendingLeads">3</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#E50914; margin-top:6px;" id="statPendingLeads">0</div>
             <div style="font-size:12px; color:#aaaaaa;">Website inquiries awaiting quote</div>
           </div>
           <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
             <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE JOB CARDS</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statActiveJobs">5</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statActiveJobs">0</div>
             <div style="font-size:12px; color:#3b82f6;">Under service / paint prep</div>
           </div>
           <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
             <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">VIP MEMBERS ENROLLED</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#fbbf24; margin-top:6px;" id="statMembersCount">18</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#fbbf24; margin-top:6px;" id="statMembersCount">0</div>
             <div style="font-size:12px; color:#aaaaaa;">Jammu subscription passes</div>
           </div>
         </div>
 
         <!-- 4 STUDIO BAYS GRID -->
         <h3 style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.04em; margin-bottom:14px; color:#ffffff;">LIVE DETAILING BAYS</h3>
-        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:18px;">
-          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #E50914; border-radius:8px; padding:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:800; color:#E50914; letter-spacing:0.12em;">BAY 01 // PPF CLEANROOM</span>
-              <span class="crm-badge crm-badge-warning" style="background:rgba(234,179,8,0.15); color:#eab308; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">IN PROGRESS (75%)</span>
-            </div>
-            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">BMW M340i xDrive (Portimao Blue)</h4>
-            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 CK 9999 • STEK DynoShield Full Body PPF</p>
-            <div style="font-size:12px; color:#cccccc;">Lead Tech: Rohan Sharma • ETA: Today 6:00 PM</div>
-          </div>
-
-          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #3b82f6; border-radius:8px; padding:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:800; color:#3b82f6; letter-spacing:0.12em;">BAY 02 // CERAMIC COATING</span>
-              <span class="crm-badge crm-badge-info" style="background:rgba(59,130,246,0.15); color:#3b82f6; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">PAINT CORRECTION (Stage 2)</span>
-            </div>
-            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">Mahindra Thar Roxx 4x4 (Stealth Black)</h4>
-            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 CQ 7788 • Gtechniq Ultra 9-Year Coating</p>
-            <div style="font-size:12px; color:#cccccc;">Lead Tech: Arjun Mehta • ETA: Tomorrow 2:00 PM</div>
-          </div>
-
-          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #22c55e; border-radius:8px; padding:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:800; color:#22c55e; letter-spacing:0.12em;">BAY 03 // DECON & WASH BAY</span>
-              <span class="crm-badge crm-badge-success" style="background:rgba(34,197,94,0.15); color:#22c55e; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">FINAL STEAM PURGE</span>
-            </div>
-            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">Audi A6 Matrix (Ibis White)</h4>
-            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 BW 0001 • VIP Signature Decon Wash & Leather Purge</p>
-            <div style="font-size:12px; color:#cccccc;">Lead Tech: Sameer Khan • Ready for Delivery in 30 mins</div>
-          </div>
-
-          <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid #a855f7; border-radius:8px; padding:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:800; color:#a855f7; letter-spacing:0.12em;">BAY 04 // INSPECTION & DELIVERY</span>
-              <span class="crm-badge crm-badge-secondary" style="background:rgba(168,85,247,0.15); color:#a855f7; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">INSPECTION PASSED</span>
-            </div>
-            <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">Toyota Fortuner Legender (Pearl White)</h4>
-            <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: JK 02 DA 5555 • Front Bumper PPF + Gloss Top-Up</p>
-            <div style="font-size:12px; color:#cccccc;">Customer arriving at 5:30 PM • Invoice Ready</div>
-          </div>
+        <div id="liveBaysGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:18px;">
+          <!-- Dynamically rendered from active jobs -->
         </div>
       </section>
 
@@ -658,18 +623,10 @@
        CRM STATE MANAGER & CLIENT STORAGE SCRIPT
        ========================================================================= -->
   <script>
-  // Initial Sample Seed Data for Instant Netlify Demo
+  // Clean Initial State for Live Studio Operations (No Dummy Data)
   const DEFAULT_STATE = {
-    leads: [
-      { id: 101, customer_name: "Simranjeet Singh", phone: "+91 94191 88223", email: "simran@gmail.com", service_name: "STEK PPF Full Body", vehicle_model: "Mahindra Thar Roxx", vehicle_reg: "JK 02 CQ 8899", source: "WEBSITE", stage: "NEW", created_at: "2026-10-08 14:30" },
-      { id: 102, customer_name: "Dr. Ankur Gupta", phone: "+91 94191 44112", email: "dr.ankur@gmail.com", service_name: "Ceramic Coating 9H+", vehicle_model: "Audi A6 Matrix", vehicle_reg: "JK 02 BW 0001", source: "WEBSITE", stage: "CONTACTED", created_at: "2026-10-08 11:15" },
-      { id: 103, customer_name: "Col. Sanjeev Manhas", phone: "+91 94191 99001", email: "sanjeev.m@outlook.com", service_name: "Full Studio Car Detailing", vehicle_model: "Toyota Fortuner", vehicle_reg: "JK 02 DA 5555", source: "MANUAL", stage: "BAY_SCHEDULED", created_at: "2026-10-07 16:45" }
-    ],
-    jobCards: [
-      { id: "JC-2026-041", customer_name: "Vikram Sharma", phone: "+91 94191 22334", vehicle_model: "BMW M340i xDrive", vehicle_reg: "JK 02 CK 9999", service_name: "STEK DynoShield Full PPF", total_amount: 145000, service_status: "UNDER_SERVICE", payment_status: "PAID", payment_mode: "UPI / QR", created_at: "2026-10-08" },
-      { id: "JC-2026-042", customer_name: "Rohan Jamwal", phone: "+91 94191 77665", vehicle_model: "Thar Roxx 4x4", vehicle_reg: "JK 02 CQ 7788", service_name: "Ceramic Coating 9H+ Ultra", total_amount: 32000, service_status: "UNDER_SERVICE", payment_status: "PAID", payment_mode: "Card", created_at: "2026-10-08" },
-      { id: "JC-2026-043", customer_name: "Arun Mehra", phone: "+91 94191 11223", vehicle_model: "Hyundai Creta N Line", vehicle_reg: "JK 02 CL 4400", service_name: "Interior Deep Steam Purge", total_amount: 4500, service_status: "COMPLETED", payment_status: "PAID", payment_mode: "Cash", created_at: "2026-10-07" }
-    ],
+    leads: [],
+    jobCards: [],
     inventory: [
       { id: 1, sku: "PPF-STEK-15M", name: "STEK DynoShield PPF 15m Roll", category: "PPF", stock: 6.5, unit: "Rolls", cost: 65000, price: 125000 },
       { id: 2, sku: "CER-GTECH-50ML", name: "Gtechniq Crystal Serum Light 50ml", category: "COATING", stock: 14, unit: "Bottles", cost: 4200, price: 9500 },
@@ -677,31 +634,26 @@
       { id: 4, sku: "SHAMP-KOCH-GS", name: "Koch-Chemie Gsf Gentle Snow Foam 5L", category: "CHEMICAL", stock: 8, unit: "Cans", cost: 2600, price: 4200 },
       { id: 5, sku: "PAD-RUPES-YEL", name: "Rupes Yellow Fine Polishing Pad 150mm", category: "PADS", stock: 32, unit: "Pads", cost: 650, price: 1200 }
     ],
-    invoices: [
-      { id: "INV-2026-089", customer_name: "Vikram Sharma", vehicle_reg: "JK 02 CK 9999", amount: 145000, payment_mode: "UPI / QR", status: "PAID", date: "2026-10-08" },
-      { id: "INV-2026-090", customer_name: "Rohan Jamwal", vehicle_reg: "JK 02 CQ 7788", amount: 32000, payment_mode: "Card", status: "PAID", date: "2026-10-08" },
-      { id: "INV-2026-091", customer_name: "Arun Mehra", vehicle_reg: "JK 02 CL 4400", amount: 4500, payment_mode: "Cash", status: "PAID", date: "2026-10-07" },
-      { id: "INV-2026-092", customer_name: "Simranjeet Singh", vehicle_reg: "JK 02 CQ 8899", amount: 85000, payment_mode: "Pending", status: "UNPAID", date: "2026-10-08" }
-    ],
-    memberships: [
-      { id: 1, member_no: "TDC-VIP-1001", customer_name: "Aman Gupta", phone: "+91 94191 11222", plan_name: "Ceramic Care Pass", billing_cycle: "Annual", remaining_washes: 6, status: "ACTIVE", date: "2026-01-15" },
-      { id: 2, member_no: "TDC-VIP-1002", customer_name: "Jaspreet Singh", phone: "+91 94191 33445", plan_name: "Signature Wash Club", billing_cycle: "Monthly", remaining_washes: 2, status: "ACTIVE", date: "2026-09-01" },
-      { id: 3, member_no: "TDC-VIP-1003", customer_name: "Tarun Sharma", phone: "+91 94191 66778", plan_name: "Elite Concierge Detail Pass", billing_cycle: "Annual", remaining_washes: 11, status: "ACTIVE", date: "2026-03-20" }
-    ],
-    customers: [
-      { name: "Vikram Sharma", phone: "+91 94191 22334", vehicles: "BMW M340i (JK 02 CK 9999)", visits: 4, spend: "₹1,85,000", notes: "VIP Client • PPF on both cars" },
-      { name: "Rohan Jamwal", phone: "+91 94191 77665", vehicles: "Thar Roxx (JK 02 CQ 7788)", visits: 2, spend: "₹38,000", notes: "Prefers Saturday morning bays" },
-      { name: "Dr. Ankur Gupta", phone: "+91 94191 44112", vehicles: "Audi A6 (JK 02 BW 0001)", visits: 6, spend: "₹65,000", notes: "Ceramic Care Annual Member" }
-    ]
+    invoices: [],
+    memberships: [],
+    customers: []
   };
 
-  // State initialization with localStorage fallback
+  // State initialization with localStorage fallback and dummy data purge
   function getCrmState() {
     try {
       const saved = localStorage.getItem('tdc_crm_master_state');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Purge dummy demo records if cached from prior sessions
+        if (parsed.leads && parsed.leads.some(l => l.customer_name === 'Simranjeet Singh' || l.customer_name === 'Dr. Ankur Gupta')) {
+          localStorage.removeItem('tdc_crm_master_state');
+          return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        }
+        return parsed;
+      }
     } catch(e){}
-    return DEFAULT_STATE;
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
   }
 
   function saveCrmState(state) {
@@ -807,14 +759,55 @@
     } catch(e){}
 
     // Update Badges & Stats
+    const inBayCount = state.jobCards.filter(j => j.service_status === 'UNDER_SERVICE').length;
+    const statInBayEl = document.getElementById('statInBay');
+    if (statInBayEl) statInBayEl.textContent = inBayCount;
     document.getElementById('badgeLeadCount').textContent = state.leads.length;
     document.getElementById('statPendingLeads').textContent = state.leads.filter(l => l.stage === 'NEW').length;
     document.getElementById('statActiveJobs').textContent = state.jobCards.length;
     document.getElementById('statMembersCount').textContent = state.memberships.length;
 
+    // Render Dynamic Live Workshop Bays
+    const baysGrid = document.getElementById('liveBaysGrid');
+    if (baysGrid) {
+      const bayDefs = [
+        { num: '01', name: 'BAY 01 // PPF CLEANROOM', color: '#E50914' },
+        { num: '02', name: 'BAY 02 // CERAMIC COATING', color: '#3b82f6' },
+        { num: '03', name: 'BAY 03 // DECON & WASH BAY', color: '#22c55e' },
+        { num: '04', name: 'BAY 04 // INSPECTION & DELIVERY', color: '#a855f7' }
+      ];
+      baysGrid.innerHTML = bayDefs.map((b, idx) => {
+        const job = state.jobCards[idx];
+        if (job) {
+          return `
+            <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid ${b.color}; border-radius:8px; padding:20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; font-weight:800; color:${b.color}; letter-spacing:0.12em;">${b.name}</span>
+                <span style="background:rgba(234,179,8,0.15); color:#eab308; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">${job.service_status || 'IN PROGRESS'}</span>
+              </div>
+              <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">${job.customer_name} &bull; ${job.vehicle_model}</h4>
+              <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: ${job.vehicle_reg || 'N/A'} • ${job.service_name}</p>
+              <div style="font-size:12px; color:#cccccc;">Amount: ₹${Number(job.total_amount).toLocaleString('en-IN')}</div>
+            </div>
+          `;
+        }
+        return `
+          <div style="background:#121212; border:1px solid rgba(255,255,255,0.08); border-left:4px solid rgba(255,255,255,0.2); border-radius:8px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; color:#888888; letter-spacing:0.12em;">${b.name}</span>
+              <span style="background:rgba(34,197,94,0.15); color:#22c55e; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">AVAILABLE</span>
+            </div>
+            <h4 style="font-size:17px; margin:10px 0 4px; color:#ffffff;">Cleanroom Calibrated & Ready</h4>
+            <p style="font-size:12.5px; color:#666666; margin:0 0 12px;">Bay open for incoming detailing or PPF vehicle.</p>
+            <div style="font-size:12px; color:#888888;">Ready for immediate check-in</div>
+          </div>
+        `;
+      }).join('');
+    }
+
     // 1. Leads Table
     const leadsTbody = document.getElementById('leadsTableBody');
-    leadsTbody.innerHTML = state.leads.map(l => `
+    leadsTbody.innerHTML = state.leads.length ? state.leads.map(l => `
       <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
         <td style="padding:12px 16px;">
           <div style="font-weight:700; color:#ffffff;">${l.customer_name}</div>
@@ -836,11 +829,19 @@
           <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Convert to Job Card &rarr;</button>
         </td>
       </tr>
-    `).join('');
+    `).join('') : `
+      <tr>
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#888888;">
+          <div style="font-size:32px; margin-bottom:10px;">📥</div>
+          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Active Enquiries Yet</div>
+          <div style="font-size:12px; color:#666666;">New leads and consultations submitted from the website will appear here in real time.</div>
+        </td>
+      </tr>
+    `;
 
     // 2. Job Cards Table
     const jobsTbody = document.getElementById('jobCardsTableBody');
-    jobsTbody.innerHTML = state.jobCards.map(j => `
+    jobsTbody.innerHTML = state.jobCards.length ? state.jobCards.map(j => `
       <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
         <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#E50914;">${j.id}</td>
         <td style="padding:12px 16px;">
@@ -865,7 +866,15 @@
           ${j.payment_status !== 'PAID' ? `<button onclick="markJobPaid('${j.id}')" style="background:#22c55e; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Mark Paid ✓</button>` : `<span style="font-size:12px; color:#888888;">Invoiced</span>`}
         </td>
       </tr>
-    `).join('');
+    `).join('') : `
+      <tr>
+        <td colspan="7" style="padding:48px 16px; text-align:center; color:#888888;">
+          <div style="font-size:32px; margin-bottom:10px;">🚗</div>
+          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Active Bay Job Cards</div>
+          <div style="font-size:12px; color:#666666;">Convert a website lead above or click "+ New Job Card" to assign a vehicle to a studio bay.</div>
+        </td>
+      </tr>
+    `;
 
     // 3. Inventory Table & Select Dropdowns
     const invTbody = document.getElementById('inventoryTableBody');
@@ -897,7 +906,7 @@
 
     // 4. Invoices Table
     const invTableTbody = document.getElementById('invoicesTableBody');
-    invTableTbody.innerHTML = state.invoices.map(inv => `
+    invTableTbody.innerHTML = state.invoices.length ? state.invoices.map(inv => `
       <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
         <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#ffffff;">${inv.id}</td>
         <td style="padding:12px 16px;">
@@ -915,11 +924,19 @@
           <button onclick="alert('Printing Tax Invoice: ${inv.id}\\nCustomer: ${inv.customer_name}\\nAmount: ₹${Number(inv.amount).toLocaleString('en-IN')}')" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:5px 12px; border-radius:4px; font-size:11.5px; cursor:pointer;">Print Invoice 🖨️</button>
         </td>
       </tr>
-    `).join('');
+    `).join('') : `
+      <tr>
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#888888;">
+          <div style="font-size:32px; margin-bottom:10px;">🧾</div>
+          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Invoices Generated Yet</div>
+          <div style="font-size:12px; color:#666666;">Completed jobs and offline billings will generate GST tax invoices here.</div>
+        </td>
+      </tr>
+    `;
 
     // 5. Memberships Table
     const memTbody = document.getElementById('membershipsTableBody');
-    memTbody.innerHTML = state.memberships.map(m => `
+    memTbody.innerHTML = state.memberships.length ? state.memberships.map(m => `
       <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
         <td style="padding:12px 16px; font-family:monospace; font-weight:800; color:#E50914;">${m.member_no}</td>
         <td style="padding:12px 16px;">
@@ -940,11 +957,19 @@
           <button onclick="deductMemberWash(${m.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">-1 Wash Visit</button>
         </td>
       </tr>
-    `).join('');
+    `).join('') : `
+      <tr>
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#888888;">
+          <div style="font-size:32px; margin-bottom:10px;">👑</div>
+          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No VIP Members Enrolled Yet</div>
+          <div style="font-size:12px; color:#666666;">Memberships enrolled online or at the studio counter will appear here.</div>
+        </td>
+      </tr>
+    `;
 
     // 6. Customers Table
     const custTbody = document.getElementById('customersTableBody');
-    custTbody.innerHTML = state.customers.map(c => `
+    custTbody.innerHTML = state.customers.length ? state.customers.map(c => `
       <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
         <td style="padding:12px 16px;">
           <div style="font-weight:700; color:#ffffff;">${c.name}</div>
@@ -955,7 +980,70 @@
         <td style="padding:12px 16px; font-weight:800; color:#22c55e;">${c.spend}</td>
         <td style="padding:12px 16px; font-size:12.5px; color:#888888;">${c.notes}</td>
       </tr>
-    `).join('');
+    `).join('') : `
+      <tr>
+        <td colspan="5" style="padding:48px 16px; text-align:center; color:#888888;">
+          <div style="font-size:32px; margin-bottom:10px;">👤</div>
+          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Customer Records Yet</div>
+          <div style="font-size:12px; color:#666666;">Customer profiles are created automatically as appointments and job cards are logged.</div>
+        </td>
+      </tr>
+    `;
+  }
+
+  // Live Sync with Server APIs
+  async function syncServerData() {
+    try {
+      // Sync Leads
+      const leadsRes = await fetch('/api/leads');
+      if (leadsRes.ok) {
+        const json = await leadsRes.json();
+        const list = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
+        list.forEach(srvLead => {
+          if (!state.leads.some(l => l.id == srvLead.id || l.ref == srvLead.ref)) {
+            state.leads.unshift({
+              id: srvLead.id || Date.now(),
+              ref: srvLead.ref || ('LEAD-' + (srvLead.id || Math.floor(1000 + Math.random() * 9000))),
+              customer_name: srvLead.name || srvLead.customer_name || 'Website Client',
+              phone: srvLead.phone || '',
+              email: srvLead.email || '',
+              vehicle_model: srvLead.vehicle_model || srvLead.vehicle_type || 'Vehicle',
+              vehicle_reg: srvLead.vehicle_reg || 'N/A',
+              service_name: srvLead.service_name || srvLead.service || 'Studio Consultation',
+              source: (srvLead.source || 'WEBSITE').toUpperCase(),
+              stage: srvLead.stage || 'NEW',
+              created_at: srvLead.created_at || new Date().toISOString().slice(0, 16)
+            });
+          }
+        });
+      }
+
+      // Sync Appointments
+      const apptRes = await fetch('/api/appointments');
+      if (apptRes.ok) {
+        const json = await apptRes.json();
+        const list = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
+        list.forEach(apt => {
+          if (!state.leads.some(l => l.ref == apt.ref)) {
+            state.leads.unshift({
+              id: apt.id || Date.now(),
+              ref: apt.ref,
+              customer_name: apt.customer_name || 'Online Client',
+              phone: apt.phone || '',
+              email: apt.email || '',
+              vehicle_model: `${apt.vehicle_brand || ''} ${apt.vehicle_model || ''}`.trim() || 'Vehicle',
+              vehicle_reg: apt.vehicle_registration || 'N/A',
+              service_name: apt.service_name || 'Studio Booking',
+              source: 'ONLINE_BOOKING',
+              stage: 'BAY_SCHEDULED',
+              created_at: `${apt.date} ${apt.time}`
+            });
+          }
+        });
+      }
+
+      saveCrmState(state);
+    } catch(e) {}
   }
 
   // Action Handlers
@@ -1174,8 +1262,80 @@
     }
   });
 
+  // Real-time API Sync with Website (Leads & Appointments)
+  async function syncServerData(manual = false) {
+    let newItemsFound = false;
+    try {
+      const res = await fetch('/api/leads');
+      if (res.ok) {
+        const body = await res.json();
+        const incoming = (body && body.data) ? body.data : (Array.isArray(body) ? body : []);
+        if (incoming.length) {
+          incoming.forEach(serverLead => {
+            const exists = state.leads.some(l => 
+              l.id === serverLead.id || 
+              (l.phone && serverLead.phone && l.phone === serverLead.phone && l.created_at === serverLead.created_at)
+            );
+            if (!exists) {
+              state.leads.unshift(serverLead);
+              newItemsFound = true;
+            }
+          });
+        }
+      }
+    } catch (e) {
+      // Backend offline or running purely static
+    }
+
+    try {
+      const res = await fetch('/api/appointments');
+      if (res.ok) {
+        const body = await res.json();
+        const incomingApts = (body && body.data) ? body.data : (Array.isArray(body) ? body : []);
+        if (incomingApts.length) {
+          incomingApts.forEach(apt => {
+            const aptId = apt.id || apt.ref || Date.now();
+            const aptLead = {
+              id: aptId,
+              customer_name: apt.customer_name || (apt.customer && apt.customer.name) || 'Studio Client',
+              phone: apt.customer_phone || (apt.customer && apt.customer.phone) || '',
+              vehicle_model: apt.vehicle_model || (apt.vehicle && apt.vehicle.model) || 'Car/SUV',
+              vehicle_reg: apt.vehicle_reg || (apt.vehicle && apt.vehicle.registration) || '',
+              service_name: apt.service_name || (apt.service && apt.service.name) || 'Detailing Service',
+              source: 'ONLINE_BOOKING',
+              stage: 'NEW',
+              created_at: apt.created_at || (apt.appointment_date + ' ' + (apt.slot_time || ''))
+            };
+            const exists = state.leads.some(l => 
+              l.id === aptLead.id || 
+              (l.phone && aptLead.phone && l.phone === aptLead.phone && l.service_name === aptLead.service_name)
+            );
+            if (!exists) {
+              state.leads.unshift(aptLead);
+              newItemsFound = true;
+            }
+          });
+        }
+      }
+    } catch (e) {}
+
+    if (newItemsFound) {
+      saveCrmState(state);
+    } else {
+      renderAllCrmTables();
+    }
+
+    if (manual) {
+      alert('✓ Studio CRM synchronized with website leads & appointments database.');
+    }
+  }
+
+  window.syncServerData = syncServerData;
+
   // Init
   checkAuth();
+  syncServerData();
+  setInterval(syncServerData, 15000);
   </script>
 </body>
 </html>

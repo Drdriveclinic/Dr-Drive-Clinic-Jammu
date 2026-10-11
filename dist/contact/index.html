@@ -26,6 +26,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/assets/css/main.css">
 
@@ -71,8 +74,8 @@
   <!-- Global Header / Navigation -->
   <header class="site-header header-transparent">
   <div class="container nav-container">
-    <a href="/" class="nav-brand" aria-label="The Drive Clinic - Home" data-major-nav>
-              <img src="/assets/brand/logo-white.svg" alt="The Drive Clinic Logo" class="nav-logo-img" width="180" height="36">
+    <a href="/" class="nav-brand" aria-label="THE DDC - Home" data-major-nav>
+              <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
           </a>
 
     <!-- Desktop Navigation Links -->
@@ -244,11 +247,11 @@
               <div class="mobile-sublink-badge-icon">💧</div>
               <div class="sublink-text">
                 <strong>Ceramic SiO2 Foam Wash</strong>
-                <small>pH-neutral gloss maintenance wash</small>
+                <small>pH-neutral SiO2 hydrophobic wash</small>
               </div>
             </a>
             <a href="/services" class="mobile-sublink-all" data-major-nav>
-              <span>Explore All 15 Detailing Packages &rarr;</span>
+              <span>Explore All Detailing Packages &rarr;</span>
             </a>
           </div>
         </div>
@@ -356,7 +359,7 @@
 
     <!-- Lazy Google Map Embed -->
     <div>
-      <div style="border:1px solid var(--line); overflow:hidden; min-height:460px; background:var(--white);" data-anim="mask-reveal">
+      <div style="border:1px solid var(--line); overflow:hidden; min-height:460px; background:#151A26;" data-anim="mask-reveal">
         <iframe 
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13426.123456789!2d74.871234!3d32.701234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDQyJzA0LjQiTiA3NMKwNTInMTYuNCJF!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" 
           width="100%" 
@@ -384,7 +387,7 @@
       Fill out the form below and our studio team will reach out with estimates and availability.
     </p>
 
-    <div style="background:var(--off); border:1px solid var(--line); padding:44px;" data-anim="fade-up">
+    <div style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:8px; padding:44px;" data-anim="fade-up">
       <!-- Status Message Banners -->
       <div id="contact-success-banner" style="display:none; background:#1b3820; color:#b2f2bb; border:1px solid #2b5c32; padding:18px 24px; margin-bottom:24px; font-size:15px; font-weight:600;">
         ✓ Thank you! Your enquiry has been received. The Drive Clinic team will contact you shortly via WhatsApp.
@@ -397,56 +400,54 @@
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Your Name *</label>
-            <input type="text" name="name" required placeholder="e.g. Rahul Sharma" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-weight:600;">
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Your Name *</label>
+            <input type="text" name="name" required placeholder="e.g. Rahul Sharma" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-weight:600;">
           </div>
 
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">10-Digit Mobile Phone *</label>
-            <input type="tel" name="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="9419100000" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-family:monospace; font-size:15px;">
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">10-Digit Mobile Phone *</label>
+            <input type="tel" name="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="9419100000" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-family:monospace; font-size:15px;">
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Email Address</label>
-            <input type="email" name="email" placeholder="rahul@example.com" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white);">
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Email Address</label>
+            <input type="email" name="email" placeholder="rahul@example.com" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white);">
           </div>
 
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Vehicle Type</label>
-            <select name="vehicle_type" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-weight:600;">
-              <option value="car">Car / 4-Wheeler</option>
-              <option value="bike">Bike / 2-Wheeler</option>
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Vehicle Type</label>
+            <select name="vehicle_type" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-weight:600;">
+              <option value="car" style="background:#151A26; color:#fff;">Car / 4-Wheeler</option>
+              <option value="bike" style="background:#151A26; color:#fff;">Bike / 2-Wheeler</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Service of Interest</label>
-          <select name="service_slug" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-weight:600;">
-            <option value="">General Inquiry / Consultation</option>
-                          <option value="ppf">PAINT PROTECTION FILM</option>
-                          <option value="ceramic-coating">CERAMIC COATING</option>
-                          <option value="bike-detailing">BIKE DETAILING</option>
-                          <option value="full-car-detailing">FULL CAR DETAILING</option>
-                          <option value="ceramic-wash">CERAMIC WASH</option>
-                          <option value="steam-wash">STEAM WASH</option>
-                          <option value="maintenance-wash">MAINTENANCE WASH</option>
-                          <option value="engine-detailing">ENGINE DETAILING</option>
-                          <option value="interior-deep-clean">INTERIOR DEEP CLEAN</option>
-                          <option value="polishing-waxing">POLISHING &amp; WAXING</option>
-                          <option value="tyre-rim-care">TYRE &amp; RIM CARE</option>
-                          <option value="odor-removal">ODOR REMOVAL</option>
-                          <option value="interior-dry-cleaning">INTERIOR DRY CLEANING</option>
-                          <option value="premium-car-wash">PREMIUM CAR WASH</option>
-                          <option value="express-exterior-wash">EXPRESS EXTERIOR WASH</option>
+          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Service of Interest</label>
+          <select name="service_slug" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-weight:600;">
+            <option value="" style="background:#151A26; color:#fff;">General Inquiry / Consultation</option>
+                          <option value="ppf" style="background:#151A26; color:#fff;">PAINT PROTECTION FILM</option>
+                          <option value="ceramic-coating" style="background:#151A26; color:#fff;">CERAMIC COATING</option>
+                          <option value="bike-detailing" style="background:#151A26; color:#fff;">BIKE DETAILING</option>
+                          <option value="full-car-detailing" style="background:#151A26; color:#fff;">FULL CAR DETAILING</option>
+                          <option value="ceramic-wash" style="background:#151A26; color:#fff;">CERAMIC WASH</option>
+                          <option value="steam-wash" style="background:#151A26; color:#fff;">STEAM WASH</option>
+                          <option value="basic-car-wash" style="background:#151A26; color:#fff;">BASIC CAR WASH</option>
+                          <option value="engine-detailing" style="background:#151A26; color:#fff;">ENGINE DETAILING</option>
+                          <option value="interior-deep-clean" style="background:#151A26; color:#fff;">INTERIOR DEEP CLEAN</option>
+                          <option value="polishing-waxing" style="background:#151A26; color:#fff;">POLISHING &amp; WAXING</option>
+                          <option value="tyre-rim-care" style="background:#151A26; color:#fff;">TYRE &amp; RIM CARE</option>
+                          <option value="interior-dry-cleaning" style="background:#151A26; color:#fff;">INTERIOR DRY CLEANING</option>
+                          <option value="express-exterior-wash" style="background:#151A26; color:#fff;">EXPRESS EXTERIOR WASH</option>
                       </select>
         </div>
 
         <div>
-          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Your Message / Query</label>
-          <textarea name="message" rows="4" placeholder="Tell us about your vehicle model, current paint condition, or questions..." style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white);"></textarea>
+          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Your Message / Query</label>
+          <textarea name="message" rows="4" placeholder="Tell us about your vehicle model, current paint condition, or questions..." style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white);"></textarea>
         </div>
 
         <button type="submit" id="contact-submit-btn" class="btn btn-red" style="width:100%; margin-top:8px;">
@@ -523,8 +524,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="footer-top">
       <!-- Column 1: Brand & Tagline -->
       <div>
-        <a href="/" class="nav-brand" aria-label="The Drive Clinic">
-                      <img src="/assets/brand/logo-white.svg" alt="The Drive Clinic" class="nav-logo-img" width="180" height="36">
+        <a href="/" class="nav-brand" aria-label="THE DDC - Home">
+                      <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
                   </a>
         <h3 class="footer-brand-title">WHERE CARS GET<br>THEIR SHINE BACK.</h3>
         <p class="footer-tagline">Premium car and bike detailing, Paint Protection Film (PPF), and studio wash in Jammu.</p>
@@ -539,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <li><a href="/services/bike-detailing" class="footer-list-link">Bike Detailing</a></li>
           <li><a href="/services/ceramic-wash" class="footer-list-link">Ceramic Wash</a></li>
           <li><a href="/services/steam-wash" class="footer-list-link">Steam Wash</a></li>
-          <li><a href="/services/maintenance-wash" class="footer-list-link">Maintenance Wash</a></li>
+          <li><a href="/services/basic-car-wash" class="footer-list-link">Basic Car Wash</a></li>
           <li><a href="/services/full-car-detailing" class="footer-list-link">Full Car Detailing</a></li>
           <li><a href="/services" class="footer-list-link" style="color:var(--red);">View All Services →</a></li>
         </ul>
@@ -615,17 +616,28 @@ document.addEventListener('DOMContentLoaded', () => {
   <script type="module" src="/assets/js/main.js"></script>
 
         <script>
-        // Netlify Client-side Lead & Booking Sync to CRM Storage
+        // THE DDC — Cross-Domain Lead & Booking Sync Bridge
         (function() {
-          function saveToCrmStorage(key, item) {
+          const CRM_ENDPOINT = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 'https://crm.theddc.in/api';
+
+          function saveLead(lead) {
             try {
-              let existing = JSON.parse(localStorage.getItem(key) || '[]');
-              existing.unshift(item);
-              localStorage.setItem(key, JSON.stringify(existing));
+              let existing = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
+              existing.unshift(lead);
+              localStorage.setItem('tdc_crm_leads', JSON.stringify(existing));
+            } catch(e){}
+
+            // Post to CRM Domain if available
+            try {
+              fetch(CRM_ENDPOINT + '/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(lead),
+                mode: 'cors'
+              }).catch(function(){});
             } catch(e){}
           }
 
-          // Intercept Booking form submissions
           document.addEventListener('submit', function(e) {
             const form = e.target;
             if (form.matches('#formPublicEnroll, #modalBookingForm, form[action*="book"], form[action*="contact"], form[action*="leads"]')) {
@@ -633,42 +645,20 @@ document.addEventListener('DOMContentLoaded', () => {
               const data = Object.fromEntries(fd.entries());
               data.id = Date.now();
               data.created_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
-              data.source = form.id === 'formPublicEnroll' ? 'MEMBERSHIP_PAGE' : 'WEBSITE';
-              data.status = 'NEW';
-              
-              if (form.id === 'formPublicEnroll') {
-                saveToCrmStorage('tdc_crm_memberships', {
-                  id: Date.now(),
-                  member_no: 'TDC-VIP-' + Math.floor(1000 + Math.random() * 9000),
-                  customer_name: data.customer_name || 'VIP Member',
-                  phone: data.phone || '',
-                  email: data.email || '',
-                  plan_name: data.plan_name || 'Signature Wash Club',
-                  billing_cycle: data.billing_cycle || 'Monthly',
-                  price: data.price || '2999',
-                  vehicle_model: data.vehicle_model || '',
-                  vehicle_reg: data.vehicle_reg || '',
-                  remaining_washes: data.billing_cycle === 'Annual' ? 12 : 3,
-                  status: 'ACTIVE',
-                  created_at: new Date().toISOString().slice(0, 10)
-                });
-              } else {
-                saveToCrmStorage('tdc_crm_leads', {
-                  id: Date.now(),
-                  customer_name: data.name || data.customer_name || 'Website Inquiry',
-                  phone: data.phone || '',
-                  email: data.email || '',
-                  service_name: data.service_name || data.service || 'PPF & Ceramic Detailing',
-                  vehicle_model: data.vehicle || data.vehicle_model || '',
-                  vehicle_reg: data.vehicle_reg || '',
-                  preferred_date: data.date || '',
-                  preferred_time: data.time || '',
-                  notes: data.notes || data.message || '',
-                  source: 'WEBSITE',
-                  stage: 'NEW',
-                  created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
-                });
-              }
+              data.source = 'WEBSITE_DOMAIN';
+              data.stage = 'NEW';
+              saveLead({
+                id: data.id,
+                customer_name: data.name || data.customer_name || 'Website Lead',
+                phone: data.phone || '',
+                email: data.email || '',
+                service_name: data.service_name || data.service || 'Detailing & Protection',
+                vehicle_model: data.vehicle || data.vehicle_model || '',
+                notes: data.notes || data.message || '',
+                source: 'WEBSITE_DOMAIN',
+                stage: 'NEW',
+                created_at: data.created_at
+              });
             }
           }, true);
         })();

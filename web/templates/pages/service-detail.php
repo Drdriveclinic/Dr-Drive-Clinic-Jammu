@@ -27,6 +27,26 @@ $heroBreadcrumb = [
     ['label' => 'SERVICES', 'url' => '/services'],
     ['label' => $service['name'], 'url' => '']
 ];
+// Service Visual Images Mapping
+$serviceImages = [
+    'ppf'                   => '/assets/img/studio/ppf-install.png',
+    'ceramic-coating'       => '/assets/img/studio/ceramic-coating.png',
+    'bike-detailing'        => '/assets/img/studio/bike-detailing.png',
+    'full-car-detailing'    => '/assets/img/studio/full-detailing.png',
+    'interior-deep-clean'   => '/assets/img/studio/interior-clean.png',
+    'ceramic-wash'          => '/assets/img/studio/ceramic-wash.png',
+    'steam-wash'            => '/assets/img/studio/steam-wash.png',
+    'basic-car-wash'        => '/assets/img/studio/basic-wash.png',
+    'engine-detailing'      => '/assets/img/studio/engine-bay.png',
+    'polishing-waxing'      => '/assets/img/studio/polishing-waxing.png',
+    'tyre-rim-care'         => '/assets/img/studio/wheel-care.png',
+    'headlight-restoration' => '/assets/img/services/headlight.jpg',
+    'underbody-coating'     => '/assets/img/services/underbody.jpg',
+    'glass-treatment'       => '/assets/img/services/glass-treatment.jpg',
+    'rubbing-compound'      => '/assets/img/studio/polishing-waxing.png',
+];
+$svcHeroImg = $serviceImages[$service['slug']] ?? '/assets/img/studio/studio-showcase.png';
+$heroVisualImg = $svcHeroImg;
 ?>
 
 <!-- ========================================================================
@@ -68,28 +88,7 @@ require dirname(__DIR__) . '/partials/page-hero.php';
       </div>
     </div>
     <div>
-      <?php
-      $serviceImages = [
-          'ppf' => '/assets/img/services/ppf.jpg',
-          'bike-detailing' => '/assets/img/bike/bike-1.jpg',
-          'ceramic-coating' => '/assets/img/services/ceramic-coating.jpg',
-          'full-car-detailing' => '/assets/img/services/full-detailing.jpg',
-          'interior-deep-clean' => '/assets/img/services/interior-detailing.jpg',
-          'ceramic-wash' => '/assets/img/wash/ceramic-wash.jpg',
-          'steam-wash' => '/assets/img/wash/steam-wash.jpg',
-          'maintenance-wash' => '/assets/img/wash/maintenance-wash.jpg',
-          'headlight-restoration' => '/assets/img/services/headlight.jpg',
-          'engine-detailing' => '/assets/img/services/engine-bay.jpg',
-          'underbody-coating' => '/assets/img/services/underbody.jpg',
-          'glass-treatment' => '/assets/img/services/glass-treatment.jpg',
-          'polishing-waxing' => '/assets/img/services/rubbing-polishing.jpg',
-          'rubbing-compound' => '/assets/img/services/rubbing-polishing.jpg',
-          'odor-removal' => '/assets/img/services/interior-detailing.jpg',
-          'tyre-rim-care' => '/assets/img/bike/bike-2.jpg'
-      ];
-      $svcHeroImg = $serviceImages[$service['slug']] ?? '/assets/img/services/full-detailing.jpg';
-      ?>
-      <div style="overflow:hidden; height:100%; min-height:460px; border:1px solid var(--line);" data-anim="mask-reveal">
+      <div style="overflow:hidden; height:100%; min-height:460px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
         <img src="<?= $svcHeroImg ?>" alt="<?= htmlspecialchars($service['name']) ?> in studio bay" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </div>
@@ -151,7 +150,7 @@ require dirname(__DIR__) . '/partials/page-hero.php';
     </div>
 
     <div>
-      <div style="background:var(--white); border:1px solid var(--line); padding:40px;" data-anim="fade-up">
+      <div style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); padding:40px;" data-anim="fade-up">
         <ul style="display:flex; flex-direction:column; gap:20px;">
           <?php foreach ($includedList as $item): ?>
             <li style="display:flex; align-items:flex-start; gap:16px; font-size:16px; font-weight:600; color:var(--ink); line-height:1.5;">
@@ -218,21 +217,6 @@ require dirname(__DIR__) . '/partials/page-hero.php';
       </div>
     </div>
   </section>
-
-<?php elseif ($service['module'] === 'maintenance'): ?>
-  <!-- Maintenance Special Module: Recurring Plan CTA -->
-  <section class="section section-dark" style="text-align:center;">
-    <div class="container">
-      <div class="eyebrow" style="justify-content:center;">RECURRING CARE PROGRAM</div>
-      <h2 class="h2-section" style="margin-bottom: 24px;">
-        LOCK IN YOUR SHINE.<br><span class="text-red">EVERY 2 OR 4 WEEKS.</span>
-      </h2>
-      <p class="lead-text" style="color:var(--grey); max-width:600px; margin: 0 auto 36px;">
-        Sign up for our automated recurring maintenance schedule to ensure dedicated bay availability and priority time slots.
-      </p>
-      <a href="/book?service=maintenance-wash&recurring=1" class="btn btn-red">SCHEDULE RECURRING SERVICE →</a>
-    </div>
-  </section>
 <?php endif; ?>
 
 <!-- ========================================================================
@@ -282,7 +266,7 @@ require dirname(__DIR__) . '/partials/page-hero.php';
 
     <div class="grid-3-col">
       <?php foreach ($whoList as $who): ?>
-        <div style="background:var(--white); border:1px solid var(--line); padding:36px 28px; display:flex; flex-direction:column; justify-content:space-between;" data-anim="fade-up">
+        <div style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); padding:36px 28px; display:flex; flex-direction:column; justify-content:space-between;" data-anim="fade-up">
           <div>
             <div style="color:var(--red); font-size:24px; margin-bottom:12px;">→</div>
             <h4 style="font-family:var(--font-display); font-size:26px; margin-bottom:14px;">
@@ -313,13 +297,19 @@ require dirname(__DIR__) . '/partials/page-hero.php';
 
     <div class="grid-3-col">
       <?php foreach ($serviceGallery as $gItem): ?>
-        <div style="background:#181818; border:1px solid rgba(255,255,255,0.1); overflow:hidden;" data-anim="mask-reveal">
-          <div class="img-placeholder" style="min-height:260px;">
-            PHOTO — <?= htmlspecialchars($gItem['alt']) ?>
+        <?php 
+        $gImg = $gItem['after_image'] ?? $gItem['image'] ?? null;
+        if (!$gImg) {
+            $gImg = $svcHeroImg;
+        }
+        ?>
+        <div style="background:#181818; border:1px solid rgba(255,255,255,0.1); border-radius:6px; overflow:hidden;" data-anim="mask-reveal">
+          <div style="height:250px; overflow:hidden; position:relative;">
+            <img src="<?= htmlspecialchars($gImg) ?>" alt="<?= htmlspecialchars($gItem['alt']) ?>" style="width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease;" loading="lazy" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
           </div>
           <div style="padding:20px;">
             <div style="font-size:11px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:6px;">
-              TRANSFORMATION
+              STUDIO TRANSFORMATION
             </div>
             <h4 style="font-size:18px; font-family:var(--font-display); color:var(--white);">
               <?= htmlspecialchars($gItem['vehicle_label'] ?: $service['name']) ?>

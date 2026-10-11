@@ -25,20 +25,15 @@ export function initVehicleDiagnosis() {
       name: 'STEAM WASH & SANITIZATION',
       why: '160°C dry vapor steam eliminates 99.9% of bacteria and allergens while deep-cleaning AC vents and cabin fabrics.'
     },
-    'remove-odor': {
-      slug: 'odor-removal',
-      name: 'ODOR REMOVAL & OZONE TREATMENT',
-      why: 'Medical-grade Ozone (O3) gas shock destroys organic odor molecules at the cellular level permanently.'
-    },
     'detail-bike': {
       slug: 'bike-detailing',
       name: 'PRECISION BIKE DETAILING',
       why: 'Specialized degreasing, chrome restoration, chain maintenance, and paint correction tailored for two-wheelers.'
     },
-    'maintain-vehicle': {
-      slug: 'maintenance-wash',
-      name: 'MAINTENANCE WASH',
-      why: 'Fast, consistent bi-weekly upkeep designed to preserve existing coatings and keep your vehicle showroom-ready.'
+    'basic-wash': {
+      slug: 'basic-car-wash',
+      name: 'BASIC CAR WASH',
+      why: 'Thorough two-bucket scratch-free foam wash, wheel face clean, and full cabin vacuuming for everyday driving.'
     },
     'full-transformation': {
       slug: 'full-car-detailing',

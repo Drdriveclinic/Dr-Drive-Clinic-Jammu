@@ -6,15 +6,15 @@ $currentNav = $activeNav ?? 'overview';
 <aside class="crm-sidebar" id="crmSidebar">
   <div class="crm-sidebar-header">
     <a href="/crm" class="crm-brand-block">
-      <div class="crm-brand-icon">D/</div>
+      <img src="/assets/brand/logo-icon.svg" alt="THE DDC" class="crm-brand-icon-svg" style="width:36px; height:36px; border-radius:8px;">
       <div class="crm-brand-text">
-        <span class="crm-brand-name">THE DRIVE CLINIC</span>
-        <span class="crm-brand-sub">STUDIO MANAGEMENT</span>
+        <span class="crm-brand-name">THE DDC</span>
+        <span class="crm-brand-sub">STUDIO CRM • JAMMU</span>
       </div>
     </a>
 
     <div class="crm-studio-pill">
-      <div class="crm-studio-avatar">DC</div>
+      <div class="crm-studio-avatar">DDC</div>
       <div class="crm-studio-info">
         <span class="crm-studio-title">Flagship Studio</span>
         <span class="crm-studio-role">Owner Workspace</span>

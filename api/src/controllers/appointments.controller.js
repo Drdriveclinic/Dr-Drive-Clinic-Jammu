@@ -1,4 +1,4 @@
-import { bookAppointment, getAppointmentByRef } from '../services/appointment.service.js';
+import { bookAppointment, getAppointmentByRef, getAllAppointments } from '../services/appointment.service.js';
 import { generateAppointmentIcs } from '../services/ics.service.js';
 
 export async function createAppointment(req, res, next) {
@@ -7,6 +7,18 @@ export async function createAppointment(req, res, next) {
     res.status(201).json({
       ok: true,
       data: result
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getAppointments(req, res, next) {
+  try {
+    const list = await getAllAppointments();
+    res.json({
+      ok: true,
+      data: list
     });
   } catch (err) {
     next(err);

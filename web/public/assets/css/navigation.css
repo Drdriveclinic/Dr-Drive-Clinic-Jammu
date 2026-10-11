@@ -601,6 +601,29 @@
   }
 }
 
+@media (max-width: 768px) {
+  .site-header {
+    padding: 14px 0 !important;
+  }
+  .nav-logo-img {
+    height: 32px;
+    max-width: 170px;
+  }
+  .nav-actions .btn {
+    display: none; /* Hide top Book Now on mobile to avoid overcrowding; mobile bottom bar handles booking */
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-logo-img {
+    height: 28px;
+    max-width: 150px;
+  }
+  .nav-container {
+    gap: 16px;
+  }
+}
+
 /* ==========================================================================
    05. GLOBAL FOOTER
    ========================================================================== */

@@ -90,7 +90,7 @@ $services = $services ?? [];
 
     <!-- Lazy Google Map Embed -->
     <div>
-      <div style="border:1px solid var(--line); overflow:hidden; min-height:460px; background:var(--white);" data-anim="mask-reveal">
+      <div style="border:1px solid var(--line); overflow:hidden; min-height:460px; background:#151A26;" data-anim="mask-reveal">
         <iframe 
           src="<?= htmlspecialchars($settings['map_embed_url'] ?? 'https://maps.google.com') ?>" 
           width="100%" 
@@ -118,7 +118,7 @@ $services = $services ?? [];
       Fill out the form below and our studio team will reach out with estimates and availability.
     </p>
 
-    <div style="background:var(--off); border:1px solid var(--line); padding:44px;" data-anim="fade-up">
+    <div style="background:var(--glass-bg); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur); border:1px solid var(--glass-border); box-shadow:var(--glass-shadow); border-radius:8px; padding:44px;" data-anim="fade-up">
       <!-- Status Message Banners -->
       <div id="contact-success-banner" style="display:none; background:#1b3820; color:#b2f2bb; border:1px solid #2b5c32; padding:18px 24px; margin-bottom:24px; font-size:15px; font-weight:600;">
         ✓ Thank you! Your enquiry has been received. The Drive Clinic team will contact you shortly via WhatsApp.
@@ -131,44 +131,44 @@ $services = $services ?? [];
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Your Name *</label>
-            <input type="text" name="name" required placeholder="e.g. Rahul Sharma" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-weight:600;">
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Your Name *</label>
+            <input type="text" name="name" required placeholder="e.g. Rahul Sharma" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-weight:600;">
           </div>
 
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">10-Digit Mobile Phone *</label>
-            <input type="tel" name="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="9419100000" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-family:monospace; font-size:15px;">
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">10-Digit Mobile Phone *</label>
+            <input type="tel" name="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="9419100000" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-family:monospace; font-size:15px;">
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Email Address</label>
-            <input type="email" name="email" placeholder="rahul@example.com" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white);">
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Email Address</label>
+            <input type="email" name="email" placeholder="rahul@example.com" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white);">
           </div>
 
           <div>
-            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Vehicle Type</label>
-            <select name="vehicle_type" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-weight:600;">
-              <option value="car">Car / 4-Wheeler</option>
-              <option value="bike">Bike / 2-Wheeler</option>
+            <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Vehicle Type</label>
+            <select name="vehicle_type" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-weight:600;">
+              <option value="car" style="background:#151A26; color:#fff;">Car / 4-Wheeler</option>
+              <option value="bike" style="background:#151A26; color:#fff;">Bike / 2-Wheeler</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Service of Interest</label>
-          <select name="service_slug" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white); font-weight:600;">
-            <option value="">General Inquiry / Consultation</option>
+          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Service of Interest</label>
+          <select name="service_slug" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-weight:600;">
+            <option value="" style="background:#151A26; color:#fff;">General Inquiry / Consultation</option>
             <?php foreach ($services as $svc): ?>
-              <option value="<?= htmlspecialchars($svc['slug']) ?>"><?= htmlspecialchars($svc['name']) ?></option>
+              <option value="<?= htmlspecialchars($svc['slug']) ?>" style="background:#151A26; color:#fff;"><?= htmlspecialchars($svc['name']) ?></option>
             <?php endforeach; ?>
           </select>
         </div>
 
         <div>
-          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Your Message / Query</label>
-          <textarea name="message" rows="4" placeholder="Tell us about your vehicle model, current paint condition, or questions..." style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--white);"></textarea>
+          <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">Your Message / Query</label>
+          <textarea name="message" rows="4" placeholder="Tell us about your vehicle model, current paint condition, or questions..." style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white);"></textarea>
         </div>
 
         <button type="submit" id="contact-submit-btn" class="btn btn-red" style="width:100%; margin-top:8px;">
@@ -209,20 +209,52 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const res = await fetch('http://localhost:5000/api/leads', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        const apiTarget = (window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || '/api') + '/leads';
+        let res;
+        try {
+          res = await fetch(apiTarget, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (fetchErr) {
+          // Fallback if cross-port local dev
+          res = await fetch('http://localhost:5000/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
 
         const json = await res.json();
 
-        if (res.ok && json.ok) {
+        if ((res.ok && json.ok) || json.success) {
+          // Sync with local CRM state if present
+          try {
+            const raw = localStorage.getItem('tdc_crm_master_state');
+            const state = raw ? JSON.parse(raw) : { leads: [], jobCards: [], inventory: [], invoices: [], memberships: [], customers: [] };
+            state.leads = state.leads || [];
+            state.leads.unshift({
+              id: json.data?.lead_id || Date.now(),
+              ref: json.data?.ref || ('LEAD-' + Math.floor(1000 + Math.random() * 9000)),
+              customer_name: payload.name,
+              phone: payload.phone,
+              email: payload.email || '',
+              service_name: payload.service_slug ? payload.service_slug.replace(/-/g, ' ').toUpperCase() : 'Studio Consultation',
+              vehicle_model: payload.vehicle_type === 'bike' ? 'Superbike' : 'Car',
+              vehicle_reg: 'N/A',
+              source: 'WEBSITE',
+              stage: 'NEW',
+              created_at: new Date().toISOString().replace('T', ' ').slice(0, 16)
+            });
+            localStorage.setItem('tdc_crm_master_state', JSON.stringify(state));
+          } catch (storageErr) {}
+
           successBanner.style.display = 'block';
           form.reset();
           submitBtn.textContent = 'ENQUIRY SENT ✓';
         } else {
-          errorBanner.textContent = json.error?.message || 'Failed to submit enquiry. Please check your details.';
+          errorBanner.textContent = json.error?.message || json.error || 'Failed to submit enquiry. Please check your details.';
           errorBanner.style.display = 'block';
           submitBtn.disabled = false;
           submitBtn.textContent = 'SEND ENQUIRY →';

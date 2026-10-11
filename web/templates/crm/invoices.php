@@ -38,41 +38,51 @@ $invoices = Database::query("
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($invoices as $inv): ?>
-          <tr>
-            <td><strong class="crm-ref-code"><?= htmlspecialchars($inv['invoice_no']) ?></strong></td>
-            <td><?= date('d M Y', strtotime($inv['created_at'])) ?></td>
-            <td>
-              <strong><?= htmlspecialchars($inv['customer_name'] ?? 'Walk-in') ?></strong>
-              <div class="crm-text-muted" style="font-size:11px;"><?= htmlspecialchars(($inv['brand'] ?? '') . ' ' . ($inv['model'] ?? '')) ?> (<?= htmlspecialchars($inv['registration'] ?? '') ?>)</div>
-            </td>
-            <td>₹<?= number_format((float)$inv['subtotal']) ?></td>
-            <td>₹<?= number_format((float)$inv['gst_amount']) ?></td>
-            <td><strong class="crm-amount-val">₹<?= number_format((float)$inv['grand_total']) ?></strong></td>
-            <td>
-              <?php if ($inv['payment_status'] === 'PAID'): ?>
-                <span class="crm-pill crm-pill-success">Paid</span>
-              <?php else: ?>
-                <span class="crm-pill crm-pill-warning">Pending (₹<?= number_format((float)$inv['grand_total']) ?>)</span>
-              <?php endif; ?>
-            </td>
-            <td>
-              <span class="crm-source-badge"><?= htmlspecialchars($inv['payment_method'] ?: 'Pending') ?></span>
-            </td>
-            <td>
-              <div class="crm-action-group">
-                <?php if ($inv['payment_status'] !== 'PAID'): ?>
-                  <button class="crm-btn crm-btn-xs crm-btn-success" onclick="markInvoicePaid(<?= $inv['id'] ?>)">
-                    Mark Paid
-                  </button>
+          <?php if (!empty($invoices)): ?>
+            <?php foreach ($invoices as $inv): ?>
+            <tr>
+              <td><strong class="crm-ref-code"><?= htmlspecialchars($inv['invoice_no']) ?></strong></td>
+              <td><?= date('d M Y', strtotime($inv['created_at'])) ?></td>
+              <td>
+                <strong><?= htmlspecialchars($inv['customer_name'] ?? 'Walk-in') ?></strong>
+                <div class="crm-text-muted" style="font-size:11px;"><?= htmlspecialchars(($inv['brand'] ?? '') . ' ' . ($inv['model'] ?? '')) ?> (<?= htmlspecialchars($inv['registration'] ?? '') ?>)</div>
+              </td>
+              <td>₹<?= number_format((float)$inv['subtotal']) ?></td>
+              <td>₹<?= number_format((float)$inv['gst_amount']) ?></td>
+              <td><strong class="crm-amount-val">₹<?= number_format((float)$inv['grand_total']) ?></strong></td>
+              <td>
+                <?php if ($inv['payment_status'] === 'PAID'): ?>
+                  <span class="crm-pill crm-pill-success">Paid</span>
+                <?php else: ?>
+                  <span class="crm-pill crm-pill-warning">Pending (₹<?= number_format((float)$inv['grand_total']) ?>)</span>
                 <?php endif; ?>
-                <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="alert('Print invoice #<?= htmlspecialchars($inv['invoice_no']) ?>')">
-                  🖨️ Print
-                </button>
-              </div>
-            </td>
-          </tr>
-          <?php endforeach; ?>
+              </td>
+              <td>
+                <span class="crm-source-badge"><?= htmlspecialchars($inv['payment_method'] ?: 'Pending') ?></span>
+              </td>
+              <td>
+                <div class="crm-action-group">
+                  <?php if ($inv['payment_status'] !== 'PAID'): ?>
+                    <button class="crm-btn crm-btn-xs crm-btn-success" onclick="markInvoicePaid(<?= $inv['id'] ?>)">
+                      Mark Paid
+                    </button>
+                  <?php endif; ?>
+                  <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="alert('Print invoice #<?= htmlspecialchars($inv['invoice_no']) ?>')">
+                    🖨️ Print
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr>
+              <td colspan="9" style="text-align:center; padding:44px 20px; color:#888888;">
+                <div style="font-size:32px; margin-bottom:10px;">🧾</div>
+                <strong style="color:#ffffff; font-size:14px;">No Invoices Generated Yet</strong>
+                <p style="font-size:12px; margin:6px 0 0; color:#666666;">Completed job cards and billings will generate GST tax invoices here.</p>
+              </td>
+            </tr>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>

@@ -41,47 +41,57 @@ $appointments = Database::query("
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($appointments as $apt): ?>
-          <tr>
-            <td><strong class="crm-ref-code"><?= htmlspecialchars($apt['ref']) ?></strong></td>
-            <td>
-              <div class="crm-time-stamp">
-                <strong><?= date('d M Y', strtotime($apt['date'])) ?></strong>
-                <span><?= htmlspecialchars($apt['time']) ?></span>
-              </div>
-            </td>
-            <td>
-              <strong><?= htmlspecialchars($apt['customer_name'] ?? 'Walk-in') ?></strong>
-              <div class="crm-text-muted"><?= htmlspecialchars($apt['customer_phone'] ?? '—') ?></div>
-            </td>
-            <td>
-              <strong><?= htmlspecialchars(($apt['brand'] ?? '') . ' ' . ($apt['model'] ?? 'Car')) ?></strong>
-              <div class="crm-plate-tag"><?= htmlspecialchars($apt['registration'] ?: 'JK 02 XX 0000') ?></div>
-            </td>
-            <td>
-              <span class="crm-service-tag"><?= htmlspecialchars($apt['service_name'] ?? 'Custom Detailing') ?></span>
-            </td>
-            <td>
-              <?php if ($apt['status'] === 'CONFIRMED'): ?>
-                <span class="crm-pill crm-pill-confirmed">Confirmed</span>
-              <?php elseif ($apt['status'] === 'IN_PROGRESS'): ?>
-                <span class="crm-pill crm-pill-progress">In Bay</span>
-              <?php elseif ($apt['status'] === 'COMPLETED'): ?>
-                <span class="crm-pill crm-pill-success">Completed</span>
-              <?php else: ?>
-                <span class="crm-pill crm-pill-secondary"><?= htmlspecialchars($apt['status']) ?></span>
-              <?php endif; ?>
-            </td>
-            <td>
-              <span class="crm-source-badge"><?= strtoupper(htmlspecialchars($apt['source'] ?? 'DIRECT')) ?></span>
-            </td>
-            <td>
-              <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="quickCheckIn('<?= addslashes($apt['customer_name'] ?? 'Customer') ?>', '<?= addslashes(($apt['brand'] ?? '') . ' ' . ($apt['model'] ?? '')) ?>', '<?= addslashes($apt['service_name'] ?? '') ?>')">
-                Check-in
-              </button>
-            </td>
-          </tr>
-          <?php endforeach; ?>
+          <?php if (!empty($appointments)): ?>
+            <?php foreach ($appointments as $apt): ?>
+            <tr>
+              <td><strong class="crm-ref-code"><?= htmlspecialchars($apt['ref']) ?></strong></td>
+              <td>
+                <div class="crm-time-stamp">
+                  <strong><?= date('d M Y', strtotime($apt['date'])) ?></strong>
+                  <span><?= htmlspecialchars($apt['time']) ?></span>
+                </div>
+              </td>
+              <td>
+                <strong><?= htmlspecialchars($apt['customer_name'] ?? 'Walk-in') ?></strong>
+                <div class="crm-text-muted"><?= htmlspecialchars($apt['customer_phone'] ?? '—') ?></div>
+              </td>
+              <td>
+                <strong><?= htmlspecialchars(($apt['brand'] ?? '') . ' ' . ($apt['model'] ?? 'Car')) ?></strong>
+                <div class="crm-plate-tag"><?= htmlspecialchars($apt['registration'] ?: 'JK 02 XX 0000') ?></div>
+              </td>
+              <td>
+                <span class="crm-service-tag"><?= htmlspecialchars($apt['service_name'] ?? 'Custom Detailing') ?></span>
+              </td>
+              <td>
+                <?php if ($apt['status'] === 'CONFIRMED'): ?>
+                  <span class="crm-pill crm-pill-confirmed">Confirmed</span>
+                <?php elseif ($apt['status'] === 'IN_PROGRESS'): ?>
+                  <span class="crm-pill crm-pill-progress">In Bay</span>
+                <?php elseif ($apt['status'] === 'COMPLETED'): ?>
+                  <span class="crm-pill crm-pill-success">Completed</span>
+                <?php else: ?>
+                  <span class="crm-pill crm-pill-secondary"><?= htmlspecialchars($apt['status']) ?></span>
+                <?php endif; ?>
+              </td>
+              <td>
+                <span class="crm-source-badge"><?= strtoupper(htmlspecialchars($apt['source'] ?? 'DIRECT')) ?></span>
+              </td>
+              <td>
+                <button class="crm-btn crm-btn-xs crm-btn-ghost" onclick="quickCheckIn('<?= addslashes($apt['customer_name'] ?? 'Customer') ?>', '<?= addslashes(($apt['brand'] ?? '') . ' ' . ($apt['model'] ?? '')) ?>', '<?= addslashes($apt['service_name'] ?? '') ?>')">
+                  Check-in
+                </button>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr>
+              <td colspan="8" style="text-align:center; padding:44px 20px; color:#888888;">
+                <div style="font-size:32px; margin-bottom:10px;">📅</div>
+                <strong style="color:#ffffff; font-size:14px;">No Appointments Booked Yet</strong>
+                <p style="font-size:12px; margin:6px 0 0; color:#666666;">New bookings submitted via the 7-step booking engine will appear here in real time.</p>
+              </td>
+            </tr>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>
