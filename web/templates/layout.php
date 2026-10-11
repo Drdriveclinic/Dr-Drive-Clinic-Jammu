@@ -11,7 +11,7 @@ $currentUrl = $siteUrl . ($_SERVER['REQUEST_URI'] ?? '/');
 <html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title><?= htmlspecialchars($pageTitle) ?></title>
   <meta name="description" content="<?= htmlspecialchars($metaDesc) ?>">
   <link rel="canonical" href="<?= htmlspecialchars($currentUrl) ?>">

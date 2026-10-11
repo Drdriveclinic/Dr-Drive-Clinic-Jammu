@@ -604,6 +604,143 @@
     -webkit-overflow-scrolling: touch;
     width: 100%;
   }
+
+  /* ==========================================================================
+     PROPER MOBILE IMAGE SIZING & FRAMING SETUP
+     ========================================================================== */
+  img, picture, video {
+    max-width: 100% !important;
+    height: auto;
+  }
+
+  /* Section 02 / Studio Showcase Bay */
+  .studio-showcase-box {
+    min-height: 230px !important;
+    height: 230px !important;
+    margin-top: 24px;
+    width: 100% !important;
+  }
+
+  /* Section 03 / Service Explorer Preview Card */
+  .explorer-sticky-card {
+    position: static !important;
+    margin-top: 24px;
+    width: 100% !important;
+  }
+
+  .explorer-preview-box {
+    height: 220px !important;
+    max-height: 240px !important;
+    width: 100% !important;
+  }
+
+  .explorer-preview-img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Section 04 / PPF Feature Image */
+  .ppf-feature-img-box {
+    min-height: 230px !important;
+    height: 230px !important;
+    margin-bottom: 24px;
+    width: 100% !important;
+  }
+
+  /* Section 06 / Bike Detailing Mosaic */
+  .bike-mosaic-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    margin-top: 24px;
+  }
+
+  .bike-mosaic-grid > div:first-child {
+    min-height: 230px !important;
+    height: 230px !important;
+  }
+
+  .bike-mosaic-stacked {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .bike-mosaic-stacked > div {
+    height: 140px !important;
+  }
+
+  /* Wash Trio Program Cards (Ceramic, Steam, Basic) */
+  .wash-trio-img-wrap {
+    aspect-ratio: 16 / 10 !important;
+    height: 190px !important;
+    width: 100% !important;
+  }
+
+  .wash-trio-img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Before / After Transformation Sliders */
+  .before-after-stage,
+  .before-after-wrap {
+    height: 230px !important;
+    max-height: 250px !important;
+    width: 100% !important;
+  }
+
+  .before-after-media {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Services Directory Cards (`/services`) */
+  .service-card-item {
+    width: 100% !important;
+  }
+
+  .service-card-item > div:first-child {
+    height: 200px !important;
+  }
+
+  .services-hero-pair {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .services-mixed-flow {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Service Detail Page Hero Image */
+  .service-detail-hero-box {
+    min-height: 240px !important;
+    height: 240px !important;
+    margin-top: 24px;
+    width: 100% !important;
+  }
+
+  /* Our Work Gallery Cards (`/our-work`) */
+  .gallery-card-thumb {
+    height: 200px !important;
+    width: 100% !important;
+  }
+
+  .gallery-card-thumb img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Vulnerability Hotspot Stage on Mobile */
+  .hotspot-car-stage {
+    padding: 10px 0;
+    overflow-x: hidden;
+  }
 }
 
 @media (max-width: 480px) {
@@ -618,6 +755,33 @@
 
   .mobile-menu-link {
     font-size: 28px !important;
+  }
+
+  .bike-mosaic-stacked {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .bike-mosaic-stacked > div {
+    height: 170px !important;
+  }
+
+  .studio-showcase-box,
+  .ppf-feature-img-box,
+  .explorer-preview-box,
+  .service-detail-hero-box {
+    height: 210px !important;
+    min-height: 210px !important;
+  }
+
+  .wash-trio-img-wrap,
+  .gallery-card-thumb {
+    height: 180px !important;
+  }
+
+  .before-after-stage,
+  .before-after-wrap {
+    height: 210px !important;
   }
 }
 

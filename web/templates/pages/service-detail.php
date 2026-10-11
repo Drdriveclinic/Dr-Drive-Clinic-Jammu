@@ -88,7 +88,7 @@ require dirname(__DIR__) . '/partials/page-hero.php';
       </div>
     </div>
     <div>
-      <div style="overflow:hidden; height:100%; min-height:460px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
+      <div class="service-detail-hero-box" style="overflow:hidden; height:100%; min-height:460px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 40px rgba(0,0,0,0.4);" data-anim="mask-reveal">
         <img src="<?= $svcHeroImg ?>" alt="<?= htmlspecialchars($service['name']) ?> in studio bay" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </div>
