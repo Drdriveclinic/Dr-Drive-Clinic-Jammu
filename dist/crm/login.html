@@ -368,6 +368,29 @@
           </button>
         </div>
 
+        <!-- SEARCH BAR & STATUS FILTERS FOR JOB CARDS -->
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:18px; background:#ffffff; padding:12px 16px; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,0.03);">
+          <div style="flex:1; min-width:280px; position:relative;">
+            <input type="text" id="jobCardSearchInput" class="crm-input" oninput="handleJobCardSearch(this.value)" placeholder="🔍 Search Job Cards by Mobile Number, Car Reg, Customer Name, Job ID, or Service..." style="width:100%; height:40px; padding:0 36px 0 34px;">
+            <span style="position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:14px; color:#94a3b8; pointer-events:none;">🔍</span>
+            <button type="button" id="jobCardSearchClearBtn" onclick="clearJobCardSearch()" style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:none; color:#94a3b8; font-size:14px; cursor:pointer; font-weight:700;">✕</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select id="jobCardStatusFilter" onchange="handleJobCardStatusFilter(this.value)" class="crm-input" style="height:40px; padding:0 12px; font-size:12px; width:auto;">
+              <option value="ALL">All Service Status</option>
+              <option value="UNDER_SERVICE">Under Service</option>
+              <option value="QUALITY_CHECK">Quality Check</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+            <select id="jobCardPaymentFilter" onchange="handleJobCardPaymentFilter(this.value)" class="crm-input" style="height:40px; padding:0 12px; font-size:12px; width:auto;">
+              <option value="ALL">All Payments</option>
+              <option value="UNPAID">Unpaid / Pending</option>
+              <option value="PAID">Paid</option>
+            </select>
+            <span id="jobCardSearchCount" style="font-size:12px; font-weight:700; color:#64748b; background:#f1f5f9; padding:8px 12px; border-radius:6px; white-space:nowrap;"></span>
+          </div>
+        </div>
+
         <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableJobCards" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
@@ -424,7 +447,24 @@
       <!-- TAB 5: INVOICES -->
       <section id="tab-invoices" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#64748b;">All studio billing records, paid status, and print-ready tax invoices.</div>
+          <div style="font-size:13px; color:#64748b;">All studio billing records, paid & unpaid statuses, and print-ready tax invoices.</div>
+        </div>
+
+        <!-- SEARCH BAR & STATUS FILTERS FOR INVOICES -->
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:18px; background:#ffffff; padding:12px 16px; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,0.03);">
+          <div style="flex:1; min-width:280px; position:relative;">
+            <input type="text" id="invoiceSearchInput" class="crm-input" oninput="handleInvoiceSearch(this.value)" placeholder="🔍 Search Invoices by Invoice #, Job ID, Customer Name, Mobile Number, or Car Reg..." style="width:100%; height:40px; padding:0 36px 0 34px;">
+            <span style="position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:14px; color:#94a3b8; pointer-events:none;">🔍</span>
+            <button type="button" id="invoiceSearchClearBtn" onclick="clearInvoiceSearch()" style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:none; color:#94a3b8; font-size:14px; cursor:pointer; font-weight:700;">✕</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select id="invoiceStatusFilter" onchange="handleInvoiceStatusFilter(this.value)" class="crm-input" style="height:40px; padding:0 12px; font-size:12px; width:auto;">
+              <option value="ALL">All Invoices (Paid & Unpaid)</option>
+              <option value="UNPAID">Unpaid / Pending</option>
+              <option value="PAID">Paid in Full</option>
+            </select>
+            <span id="invoiceSearchCount" style="font-size:12px; font-weight:700; color:#64748b; background:#f1f5f9; padding:8px 12px; border-radius:6px; white-space:nowrap;"></span>
+          </div>
         </div>
 
         <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
@@ -740,6 +780,124 @@
         <div class="crm-modal-footer">
           <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalCreateJobCard')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
           <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Generate Job Card & Deduct Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2B. Modal: Edit Job Card & Add Studio Products -->
+  <div class="crm-modal-backdrop" id="modalEditJobCard">
+    <div class="crm-modal" style="max-width:680px;" onclick="event.stopPropagation()">
+      <div class="crm-modal-header" style="border-bottom:1px solid #e2e8f0; padding-bottom:14px;">
+        <div>
+          <h3 class="crm-modal-title" style="display:flex; align-items:center; gap:8px;">
+            <span>🛠️</span> Edit Job Card & Add Studio Products
+          </h3>
+          <p style="font-size:12.5px; color:#64748b; margin-top:2px;">Update quote, change service stage, or deduct products directly from studio inventory.</p>
+        </div>
+        <button class="crm-modal-close" onclick="closeModal('modalEditJobCard')">&times;</button>
+      </div>
+      <form onsubmit="handleUpdateJobCard(event)">
+        <input type="hidden" id="editJobCardId" name="job_id">
+        <div class="crm-modal-body" style="max-height:75vh; overflow-y:auto; padding:20px 24px;">
+          <!-- Customer & Vehicle Info -->
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Customer Name *</label>
+              <input type="text" id="editJobCustomerName" name="customer_name" class="crm-input" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Phone / WhatsApp</label>
+              <input type="tel" id="editJobPhone" name="phone" class="crm-input">
+            </div>
+          </div>
+
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Vehicle Model *</label>
+              <input type="text" id="editJobVehicleModel" name="vehicle_model" class="crm-input" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Registration Plate *</label>
+              <input type="text" id="editJobVehicleReg" name="vehicle_reg" class="crm-input" required>
+            </div>
+          </div>
+
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Primary Service *</label>
+              <input type="text" id="editJobServiceName" name="service_name" class="crm-input" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Total Quotation / Bill (₹) *</label>
+              <input type="number" id="editJobTotalAmount" name="total_amount" class="crm-input" required>
+            </div>
+          </div>
+
+          <!-- Existing Products & Items Used -->
+          <div id="editJobExistingItemsBox" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 14px; margin-bottom:16px;">
+            <div style="font-size:11px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">Current Materials & Products Used:</div>
+            <div id="editJobCurrentItemsList" style="font-size:12.5px; color:#0f172a; font-weight:600;">None (Labor only)</div>
+          </div>
+
+          <!-- ADD MORE PRODUCTS FROM INVENTORY (WITH STOCK DEDUCTION) -->
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:16px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:11.5px; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:0.05em;">📦 Add Product & Deduct Inventory Stock</span>
+              <span style="font-size:11px; color:#16a34a; font-weight:600;">Auto-deducts from stock</span>
+            </div>
+            <div class="crm-form-row">
+              <div class="crm-form-group" style="flex:2;">
+                <label class="crm-label">Select Studio Product to Add</label>
+                <select id="editJobProductSelect" name="add_product_id" class="crm-input" onchange="handleProductSelectPriceAdd(this)">
+                  <option value="">-- No additional product --</option>
+                </select>
+              </div>
+              <div class="crm-form-group" style="flex:1;">
+                <label class="crm-label">Quantity to Deduct</label>
+                <input type="number" step="0.5" id="editJobProductQty" name="add_product_qty" class="crm-input" value="1" min="0.1">
+              </div>
+            </div>
+            <div style="font-size:11.5px; color:#15803d; margin-top:4px;">
+              💡 Adding a product deducts from studio inventory and automatically syncs with the customer's tax invoice.
+            </div>
+          </div>
+
+          <!-- Status & Payment Sync -->
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Service Status *</label>
+              <select id="editJobServiceStatus" name="service_status" class="crm-input">
+                <option value="UNDER_SERVICE">UNDER SERVICE (In Detailing Bay)</option>
+                <option value="QUALITY_CHECK">QUALITY CHECK (Inspection)</option>
+                <option value="COMPLETED">COMPLETED (Ready for Delivery)</option>
+              </select>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Payment Status *</label>
+              <select id="editJobPaymentStatus" name="payment_status" class="crm-input">
+                <option value="UNPAID">UNPAID (Pending)</option>
+                <option value="PAID">PAID IN FULL</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Payment Mode</label>
+              <select id="editJobPaymentMode" name="payment_mode" class="crm-input">
+                <option value="Pending">Pending</option>
+                <option value="UPI / QR">UPI / QR Code</option>
+                <option value="Credit / Debit Card">Credit / Debit Card</option>
+                <option value="Cash">Cash</option>
+                <option value="NetBanking">NetBanking / Transfer</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="crm-modal-footer" style="border-top:1px solid #e2e8f0; padding:14px 24px;">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalEditJobCard')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 22px; border-radius:6px; font-weight:700; cursor:pointer;">Save Changes & Update Invoice</button>
         </div>
       </form>
     </div>
@@ -1324,19 +1482,64 @@
       `;
     }
 
-    // 2. Job Cards Table
+    // Auto-sync: Guarantee every Job Card has a corresponding Invoice (PAID or UNPAID)
+    state.jobCards.forEach(jc => {
+      const exists = state.invoices.some(inv => inv.job_id === jc.id || inv.id === ('INV-' + jc.id));
+      if (!exists) {
+        state.invoices.push({
+          id: 'INV-' + jc.id,
+          job_id: jc.id,
+          customer_name: jc.customer_name,
+          phone: jc.phone || '',
+          vehicle_reg: jc.vehicle_reg || 'N/A',
+          vehicle_model: jc.vehicle_model || '',
+          service_name: jc.service_name || 'Detailing Service',
+          amount: Number(jc.total_amount) || 0,
+          payment_mode: jc.payment_mode || (jc.payment_status === 'PAID' ? 'UPI / Cash' : 'Pending'),
+          status: jc.payment_status || 'UNPAID',
+          date: jc.created_at || new Date().toISOString().slice(0, 10)
+        });
+      }
+    });
+
+    // 2. Job Cards Table (Filtered by Search & Status)
+    const filteredJobs = getFilteredJobCards();
+    const countJobsEl = document.getElementById('jobCardSearchCount');
+    if (countJobsEl) {
+      countJobsEl.textContent = `${filteredJobs.length} of ${state.jobCards.length} Job Card${state.jobCards.length === 1 ? '' : 's'}`;
+    }
+
     const jobsTbody = document.getElementById('jobCardsTableBody');
-    jobsTbody.innerHTML = state.jobCards.length ? state.jobCards.map(j => `
-      <tr style="border-bottom:1px solid #f1f5f9;">
-        <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#E50914;">${j.id}</td>
+    jobsTbody.innerHTML = filteredJobs.length ? filteredJobs.map(j => {
+      const cleanPhone = (j.phone || '').replace(/[^0-9]/g, '');
+      const phone10 = cleanPhone.length > 10 ? cleanPhone.slice(-10) : cleanPhone;
+
+      return `
+      <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s ease;" onmouseenter="this.style.background='#f8fafc'" onmouseleave="this.style.background='transparent'">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#0f172a;">${j.customer_name}</div>
-          <div style="font-size:12px; color:#64748b;">${j.vehicle_model} • ${j.vehicle_reg}</div>
+          <div style="font-family:monospace; font-weight:800; color:#E50914; font-size:13px;">${highlightJobCardMatch(j.id)}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:2px;">${j.created_at || 'Recently'}</div>
         </td>
-        <td style="padding:12px 16px; color:#0f172a;">${j.service_name}</td>
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#0f172a; font-size:14px;">${highlightJobCardMatch(j.customer_name)}</div>
+          <div style="display:flex; gap:6px; align-items:center; margin-top:3px; flex-wrap:wrap;">
+            ${phone10 ? `
+            <a href="tel:+91${phone10}" style="font-size:12px; color:#0284c7; font-weight:700; text-decoration:none;">📱 ${highlightJobCardMatch(j.phone)}</a>
+            <a href="https://wa.me/91${phone10}?text=Hello%20${encodeURIComponent(j.customer_name || 'Sir')}%2C%20regarding%20Job%20Card%20${j.id}%20at%20The%20Drive%20Clinic%20Jammu..." target="_blank" rel="noopener" style="font-size:11px; background:#dcfce7; color:#15803d; font-weight:700; padding:1px 6px; border-radius:4px; text-decoration:none;">WhatsApp</a>` : ''}
+          </div>
+          <div style="margin-top:4px; font-size:12px; color:#475569;">
+            ${highlightJobCardMatch(j.vehicle_model)} • <span style="font-family:monospace; font-weight:800; background:#f1f5f9; padding:1px 5px; border-radius:3px; border:1px solid #e2e8f0; color:#0f172a;">${highlightJobCardMatch(j.vehicle_reg)}</span>
+          </div>
+        </td>
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#0f172a; font-size:13px;">${highlightJobCardMatch(j.service_name)}</div>
+          <div style="font-size:11.5px; color:#64748b; margin-top:3px; background:#f8fafc; padding:3px 6px; border-radius:4px; border:1px solid #f1f5f9; display:inline-block;">
+            📦 ${highlightJobCardMatch(j.items_used || 'Labor only')}
+          </div>
+        </td>
         <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#0f172a;">₹${Number(j.total_amount).toLocaleString('en-IN')}</td>
         <td style="padding:12px 16px;">
-          <select onchange="updateJobStatus('${j.id}', this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px;">
+          <select onchange="updateJobStatus('${j.id}', this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:700; outline:none;">
             <option value="UNDER_SERVICE" ${j.service_status === 'UNDER_SERVICE' ? 'selected' : ''}>UNDER SERVICE</option>
             <option value="QUALITY_CHECK" ${j.service_status === 'QUALITY_CHECK' ? 'selected' : ''}>QUALITY CHECK</option>
             <option value="COMPLETED" ${j.service_status === 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
@@ -1348,15 +1551,27 @@
           </span>
         </td>
         <td style="padding:12px 16px; text-align:right;">
-          ${j.payment_status !== 'PAID' ? `<button onclick="markJobPaid('${j.id}')" style="background:#16a34a; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Mark Paid ✓</button>` : `<span style="font-size:12px; color:#64748b; font-weight:600;">Invoiced</span>`}
+          <div style="display:inline-flex; gap:6px; align-items:center;">
+            <button onclick="openEditJobCard('${j.id}')" title="Edit Job Card & Add Products" style="background:#0284c7; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+              ✏️ Edit & Add Products
+            </button>
+            ${j.payment_status !== 'PAID' ? `
+            <button onclick="markJobPaid('${j.id}')" style="background:#16a34a; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+              Mark Paid ✓
+            </button>` : `
+            <button onclick="switchCrmTab('invoices', document.querySelector('a[href=\\'#invoices\\']'))" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">
+              🧾 Invoice
+            </button>`}
+          </div>
         </td>
       </tr>
-    `).join('') : `
+      `;
+    }).join('') : `
       <tr>
         <td colspan="7" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">🚗</div>
-          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Active Bay Job Cards</div>
-          <div style="font-size:12px; color:#64748b;">Convert a website lead above or click "+ New Job Card" to assign a vehicle to a studio bay.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Matching Job Cards Found</div>
+          <div style="font-size:12px; color:#64748b;">Try searching by client name, mobile number, car plate number or status.</div>
         </td>
       </tr>
     `;
@@ -1389,32 +1604,64 @@
         state.inventory.map(it => `<option value="${it.id}">[${it.sku}] ${it.name} (Avail: ${it.stock} ${it.unit})</option>`).join('');
     }
 
-    // 4. Invoices Table
+    // 4. Invoices Table (Filtered by Search & Status - Showing ALL Paid & Unpaid)
+    const filteredInvoices = getFilteredInvoices();
+    const countInvEl = document.getElementById('invoiceSearchCount');
+    if (countInvEl) {
+      countInvEl.textContent = `${filteredInvoices.length} of ${state.invoices.length} Invoice${state.invoices.length === 1 ? '' : 's'}`;
+    }
+
     const invTableTbody = document.getElementById('invoicesTableBody');
-    invTableTbody.innerHTML = state.invoices.length ? state.invoices.map(inv => `
-      <tr style="border-bottom:1px solid #f1f5f9;">
-        <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#0f172a;">${inv.id}</td>
+    invTableTbody.innerHTML = filteredInvoices.length ? filteredInvoices.map(inv => {
+      const isPaid = inv.status === 'PAID';
+      return `
+      <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s ease;" onmouseenter="this.style.background='#f8fafc'" onmouseleave="this.style.background='transparent'">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#0f172a;">${inv.customer_name}</div>
-          <div style="font-size:12px; color:#64748b;">${inv.vehicle_reg} • ${inv.date}</div>
+          <div style="font-family:monospace; font-weight:800; color:#0f172a; font-size:13px;">${highlightInvoiceMatch(inv.id)}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:2px;">
+            ${inv.date} ${inv.job_id ? `• <span style="color:#E50914; font-weight:700;">${highlightInvoiceMatch(inv.job_id)}</span>` : ''}
+          </div>
+        </td>
+        <td style="padding:12px 16px;">
+          <div style="font-weight:700; color:#0f172a; font-size:14px;">${highlightInvoiceMatch(inv.customer_name)}</div>
+          <div style="font-size:12px; color:#64748b; margin-top:2px;">
+            ${highlightInvoiceMatch(inv.vehicle_model || '')} • <span style="font-family:monospace; font-weight:700; color:#0f172a;">${highlightInvoiceMatch(inv.vehicle_reg || 'N/A')}</span>
+          </div>
+          ${inv.phone ? `<div style="font-size:11.5px; color:#0284c7; font-weight:600; margin-top:1px;">📱 ${highlightInvoiceMatch(inv.phone)}</div>` : ''}
         </td>
         <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#0f172a;">₹${Number(inv.amount).toLocaleString('en-IN')}</td>
-        <td style="padding:12px 16px; color:#475569;">${inv.payment_mode}</td>
         <td style="padding:12px 16px;">
-          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${inv.status === 'PAID' ? '#dcfce7' : '#fee2e2'}; color:${inv.status === 'PAID' ? '#15803d' : '#b91c1c'};">
-            ${inv.status}
-          </span>
+          <span style="font-size:12px; font-weight:600; color:#475569; background:#f1f5f9; padding:3px 8px; border-radius:4px;">${inv.payment_mode || 'Pending'}</span>
+        </td>
+        <td style="padding:12px 16px;">
+          <select onchange="updateInvoiceStatus('${inv.id}', this.value)" style="background:#ffffff; color:${isPaid ? '#15803d' : '#b91c1c'}; border:1px solid ${isPaid ? '#86efac' : '#fca5a5'}; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:800; outline:none;">
+            <option value="UNPAID" ${!isPaid ? 'selected' : ''}>⚠️ UNPAID (PENDING)</option>
+            <option value="PAID" ${isPaid ? 'selected' : ''}>✓ PAID IN FULL</option>
+          </select>
         </td>
         <td style="padding:12px 16px; text-align:right;">
-          <button onclick="alert('Printing Tax Invoice: ${inv.id}\\nCustomer: ${inv.customer_name}\\nAmount: ₹${Number(inv.amount).toLocaleString('en-IN')}')" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:5px 12px; border-radius:4px; font-size:11.5px; cursor:pointer; font-weight:600;">Print Invoice 🖨️</button>
+          <div style="display:inline-flex; gap:6px; align-items:center;">
+            ${!isPaid ? `
+            <button onclick="markInvoicePaid('${inv.id}')" style="background:#16a34a; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+              Mark Paid ✓
+            </button>` : ''}
+            <button onclick="alert('Tax Invoice: ${inv.id}\\nCustomer: ${inv.customer_name}\\nVehicle: ${inv.vehicle_reg}\\nAmount: ₹${Number(inv.amount).toLocaleString('en-IN')}\\nStatus: ${inv.status}\\nMode: ${inv.payment_mode || 'Cash/UPI'}'); window.print();" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:5px 12px; border-radius:4px; font-size:11.5px; cursor:pointer; font-weight:600; white-space:nowrap;">
+              Print Invoice 🖨️
+            </button>
+            ${inv.job_id ? `
+            <button onclick="openEditJobCard('${inv.job_id}')" title="Edit Linked Job Card" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#0f172a; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+              ✏️
+            </button>` : ''}
+          </div>
         </td>
       </tr>
-    `).join('') : `
+      `;
+    }).join('') : `
       <tr>
         <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">🧾</div>
-          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Invoices Generated Yet</div>
-          <div style="font-size:12px; color:#64748b;">Completed jobs and offline billings will generate GST tax invoices here.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Invoices Found</div>
+          <div style="font-size:12px; color:#64748b;">No billing records match your search. Create or convert a Job Card above to automatically generate invoices.</div>
         </td>
       </tr>
     `;
@@ -1545,6 +1792,8 @@
     if (!lead) return;
     
     const newJcId = 'JC-2026-0' + (40 + state.jobCards.length + 1);
+    const totalAmt = 35000;
+    
     state.jobCards.unshift({
       id: newJcId,
       customer_name: lead.customer_name,
@@ -1552,16 +1801,33 @@
       vehicle_model: lead.vehicle_model,
       vehicle_reg: lead.vehicle_reg || 'JK 02 TEMP',
       service_name: lead.service_name,
-      total_amount: 35000,
+      items_used: "Labor & Calibration (Click 'Edit' to add products)",
+      total_amount: totalAmt,
       service_status: "UNDER_SERVICE",
       payment_status: "UNPAID",
       payment_mode: "Pending",
       created_at: new Date().toISOString().slice(0, 10)
     });
 
+    // AUTOMATICALLY CREATE LINKED INVOICE IN INVOICES & BILLING
+    const newInvId = 'INV-' + newJcId;
+    state.invoices.unshift({
+      id: newInvId,
+      job_id: newJcId,
+      customer_name: lead.customer_name,
+      phone: lead.phone || '',
+      vehicle_reg: lead.vehicle_reg || 'JK 02 TEMP',
+      vehicle_model: lead.vehicle_model,
+      service_name: lead.service_name,
+      amount: totalAmt,
+      payment_mode: "Pending",
+      status: "UNPAID",
+      date: new Date().toISOString().slice(0, 10)
+    });
+
     lead.stage = 'WON';
     saveCrmState(state);
-    alert('🎉 Lead successfully converted to Job Card #' + newJcId + '! Viewing Job Cards tab.');
+    alert('🎉 Lead converted to Job Card #' + newJcId + '!\n\n✓ Invoice #' + newInvId + ' automatically created in Invoices & Billing.\n✓ You can now click "✏️ Edit & Add Products" to add materials or adjust prices.');
     switchCrmTab('job-cards', document.querySelector('a[href="#job-cards"]'));
   };
 
@@ -1570,16 +1836,22 @@
     const fd = new FormData(e.target);
     const productId = fd.get('product_id');
     const productQty = parseFloat(fd.get('product_qty') || '0');
+    let itemsUsed = "Labor only";
 
     // Deduct stock if product selected
     if (productId && productQty > 0) {
       const prod = state.inventory.find(i => i.id == productId);
       if (prod) {
         prod.stock = Math.max(0, parseFloat((prod.stock - productQty).toFixed(2)));
+        itemsUsed = `${prod.name} (${productQty} ${prod.unit})`;
       }
     }
 
     const newJcId = 'JC-2026-0' + (40 + state.jobCards.length + 1);
+    const totalAmt = parseFloat(fd.get('total_amount'));
+    const paymentStatus = fd.get('payment_status');
+    const paymentMode = fd.get('payment_mode');
+
     state.jobCards.unshift({
       id: newJcId,
       customer_name: fd.get('customer_name'),
@@ -1587,28 +1859,55 @@
       vehicle_model: fd.get('vehicle_model'),
       vehicle_reg: fd.get('vehicle_reg'),
       service_name: fd.get('service_name'),
-      total_amount: parseFloat(fd.get('total_amount')),
+      items_used: itemsUsed,
+      total_amount: totalAmt,
       service_status: "UNDER_SERVICE",
-      payment_status: fd.get('payment_status'),
-      payment_mode: fd.get('payment_mode'),
+      payment_status: paymentStatus,
+      payment_mode: paymentMode,
       created_at: new Date().toISOString().slice(0, 10)
     });
 
-    // Also add to invoice list
+    // AUTOMATICALLY CREATE LINKED INVOICE
     state.invoices.unshift({
-      id: 'INV-2026-0' + (90 + state.invoices.length + 1),
+      id: 'INV-' + newJcId,
+      job_id: newJcId,
       customer_name: fd.get('customer_name'),
+      phone: fd.get('phone') || '',
       vehicle_reg: fd.get('vehicle_reg'),
-      amount: parseFloat(fd.get('total_amount')),
-      payment_mode: fd.get('payment_mode'),
-      status: fd.get('payment_status'),
+      vehicle_model: fd.get('vehicle_model'),
+      service_name: fd.get('service_name'),
+      amount: totalAmt,
+      payment_mode: paymentMode,
+      status: paymentStatus,
       date: new Date().toISOString().slice(0, 10)
     });
 
     saveCrmState(state);
     closeModal('modalCreateJobCard');
     e.target.reset();
-    alert('✅ Job Card #' + newJcId + ' created & inventory stock updated!');
+    alert('✅ Job Card #' + newJcId + ' created & Invoice generated in Invoices & Billing!');
+  };
+
+  window.updateJobStatus = function(jcId, status) {
+    const jc = state.jobCards.find(j => j.id === jcId);
+    if (jc) {
+      jc.service_status = status;
+      saveCrmState(state);
+    }
+  };
+
+  window.updateInvoiceStatus = function(invId, status) {
+    const inv = state.invoices.find(i => i.id === invId);
+    if (inv) {
+      inv.status = status;
+      if (inv.job_id) {
+        const jc = state.jobCards.find(j => j.id === inv.job_id);
+        if (jc) {
+          jc.payment_status = status;
+        }
+      }
+      saveCrmState(state);
+    }
   };
 
   window.markJobPaid = function(jcId) {
@@ -1616,9 +1915,141 @@
     if (jc) {
       jc.payment_status = 'PAID';
       jc.service_status = 'COMPLETED';
+
+      // Sync linked invoice
+      const inv = state.invoices.find(i => i.job_id === jc.id || i.id === ('INV-' + jc.id));
+      if (inv) {
+        inv.status = 'PAID';
+        if (!inv.payment_mode || inv.payment_mode === 'Pending') {
+          inv.payment_mode = 'UPI / Cash';
+        }
+      }
       saveCrmState(state);
-      alert('✓ Job Card #' + jcId + ' marked as PAID and COMPLETED.');
+      alert('✓ Job Card #' + jcId + ' and linked Invoice marked as PAID and COMPLETED.');
     }
+  };
+
+  window.markInvoicePaid = function(invId) {
+    const inv = state.invoices.find(i => i.id === invId);
+    if (inv) {
+      inv.status = 'PAID';
+      if (!inv.payment_mode || inv.payment_mode === 'Pending') {
+        inv.payment_mode = 'UPI / Cash';
+      }
+      if (inv.job_id) {
+        const jc = state.jobCards.find(j => j.id === inv.job_id);
+        if (jc) {
+          jc.payment_status = 'PAID';
+        }
+      }
+      saveCrmState(state);
+      alert('✓ Invoice #' + invId + ' marked as PAID.');
+    }
+  };
+
+  window.openEditJobCard = function(jcId) {
+    const jc = state.jobCards.find(j => j.id === jcId);
+    if (!jc) return;
+
+    document.getElementById('editJobCardId').value = jc.id;
+    document.getElementById('editJobCustomerName').value = jc.customer_name || '';
+    document.getElementById('editJobPhone').value = jc.phone || '';
+    document.getElementById('editJobVehicleModel').value = jc.vehicle_model || '';
+    document.getElementById('editJobVehicleReg').value = jc.vehicle_reg || '';
+    document.getElementById('editJobServiceName').value = jc.service_name || '';
+    document.getElementById('editJobTotalAmount').value = Number(jc.total_amount) || 0;
+    document.getElementById('editJobServiceStatus').value = jc.service_status || 'UNDER_SERVICE';
+    document.getElementById('editJobPaymentStatus').value = jc.payment_status || 'UNPAID';
+    document.getElementById('editJobPaymentMode').value = jc.payment_mode || 'Pending';
+
+    const itemsList = document.getElementById('editJobCurrentItemsList');
+    if (itemsList) {
+      itemsList.textContent = jc.items_used || 'None (Labor only)';
+    }
+
+    const prodSelect = document.getElementById('editJobProductSelect');
+    if (prodSelect) {
+      prodSelect.innerHTML = `<option value="">-- No additional product --</option>` +
+        state.inventory.map(it => `<option value="${it.id}" data-price="${it.price}" data-unit="${it.unit}">[${it.sku}] ${it.name} (Avail: ${it.stock} ${it.unit}) - ₹${it.price}</option>`).join('');
+    }
+    document.getElementById('editJobProductQty').value = '1';
+
+    openModal('modalEditJobCard');
+  };
+
+  window.handleProductSelectPriceAdd = function(selectEl) {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    if (!opt || !opt.dataset.price) return;
+    const price = parseFloat(opt.dataset.price);
+    const qty = parseFloat(document.getElementById('editJobProductQty').value || '1');
+    if (price > 0 && confirm(`Would you like to add ₹${(price * qty).toLocaleString('en-IN')} for this product to the total quotation?`)) {
+      const current = parseFloat(document.getElementById('editJobTotalAmount').value || '0');
+      document.getElementById('editJobTotalAmount').value = current + (price * qty);
+    }
+  };
+
+  window.handleUpdateJobCard = function(e) {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const jcId = fd.get('job_id');
+    const jc = state.jobCards.find(j => j.id === jcId);
+    if (!jc) return;
+
+    const prodId = fd.get('add_product_id');
+    const prodQty = parseFloat(fd.get('add_product_qty') || '0');
+
+    // Deduct inventory if product selected
+    if (prodId && prodQty > 0) {
+      const prod = state.inventory.find(i => i.id == prodId);
+      if (prod) {
+        prod.stock = Math.max(0, parseFloat((prod.stock - prodQty).toFixed(2)));
+        const itemDesc = `${prod.name} (${prodQty} ${prod.unit})`;
+        jc.items_used = (jc.items_used && jc.items_used !== 'None (Labor only)' && !jc.items_used.includes('Click \'Edit\''))
+          ? `${jc.items_used}, ${itemDesc}`
+          : itemDesc;
+      }
+    }
+
+    jc.customer_name = fd.get('customer_name');
+    jc.phone = fd.get('phone');
+    jc.vehicle_model = fd.get('vehicle_model');
+    jc.vehicle_reg = fd.get('vehicle_reg');
+    jc.service_name = fd.get('service_name');
+    jc.total_amount = parseFloat(fd.get('total_amount'));
+    jc.service_status = fd.get('service_status');
+    jc.payment_status = fd.get('payment_status');
+    jc.payment_mode = fd.get('payment_mode');
+
+    // Sync linked invoice
+    let inv = state.invoices.find(i => i.job_id === jc.id || i.id === ('INV-' + jc.id));
+    if (inv) {
+      inv.customer_name = jc.customer_name;
+      inv.phone = jc.phone;
+      inv.vehicle_reg = jc.vehicle_reg;
+      inv.vehicle_model = jc.vehicle_model;
+      inv.service_name = jc.service_name;
+      inv.amount = jc.total_amount;
+      inv.status = jc.payment_status;
+      inv.payment_mode = jc.payment_mode;
+    } else {
+      state.invoices.unshift({
+        id: 'INV-' + jc.id,
+        job_id: jc.id,
+        customer_name: jc.customer_name,
+        phone: jc.phone || '',
+        vehicle_reg: jc.vehicle_reg,
+        vehicle_model: jc.vehicle_model,
+        service_name: jc.service_name,
+        amount: jc.total_amount,
+        payment_mode: jc.payment_mode,
+        status: jc.payment_status,
+        date: new Date().toISOString().slice(0, 10)
+      });
+    }
+
+    saveCrmState(state);
+    closeModal('modalEditJobCard');
+    alert('✅ Job Card #' + jc.id + ' and linked Invoice updated successfully!');
   };
 
   window.handleManualAddLead = function(e) {
@@ -1774,6 +2205,127 @@
     if (!text || !leadSearchQuery) return text || '';
     const safeText = String(text);
     const regex = new RegExp(`(${leadSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return safeText.replace(regex, '<mark style="background:#fef08a; color:#854d0e; padding:0 3px; border-radius:3px; font-weight:700;">$1</mark>');
+  }
+
+  // -------------------------------------------------------------
+  // JOB CARDS SEARCH & FILTER ENGINE
+  // -------------------------------------------------------------
+  let jobCardSearchQuery = '';
+  let jobCardStatusFilterVal = 'ALL';
+  let jobCardPaymentFilterVal = 'ALL';
+
+  window.handleJobCardSearch = function(query) {
+    jobCardSearchQuery = (query || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('jobCardSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = jobCardSearchQuery ? 'block' : 'none';
+    renderAllCrmTables();
+  };
+
+  window.clearJobCardSearch = function() {
+    jobCardSearchQuery = '';
+    const input = document.getElementById('jobCardSearchInput');
+    if (input) input.value = '';
+    const clearBtn = document.getElementById('jobCardSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    renderAllCrmTables();
+  };
+
+  window.handleJobCardStatusFilter = function(status) {
+    jobCardStatusFilterVal = status || 'ALL';
+    renderAllCrmTables();
+  };
+
+  window.handleJobCardPaymentFilter = function(status) {
+    jobCardPaymentFilterVal = status || 'ALL';
+    renderAllCrmTables();
+  };
+
+  function getFilteredJobCards() {
+    return state.jobCards.filter(j => {
+      if (jobCardStatusFilterVal !== 'ALL' && j.service_status !== jobCardStatusFilterVal) return false;
+      if (jobCardPaymentFilterVal !== 'ALL' && j.payment_status !== jobCardPaymentFilterVal) return false;
+      if (!jobCardSearchQuery) return true;
+
+      const q = jobCardSearchQuery;
+      const cleanQ = q.replace(/[^a-z0-9]/gi, '');
+      const phone = (j.phone || '').replace(/[^0-9]/g, '');
+      const reg = (j.vehicle_reg || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+
+      return (j.customer_name || '').toLowerCase().includes(q) ||
+             (cleanQ.length > 0 && phone.includes(cleanQ)) ||
+             (j.phone || '').includes(q) ||
+             (cleanQ.length > 0 && reg.includes(cleanQ)) ||
+             (j.vehicle_reg || '').toLowerCase().includes(q) ||
+             (j.vehicle_model || '').toLowerCase().includes(q) ||
+             (j.id || '').toLowerCase().includes(q) ||
+             (j.service_name || '').toLowerCase().includes(q) ||
+             (j.items_used || '').toLowerCase().includes(q);
+    });
+  }
+
+  function highlightJobCardMatch(text) {
+    if (!text || !jobCardSearchQuery) return text || '';
+    const safeText = String(text);
+    const regex = new RegExp(`(${jobCardSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return safeText.replace(regex, '<mark style="background:#fef08a; color:#854d0e; padding:0 3px; border-radius:3px; font-weight:700;">$1</mark>');
+  }
+
+  // -------------------------------------------------------------
+  // INVOICES & BILLING SEARCH & FILTER ENGINE
+  // -------------------------------------------------------------
+  let invoiceSearchQuery = '';
+  let invoiceStatusFilterVal = 'ALL';
+
+  window.handleInvoiceSearch = function(query) {
+    invoiceSearchQuery = (query || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('invoiceSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = invoiceSearchQuery ? 'block' : 'none';
+    renderAllCrmTables();
+  };
+
+  window.clearInvoiceSearch = function() {
+    invoiceSearchQuery = '';
+    const input = document.getElementById('invoiceSearchInput');
+    if (input) input.value = '';
+    const clearBtn = document.getElementById('invoiceSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    renderAllCrmTables();
+  };
+
+  window.handleInvoiceStatusFilter = function(status) {
+    invoiceStatusFilterVal = status || 'ALL';
+    renderAllCrmTables();
+  };
+
+  function getFilteredInvoices() {
+    return state.invoices.filter(inv => {
+      if (invoiceStatusFilterVal !== 'ALL' && inv.status !== invoiceStatusFilterVal) return false;
+      if (!invoiceSearchQuery) return true;
+
+      const q = invoiceSearchQuery;
+      const cleanQ = q.replace(/[^a-z0-9]/gi, '');
+      const phone = (inv.phone || '').replace(/[^0-9]/g, '');
+      const reg = (inv.vehicle_reg || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+
+      return (inv.id || '').toLowerCase().includes(q) ||
+             (inv.job_id || '').toLowerCase().includes(q) ||
+             (inv.customer_name || '').toLowerCase().includes(q) ||
+             (cleanQ.length > 0 && phone.includes(cleanQ)) ||
+             (inv.phone || '').includes(q) ||
+             (cleanQ.length > 0 && reg.includes(cleanQ)) ||
+             (inv.vehicle_reg || '').toLowerCase().includes(q) ||
+             (inv.vehicle_model || '').toLowerCase().includes(q) ||
+             (inv.service_name || '').toLowerCase().includes(q) ||
+             (inv.payment_mode || '').toLowerCase().includes(q) ||
+             (inv.status || '').toLowerCase().includes(q);
+    });
+  }
+
+  function highlightInvoiceMatch(text) {
+    if (!text || !invoiceSearchQuery) return text || '';
+    const safeText = String(text);
+    const regex = new RegExp(`(${invoiceSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
     return safeText.replace(regex, '<mark style="background:#fef08a; color:#854d0e; padding:0 3px; border-radius:3px; font-weight:700;">$1</mark>');
   }
 
