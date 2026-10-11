@@ -4,7 +4,10 @@ export function initBookingFlow() {
   const container = document.querySelector('.booking-flow-container');
   if (!container) return;
 
-  const API_BASE = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 'http://localhost:5000/api';
+  const API_BASE = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? (window.location.port === '5000' || window.location.port === '8000' ? '/api' : 'http://localhost:5000/api') 
+      : '/api');
 
   // State
   let state = {
@@ -597,6 +600,27 @@ export function initBookingFlow() {
       // Success: Render Confirmation Screen
       renderSuccessScreen(json.data);
       sessionStorage.removeItem('tdc_booking_state');
+
+      // Sync with local CRM state
+      try {
+        const raw = localStorage.getItem('tdc_crm_master_state');
+        const crmState = raw ? JSON.parse(raw) : { leads: [], jobCards: [], inventory: [], invoices: [], memberships: [], customers: [] };
+        crmState.leads = crmState.leads || [];
+        crmState.leads.unshift({
+          id: json.data?.id || Date.now(),
+          ref: json.data?.ref || ('DRC-BK-' + Math.floor(1000 + Math.random() * 9000)),
+          customer_name: state.name,
+          phone: state.phone,
+          email: state.email || '',
+          service_name: json.data?.service_name || state.serviceName || state.serviceSlug,
+          vehicle_model: `${state.brand || ''} ${state.model || ''}`.trim() || 'Vehicle',
+          vehicle_reg: state.registration || 'N/A',
+          source: 'ONLINE_BOOKING',
+          stage: 'BAY_SCHEDULED',
+          created_at: `${state.date} ${state.time}`
+        });
+        localStorage.setItem('tdc_crm_master_state', JSON.stringify(crmState));
+      } catch (storageErr) {}
     } catch (err) {
       showError('Network error connecting to booking server. Please check your connection.');
       submitBtn.disabled = false;

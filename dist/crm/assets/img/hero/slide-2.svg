@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="spotlight2" cx="70%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#242830" />
+      <stop offset="60%" stop-color="#0d0f12" />
+      <stop offset="100%" stop-color="#050507" />
+    </radialGradient>
+    <linearGradient id="ppfFilmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+      <stop offset="50%" stop-color="#00d2ff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#E50914" stop-opacity="0.1" />
+    </linearGradient>
+    <linearGradient id="carbon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#151515" />
+      <stop offset="50%" stop-color="#252525" />
+      <stop offset="100%" stop-color="#111111" />
+    </linearGradient>
+  </defs>
+
+  <!-- Studio Background -->
+  <rect width="1920" height="1080" fill="url(#spotlight2)" />
+
+  <!-- Detailing Grid & Hexagons -->
+  <g stroke="rgba(229,9,20,0.15)" stroke-width="1.5" fill="none">
+    <polygon points="1200,300 1260,335 1260,405 1200,440 1140,405 1140,335" />
+    <polygon points="1340,300 1400,335 1400,405 1340,440 1280,405 1280,335" />
+    <polygon points="1270,420 1330,455 1330,525 1270,560 1210,525 1210,455" />
+    <polygon points="1410,420 1470,455 1470,525 1410,560 1350,525 1350,455" />
+  </g>
+
+  <!-- High-End Bonnet / Hood Surface (PPF Demonstration) -->
+  <g transform="translate(700, 240)">
+    <ellipse cx="500" cy="520" rx="480" ry="30" fill="#000000" opacity="0.7" />
+    <!-- Hood Panel -->
+    <path d="M 80 440 L 260 200 L 760 180 L 960 420 Q 520 480 80 440 Z" fill="url(#carbon)" stroke="#444" stroke-width="2" />
+    
+    <!-- PPF Application Half-Mask Layer -->
+    <path d="M 80 440 L 260 200 L 510 190 L 520 455 Q 300 460 80 440 Z" fill="url(#ppfFilmGrad)" stroke="#00d2ff" stroke-width="2" />
+    
+    <!-- Self-Healing Laser Cut Line -->
+    <line x1="510" y1="190" x2="520" y2="455" stroke="#E50914" stroke-width="3" stroke-dasharray="6,4" />
+    <circle cx="515" cy="320" r="10" fill="#E50914" />
+    <circle cx="515" cy="320" r="22" stroke="#E50914" stroke-width="1.5" opacity="0.6" />
+    
+    <!-- Protective Shield Icon Over Hood -->
+    <g transform="translate(480, 280)">
+      <path d="M 35 10 L 70 25 L 70 60 Q 70 95 35 110 Q 0 95 0 60 L 0 25 Z" fill="rgba(8,8,8,0.8)" stroke="#E50914" stroke-width="3" />
+      <path d="M 20 55 L 32 67 L 52 42" stroke="#00d2ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    </g>
+
+    <!-- Gloss Highlight -->
+    <path d="M 280 230 Q 500 220 740 210" stroke="#ffffff" stroke-width="4" opacity="0.7" />
+  </g>
+
+  <!-- Studio Overhead Ceiling LED Light Array -->
+  <rect x="750" y="40" width="800" height="8" fill="#ffffff" opacity="0.5" rx="4" />
+</svg>

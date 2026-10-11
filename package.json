@@ -2,9 +2,10 @@
   "name": "the-drive-clinic-jammu",
   "version": "2.0.0",
   "description": "THE DDC — Luxury Automotive Detailing Studio in Jammu",
+  "main": "api/server.js",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-netlify.js",
+    "build": "node scripts/build.js",
     "start": "node api/server.js"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
     "express-rate-limit": "^7.3.1",
     "helmet": "^7.1.0",
     "mysql2": "^3.10.1",
+    "nodemailer": "^10.1.0",
     "zod": "^3.23.8"
   }
 }

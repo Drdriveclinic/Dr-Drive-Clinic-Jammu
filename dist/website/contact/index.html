@@ -337,8 +337,8 @@
           <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:6px;">
             EMAIL ADDRESS
           </div>
-          <a href="mailto:info@thedriveclinic.com" class="text-link" style="font-size:16px;">
-            info@thedriveclinic.com          </a>
+          <a href="mailto:care@thedriveclinic.com" class="text-link" style="font-size:16px;">
+            care@thedriveclinic.com          </a>
         </div>
 
         <!-- Hours -->
@@ -488,20 +488,52 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const res = await fetch('http://localhost:5000/api/leads', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        const apiTarget = (window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || '/api') + '/leads';
+        let res;
+        try {
+          res = await fetch(apiTarget, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (fetchErr) {
+          // Fallback if cross-port local dev
+          res = await fetch('http://localhost:5000/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
 
         const json = await res.json();
 
-        if (res.ok && json.ok) {
+        if ((res.ok && json.ok) || json.success) {
+          // Sync with local CRM state if present
+          try {
+            const raw = localStorage.getItem('tdc_crm_master_state');
+            const state = raw ? JSON.parse(raw) : { leads: [], jobCards: [], inventory: [], invoices: [], memberships: [], customers: [] };
+            state.leads = state.leads || [];
+            state.leads.unshift({
+              id: json.data?.lead_id || Date.now(),
+              ref: json.data?.ref || ('LEAD-' + Math.floor(1000 + Math.random() * 9000)),
+              customer_name: payload.name,
+              phone: payload.phone,
+              email: payload.email || '',
+              service_name: payload.service_slug ? payload.service_slug.replace(/-/g, ' ').toUpperCase() : 'Studio Consultation',
+              vehicle_model: payload.vehicle_type === 'bike' ? 'Superbike' : 'Car',
+              vehicle_reg: 'N/A',
+              source: 'WEBSITE',
+              stage: 'NEW',
+              created_at: new Date().toISOString().replace('T', ' ').slice(0, 16)
+            });
+            localStorage.setItem('tdc_crm_master_state', JSON.stringify(state));
+          } catch (storageErr) {}
+
           successBanner.style.display = 'block';
           form.reset();
           submitBtn.textContent = 'ENQUIRY SENT ✓';
         } else {
-          errorBanner.textContent = json.error?.message || 'Failed to submit enquiry. Please check your details.';
+          errorBanner.textContent = json.error?.message || json.error || 'Failed to submit enquiry. Please check your details.';
           errorBanner.style.display = 'block';
           submitBtn.disabled = false;
           submitBtn.textContent = 'SEND ENQUIRY →';
@@ -573,8 +605,8 @@ document.addEventListener('DOMContentLoaded', () => {
               WhatsApp: 919419100000            </a>
           </li>
           <li>
-            <a href="mailto:info@thedriveclinic.com" class="footer-list-link">
-              info@thedriveclinic.com            </a>
+            <a href="mailto:care@thedriveclinic.com" class="footer-list-link">
+              care@thedriveclinic.com            </a>
           </li>
           <li style="color:var(--text-3); font-size:13px; margin-top:8px;">
             Hours: Mon - Sun: 09:00 AM - 08:00 PM          </li>

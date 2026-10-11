@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="interiorSpotlight" cx="65%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#282018" />
+      <stop offset="60%" stop-color="#120e0a" />
+      <stop offset="100%" stop-color="#060503" />
+    </radialGradient>
+    <linearGradient id="leatherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3d2a1d" />
+      <stop offset="100%" stop-color="#1a120b" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#interiorSpotlight)" />
+
+  <!-- Luxury Cabin Cockpit & Leather Seat Silhouette with Steam Vapour -->
+  <g transform="translate(700, 240)">
+    <!-- Shadow -->
+    <ellipse cx="500" cy="520" rx="450" ry="30" fill="#000000" opacity="0.8" />
+    
+    <!-- Sport Bucket Seat -->
+    <path d="M 380 480 L 320 220 Q 320 120 440 100 Q 560 120 560 220 L 500 480 Z" fill="url(#leatherGrad)" stroke="#523824" stroke-width="3" />
+    
+    <!-- Red Contrast Stitching -->
+    <path d="M 360 460 L 340 220 Q 340 140 440 120" stroke="#E50914" stroke-width="2.5" stroke-dasharray="5,4" fill="none" />
+    <path d="M 520 460 L 540 220 Q 540 140 440 120" stroke="#E50914" stroke-width="2.5" stroke-dasharray="5,4" fill="none" />
+    
+    <!-- Steering Wheel Outline -->
+    <g transform="translate(680, 260)">
+      <circle cx="0" cy="0" r="110" fill="none" stroke="#222" stroke-width="22" />
+      <circle cx="0" cy="0" r="110" fill="none" stroke="#E50914" stroke-width="4" stroke-dasharray="20,10" />
+      <!-- Center Hub -->
+      <circle cx="0" cy="0" r="40" fill="#111" stroke="#333" stroke-width="3" />
+      <!-- Red 12 O'Clock Racing Marker -->
+      <rect x="-8" y="-120" width="16" height="20" fill="#E50914" />
+    </g>
+
+    <!-- Steam Vapour Swirls (Sterilization Effect) -->
+    <path d="M 400 380 Q 420 320 390 260 Q 360 200 420 150" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="12" stroke-linecap="round" />
+    <path d="M 460 390 Q 480 300 440 220 Q 410 160 480 110" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8" stroke-linecap="round" />
+  </g>
+</svg>
