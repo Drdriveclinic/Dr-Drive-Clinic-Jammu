@@ -34,29 +34,16 @@
       <form method="POST" action="/crm/login" class="crm-login-form">
         <div class="crm-form-group">
           <label class="crm-label">Studio Email Address</label>
-          <input type="email" name="email" id="loginEmail" class="crm-input" value="owner@thedriveclinic.com" required autocomplete="email">
+          <input type="email" name="email" id="loginEmail" class="crm-input" placeholder="e.g. care@thedriveclinic.com" required autocomplete="email">
         </div>
 
         <div class="crm-form-group">
           <label class="crm-label">Password</label>
-          <input type="password" name="password" id="loginPassword" class="crm-input" value="clinic2026" required autocomplete="current-password">
+          <input type="password" name="password" id="loginPassword" class="crm-input" placeholder="Enter your studio password" required autocomplete="current-password">
         </div>
 
         <button type="submit" class="crm-btn crm-btn-primary crm-btn-block">Sign in to Workspace &rarr;</button>
       </form>
-
-      <!-- 1-Click Quick Demo Switcher -->
-      <div class="crm-quick-demo-box">
-        <span class="crm-quick-demo-title">⚡ Quick 1-Click Demo Logins</span>
-        <div class="crm-quick-demo-btns">
-          <button type="button" class="crm-demo-pill-btn" onclick="fillLogin('owner@thedriveclinic.com', 'clinic2026')">
-            👤 Studio Owner (Amit Kapoor)
-          </button>
-          <button type="button" class="crm-demo-pill-btn" onclick="fillLogin('rohan@thedriveclinic.com', 'clinic2026')">
-            🔧 Master Lead (Rohan Sharma)
-          </button>
-        </div>
-      </div>
 
       <div class="crm-login-footer">
         <a href="/" class="crm-back-link">&larr; Back to Public Website</a>

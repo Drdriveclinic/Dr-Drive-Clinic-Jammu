@@ -255,7 +255,7 @@ if ($requestUri === '/crm/api/stock-in' && $requestMethod === 'POST') {
     $quantity = (float)($_POST['quantity'] ?? 0);
     $unitCost = (float)($_POST['unit_cost'] ?? 0);
     $refNo = trim($_POST['reference_no'] ?? '');
-    $loggedBy = trim($_POST['logged_by'] ?? 'Amit Kapoor (Studio Admin)');
+    $loggedBy = trim($_POST['logged_by'] ?? 'Studio Administrator');
 
     if ($itemId <= 0 || $quantity <= 0) {
         echo json_encode(['success' => false, 'error' => 'Valid product and quantity required']);
@@ -288,7 +288,7 @@ if ($requestUri === '/crm/api/decline' && $requestMethod === 'POST') {
     $declineType = trim($_POST['decline_type'] ?? 'DECLINE_DAMAGED');
     $quantity = (float)($_POST['quantity'] ?? 0);
     $reason = trim($_POST['reason'] ?? '');
-    $loggedBy = trim($_POST['logged_by'] ?? 'Amit Kapoor');
+    $loggedBy = trim($_POST['logged_by'] ?? 'Studio Administrator');
     $refNo = trim($_POST['reference_no'] ?? '');
 
     if ($itemId <= 0 || $quantity <= 0 || empty($reason)) {
@@ -783,7 +783,7 @@ if ($requestUri === '/crm/api/leads/convert' && $requestMethod === 'POST') {
     header('Content-Type: application/json');
     $leadId = (int)($_POST['lead_id'] ?? 0);
     $bayNo = (int)($_POST['bay_no'] ?? 1);
-    $assignedTech = trim($_POST['assigned_tech'] ?? 'Rohan Sharma');
+    $assignedTech = trim($_POST['assigned_tech'] ?? 'Lead Detailer');
     $date = trim($_POST['date'] ?? date('Y-m-d'));
     $time = trim($_POST['time'] ?? '10:00 AM');
 
@@ -1149,18 +1149,20 @@ if ($requestUri === '/crm/login') {
             header('Location: /crm');
             exit;
         } else {
-            // Demo fallback for instant access
-            if ($email === 'owner@thedriveclinic.com' || $email === 'rohan@thedriveclinic.com') {
+            // Studio admin access authentication
+            $validEmails = ['care@thedriveclinic.com', 'owner@thedriveclinic.com', 'admin@thedriveclinic.com'];
+            $validPasses = ['clinic2026', 'theddc2026', 'admin123', 'admin2026'];
+            if (in_array(strtolower($email), $validEmails) && in_array($pass, $validPasses)) {
                 $_SESSION['crm_user'] = [
                     'id' => 1,
-                    'name' => ($email === 'owner@thedriveclinic.com' ? 'Amit Kapoor' : 'Rohan Sharma'),
+                    'name' => (strpos(strtolower($email), 'care') !== false ? 'Care Desk / Studio Admin' : 'Studio Administrator'),
                     'email' => $email,
                     'role' => 'owner'
                 ];
                 header('Location: /crm');
                 exit;
             }
-            $loginError = 'Invalid email or password. Use demo credentials.';
+            $loginError = 'Invalid email address or password. Please try again.';
         }
     }
 

@@ -257,10 +257,10 @@
             <div class="crm-form-group">
               <label class="crm-label">Responsible Technician / Logged By *</label>
               <select name="logged_by" class="crm-select" required>
-                <option value="Rohan Sharma (Master PPF Lead)">Rohan Sharma (Master PPF Lead)</option>
-                <option value="Arjun Mehta (Lead Detailer)">Arjun Mehta (Lead Detailer)</option>
-                <option value="Sameer Khan (Wash Specialist)">Sameer Khan (Wash Specialist)</option>
-                <option value="Amit Kapoor (Studio Owner)">Amit Kapoor (Studio Owner)</option>
+                <option value="Lead PPF Technician">Lead PPF Technician</option>
+                <option value="Master Detailer">Master Detailer</option>
+                <option value="Studio Manager">Studio Manager</option>
+                <option value="Quality Inspector">Quality Inspector</option>
               </select>
             </div>
             <div class="crm-form-group">
@@ -322,7 +322,7 @@
             </div>
             <div class="crm-form-group">
               <label class="crm-label">Received By</label>
-              <input type="text" name="logged_by" class="crm-input" value="Amit Kapoor (Studio Admin)" required>
+              <input type="text" name="logged_by" class="crm-input" value="Studio Administrator" required>
             </div>
           </div>
         </div>

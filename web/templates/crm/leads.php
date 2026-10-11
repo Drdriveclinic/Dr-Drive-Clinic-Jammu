@@ -401,9 +401,10 @@ foreach ($leads as $l) {
           <div class="crm-form-group">
             <label class="crm-label">Assigned Lead Detailer *</label>
             <select name="assigned_tech" class="crm-select" required>
-              <option value="Rohan Sharma (Master Lead)">Rohan Sharma (Master PPF Lead)</option>
-              <option value="Arjun Mehta (Senior Detailer)">Arjun Mehta (Senior Detailer)</option>
-              <option value="Sameer Khan (Wash Specialist)">Sameer Khan (Wash Specialist)</option>
+              <option value="Lead PPF Specialist">Lead PPF Specialist</option>
+              <option value="Master Ceramic Detailer">Master Ceramic Detailer</option>
+              <option value="Senior Paint Correction Specialist">Senior Paint Correction Specialist</option>
+              <option value="Precision Wash Technician">Precision Wash Technician</option>
             </select>
           </div>
         </div>

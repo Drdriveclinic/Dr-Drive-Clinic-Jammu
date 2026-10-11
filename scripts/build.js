@@ -41,9 +41,12 @@ console.log('🚀 Running THE DDC Node.js Production Build...');
 // 2. Sync public assets
 const assetsSrc = path.join(WEB_PUBLIC_DIR, 'assets');
 if (fs.existsSync(assetsSrc)) {
-  console.log('📦 Syncing assets to dist/assets...');
+  console.log('📦 Syncing assets to dist/assets, dist/crm/assets, dist/website/assets...');
   copyDirRecursive(assetsSrc, path.join(DIST_DIR, 'assets'));
   copyDirRecursive(assetsSrc, path.join(CRM_DIST_DIR, 'assets'));
+  if (fs.existsSync(path.join(DIST_DIR, 'website'))) {
+    copyDirRecursive(assetsSrc, path.join(DIST_DIR, 'website', 'assets'));
+  }
 }
 
 // Copy favicon & robots

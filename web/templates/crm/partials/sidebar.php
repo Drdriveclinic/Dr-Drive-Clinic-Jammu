@@ -100,10 +100,10 @@ $currentNav = $activeNav ?? 'overview';
 
   <div class="crm-sidebar-footer">
     <div class="crm-user-profile">
-      <div class="crm-user-avatar">AK</div>
+      <div class="crm-user-avatar">DC</div>
       <div class="crm-user-info">
-        <span class="crm-user-name">Amit Kapoor</span>
-        <span class="crm-user-role">Studio Administrator</span>
+        <span class="crm-user-name">Studio Administrator</span>
+        <span class="crm-user-role">Jammu Studio Owner</span>
       </div>
       <a href="/crm/logout" class="crm-site-link" title="Logout of Studio" style="margin-left:auto;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
