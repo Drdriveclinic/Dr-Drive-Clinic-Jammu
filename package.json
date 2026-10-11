@@ -2,11 +2,11 @@
   "name": "the-drive-clinic-jammu",
   "version": "2.0.0",
   "description": "THE DDC — Luxury Automotive Detailing Studio in Jammu",
-  "main": "api/server.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
-    "start": "node api/server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -4,8 +4,8 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-  PORT: z.string().default('5000').transform((v) => parseInt(v, 10)),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  PORT: z.union([z.string(), z.number()]).default('5000').transform((v) => typeof v === 'number' ? v : parseInt(v, 10)),
+  NODE_ENV: z.string().default('production'),
   DB_HOST: z.string().default('127.0.0.1'),
   DB_PORT: z.string().default('3306').transform((v) => parseInt(v, 10)),
   DB_NAME: z.string().default('drive_clinic'),

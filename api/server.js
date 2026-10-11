@@ -1,8 +1,9 @@
 import app from './src/app.js';
 import { env } from './src/config/env.js';
 
-const server = app.listen(env.PORT, () => {
-  console.log(`[The Drive Clinic API] running on http://localhost:${env.PORT} in ${env.NODE_ENV} mode`);
+const PORT = process.env.PORT || env.PORT || 5000;
+const server = app.listen(PORT, () => {
+  console.log(`[The Drive Clinic API] running on http://localhost:${PORT} in ${env.NODE_ENV} mode`);
 });
 
 process.on('SIGTERM', () => {
