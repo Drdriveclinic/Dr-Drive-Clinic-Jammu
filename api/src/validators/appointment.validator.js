@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const appointmentBookingSchema = z.object({
   service_slug: z.string().min(1, 'Service is required'),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD'),
-  time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/, 'Time must be HH:MM or HH:MM:SS'),
+  date: z.string().optional().default(() => new Date().toISOString().slice(0, 10)),
+  time: z.string().optional().default('10:00'),
   vehicle: z.object({
     type: z.enum(['car', 'bike']).default('car'),
     brand: z.string().min(1, 'Vehicle brand is required').max(64),

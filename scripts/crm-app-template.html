@@ -13,6 +13,9 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/crm.css">
+
+  <!-- SheetJS for Excel (.xlsx/.xls) Parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body class="crm-body" style="background:#f4f6fa; color:#0f172a; font-family:'Space Grotesk', sans-serif;">
 
@@ -184,19 +187,47 @@
 
       <!-- TAB 2: LEADS PIPELINE -->
       <section id="tab-leads" class="crm-tab-pane" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#64748b;">All leads received from online booking, contact forms and manual inquiries.</div>
-          <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddLead')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
-            + Add New Lead
-          </button>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+          <div>
+            <div style="font-size:16px; font-weight:800; color:#0f172a; letter-spacing:-0.01em;">Studio Leads & Inquiries Pipeline</div>
+            <div style="font-size:12.5px; color:#64748b;">Direct website bookings, consultation requests, and ad campaign leads.</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button type="button" class="crm-btn" onclick="openModal('modalImportLeads')" style="background:#0284c7; color:#ffffff; border:none; padding:9px 16px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 3px rgba(2,132,199,0.25);">
+              <span>📊</span> Upload Leads (Excel / CSV)
+            </button>
+            <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddLead')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+              <span>+</span> Add Manual Lead
+            </button>
+          </div>
+        </div>
+
+        <!-- SEARCH BAR & STAGE FILTER BAR -->
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:16px; background:#ffffff; padding:12px 16px; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,0.03);">
+          <div style="flex:1; min-width:280px; position:relative;">
+            <input type="text" id="leadSearchInput" oninput="handleLeadSearch(this.value)" placeholder="🔍 Search leads by Mobile No., Car Number, Email, or Name..." style="width:100%; padding:9px 36px 9px 34px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; color:#0f172a; outline:none; background:#ffffff;">
+            <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; color:#94a3b8; pointer-events:none;">🔍</span>
+            <button type="button" id="leadSearchClearBtn" onclick="clearLeadSearch()" style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:none; color:#94a3b8; font-size:14px; cursor:pointer; font-weight:700;">✕</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select id="leadStageFilter" onchange="handleLeadStageFilter(this.value)" style="border:1px solid #cbd5e1; border-radius:6px; padding:9px 12px; font-size:12.5px; background:#ffffff; color:#334155; outline:none;">
+              <option value="ALL">All Stages</option>
+              <option value="NEW">New Leads</option>
+              <option value="CONTACTED">Contacted</option>
+              <option value="BAY_SCHEDULED">Bay Scheduled</option>
+              <option value="WON">Converted (Won)</option>
+              <option value="LOST">Lost</option>
+            </select>
+            <span id="leadSearchCount" style="font-size:12px; font-weight:700; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:4px; white-space:nowrap;"></span>
+          </div>
         </div>
 
         <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableLeads" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
               <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lead Name & WhatsApp</th>
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Vehicle Model</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lead Name & Contact</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Vehicle & Reg No.</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Service Inquired</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Source</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Stage</th>
@@ -404,6 +435,105 @@
           <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Save Lead</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal: Import Leads (Excel / CSV) -->
+  <div class="crm-modal-backdrop" id="modalImportLeads">
+    <div class="crm-modal" style="max-width:760px; width:95%;" onclick="event.stopPropagation()">
+      <div class="crm-modal-header" style="border-bottom:1px solid #e2e8f0; padding-bottom:14px;">
+        <div>
+          <h3 class="crm-modal-title" style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:20px;">📊</span> Import Leads from Excel / CSV
+          </h3>
+          <p style="font-size:12.5px; color:#64748b; margin-top:2px;">Upload or paste ad campaign leads (Meta Ads, Google Ads, or spreadsheets).</p>
+        </div>
+        <button class="crm-modal-close" onclick="closeModal('modalImportLeads')">&times;</button>
+      </div>
+
+      <div class="crm-modal-body" style="max-height:75vh; overflow-y:auto; padding:20px 24px;">
+        <!-- Campaign source config -->
+        <div class="crm-form-row" style="margin-bottom:16px;">
+          <div class="crm-form-group">
+            <label class="crm-label">Default Source / Campaign Name *</label>
+            <select id="importLeadSource" class="crm-input" style="height:42px;">
+              <option value="META_ADS">Meta Ads (Facebook / Instagram)</option>
+              <option value="GOOGLE_ADS">Google Ads Search & Display</option>
+              <option value="INSTAGRAM_DM">Instagram Direct Inquiries</option>
+              <option value="EXCEL_IMPORT">Custom Excel / CSV Spreadsheet</option>
+              <option value="OFFLINE_EVENT">Offline Auto Expo / Show</option>
+            </select>
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Default Service Inquired</label>
+            <input type="text" id="importLeadDefaultService" class="crm-input" style="height:42px;" placeholder="e.g. Paint Protection Film (PPF)" value="Studio Detailing Consultation">
+          </div>
+        </div>
+
+        <!-- Import Mode Tabs -->
+        <div style="display:flex; gap:10px; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+          <button type="button" id="tabBtnUploadFile" onclick="switchImportMethod('file')" style="background:#0284c7; color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-size:12.5px; font-weight:700; cursor:pointer;">
+            📁 1. Upload .XLSX / .CSV File
+          </button>
+          <button type="button" id="tabBtnPasteText" onclick="switchImportMethod('paste')" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:8px 16px; border-radius:6px; font-size:12.5px; font-weight:700; cursor:pointer;">
+            📋 2. Paste Rows from Sheets
+          </button>
+        </div>
+
+        <!-- Section A: File Upload -->
+        <div id="importFileSection" style="margin-bottom:16px;">
+          <div id="dropZoneLeads" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" style="border:2px dashed #93c5fd; background:#f0f9ff; border-radius:10px; padding:32px 20px; text-align:center; cursor:pointer; transition:all 0.2s ease;">
+            <div style="font-size:38px; margin-bottom:8px;">📥</div>
+            <div style="font-size:15px; font-weight:700; color:#0369a1; margin-bottom:4px;">Drag & Drop your Excel (.xlsx, .xls) or .csv file here</div>
+            <div style="font-size:12px; color:#64748b; margin-bottom:14px;">Supports Meta Lead Center exports, Google Ads leads, or studio spreadsheets</div>
+            <label class="crm-btn" style="background:#0284c7; color:#ffffff; padding:9px 20px; border-radius:6px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-block;">
+              Browse File on Computer
+              <input type="file" id="leadFileInput" accept=".xlsx, .xls, .csv, text/csv, text/plain" style="display:none;" onchange="handleLeadFileSelect(this.files)">
+            </label>
+          </div>
+          <div id="fileUploadStatus" style="font-size:12.5px; margin-top:8px; font-weight:700; color:#0284c7; display:none;"></div>
+        </div>
+
+        <!-- Section B: Direct Paste -->
+        <div id="importPasteSection" style="display:none; margin-bottom:16px;">
+          <label class="crm-label">Paste rows copied from Excel, Sheets, or CSV:</label>
+          <textarea id="importPasteText" class="crm-input" style="height:130px; font-family:monospace; font-size:12px; line-height:1.45; white-space:pre;" placeholder="Name&#9;Phone&#9;Car / Model&#9;Reg No&#9;Service&#9;Email&#10;Vikram Sharma&#9;9419122334&#9;BMW 330Li&#9;JK02CQ8899&#9;PPF&#9;vikram@gmail.com&#10;Amit Jamwal&#9;9419177889&#9;Thar Roxx&#9;JK02AB5544&#9;Ceramic&#9;amit@gmail.com" oninput="handlePasteInput(this.value)"></textarea>
+          <div style="font-size:11.5px; color:#64748b; margin-top:5px;">💡 Auto-detects columns: Name, Mobile, Vehicle, Registration Number, Service, Email.</div>
+        </div>
+
+        <!-- Parsed Leads Preview -->
+        <div id="importPreviewContainer" style="display:none; margin-top:16px; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden;">
+          <div style="background:#f8fafc; padding:10px 14px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:13px; font-weight:700; color:#0f172a;">
+              Preview: Ready to Import <span id="previewCountBadge" style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:10px; font-size:11.5px; font-weight:800; margin-left:6px;">0 leads</span>
+            </div>
+            <button type="button" onclick="clearImportPreview()" style="border:none; background:none; color:#ef4444; font-size:11.5px; font-weight:700; cursor:pointer;">✕ Clear</button>
+          </div>
+          <div style="max-height:220px; overflow-y:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+              <thead>
+                <tr style="background:#f1f5f9; border-bottom:1px solid #e2e8f0;">
+                  <th style="padding:8px 10px; color:#475569; font-weight:700;">Name</th>
+                  <th style="padding:8px 10px; color:#475569; font-weight:700;">Mobile</th>
+                  <th style="padding:8px 10px; color:#475569; font-weight:700;">Vehicle</th>
+                  <th style="padding:8px 10px; color:#475569; font-weight:700;">Reg No.</th>
+                  <th style="padding:8px 10px; color:#475569; font-weight:700;">Service</th>
+                  <th style="padding:8px 10px; color:#475569; font-weight:700;">Email</th>
+                </tr>
+              </thead>
+              <tbody id="importPreviewTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="crm-modal-footer" style="border-top:1px solid #e2e8f0; padding:14px 24px;">
+        <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalImportLeads')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+        <button type="button" id="btnExecuteImport" onclick="executeLeadsImport()" disabled style="background:#94a3b8; border:none; color:#ffffff; padding:9px 22px; border-radius:6px; font-weight:700; cursor:not-allowed; display:inline-flex; align-items:center; gap:6px;">
+          <span>Import Leads into Pipeline</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -815,19 +945,31 @@
       }).join('');
     }
 
-    // 1. Leads Table
+    // 1. Leads Table (Filtered by Search & Stage)
     const leadsTbody = document.getElementById('leadsTableBody');
-    leadsTbody.innerHTML = state.leads.length ? state.leads.map(l => `
+    const filteredLeads = getFilteredLeads();
+    const countEl = document.getElementById('leadSearchCount');
+    if (countEl) {
+      countEl.textContent = `${filteredLeads.length} of ${state.leads.length} lead${state.leads.length === 1 ? '' : 's'}`;
+    }
+
+    leadsTbody.innerHTML = filteredLeads.length ? filteredLeads.map(l => `
       <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#0f172a;">${l.customer_name}</div>
-          <div style="font-size:12px; color:#64748b;">${l.phone}</div>
+          <div style="font-weight:700; color:#0f172a; font-size:14px;">${highlightMatch(l.customer_name || l.name || 'Lead')}</div>
+          <div style="font-size:12px; color:#0284c7; font-weight:700; margin-top:2px;">📱 ${highlightMatch(l.phone || 'No Phone')}</div>
+          ${l.email ? `<div style="font-size:11.5px; color:#64748b; margin-top:1px;">✉️ ${highlightMatch(l.email)}</div>` : ''}
         </td>
-        <td style="padding:12px 16px; color:#334155;">${l.vehicle_model} <span style="font-size:11px; color:#64748b;">(${l.vehicle_reg || 'N/A'})</span></td>
-        <td style="padding:12px 16px; color:#0f172a; font-weight:600;">${l.service_name}</td>
-        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:#f1f5f9; color:#475569; font-weight:600; padding:3px 8px; border-radius:4px;">${l.source}</span></td>
         <td style="padding:12px 16px;">
-          <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px;">
+          <div style="color:#1e293b; font-weight:600; font-size:13.5px;">${highlightMatch(l.vehicle_model || 'Vehicle')}</div>
+          <div style="font-size:11.5px; font-weight:800; color:#0f172a; font-family:monospace; background:#f1f5f9; display:inline-block; padding:2px 7px; border-radius:4px; border:1px solid #e2e8f0; margin-top:4px; letter-spacing:0.04em;">
+            🚗 ${highlightMatch(l.vehicle_reg || 'REG N/A')}
+          </div>
+        </td>
+        <td style="padding:12px 16px; color:#0f172a; font-weight:600; font-size:13px;">${l.service_name}</td>
+        <td style="padding:12px 16px;"><span style="font-size:10px; background:#f1f5f9; color:#475569; font-weight:800; padding:3px 8px; border-radius:4px; text-transform:uppercase;">${l.source}</span></td>
+        <td style="padding:12px 16px;">
+          <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:600;">
             <option value="NEW" ${l.stage === 'NEW' ? 'selected' : ''}>NEW LEAD</option>
             <option value="CONTACTED" ${l.stage === 'CONTACTED' ? 'selected' : ''}>CONTACTED</option>
             <option value="BAY_SCHEDULED" ${l.stage === 'BAY_SCHEDULED' ? 'selected' : ''}>BAY SCHEDULED</option>
@@ -842,9 +984,9 @@
     `).join('') : `
       <tr>
         <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
-          <div style="font-size:32px; margin-bottom:10px;">📥</div>
-          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Active Enquiries Yet</div>
-          <div style="font-size:12px; color:#64748b;">New leads and consultations submitted from the website will appear here in real time.</div>
+          <div style="font-size:32px; margin-bottom:10px;">🔍</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Matching Leads Found</div>
+          <div style="font-size:12px; color:#64748b;">No records match your search criteria. Try a different mobile number, car registration, email or name.</div>
         </td>
       </tr>
     `;
@@ -1228,6 +1370,362 @@
     closeModal('modalEnrollMember');
     e.target.reset();
     alert('🎉 VIP Member Enrolled! Generated Pass Code: ' + newPass);
+  };
+
+  // -------------------------------------------------------------
+  // LEADS PIPELINE SEARCH & FILTER ENGINE
+  // -------------------------------------------------------------
+  let leadSearchQuery = '';
+  let leadStageFilter = 'ALL';
+  let pendingImportLeads = [];
+
+  window.handleLeadSearch = function(query) {
+    leadSearchQuery = (query || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('leadSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = leadSearchQuery ? 'block' : 'none';
+    renderAllCrmTables();
+  };
+
+  window.clearLeadSearch = function() {
+    leadSearchQuery = '';
+    const input = document.getElementById('leadSearchInput');
+    if (input) input.value = '';
+    const clearBtn = document.getElementById('leadSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    renderAllCrmTables();
+  };
+
+  window.handleLeadStageFilter = function(stage) {
+    leadStageFilter = stage;
+    renderAllCrmTables();
+  };
+
+  function getFilteredLeads() {
+    return state.leads.filter(l => {
+      // 1. Stage filter
+      if (leadStageFilter !== 'ALL' && l.stage !== leadStageFilter) {
+        return false;
+      }
+      // 2. Search query filter
+      if (!leadSearchQuery) return true;
+
+      const q = leadSearchQuery;
+      // Normalizing search term and fields for robust matching
+      const cleanQ = q.replace(/[^a-z0-9]/gi, '');
+      const leadPhone = (l.phone || '').replace(/[^0-9]/g, '');
+      const leadReg = (l.vehicle_reg || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+
+      const nameMatch = (l.customer_name || l.name || '').toLowerCase().includes(q);
+      const emailMatch = (l.email || '').toLowerCase().includes(q);
+      const phoneMatch = (cleanQ.length > 0 && leadPhone.includes(cleanQ)) || (l.phone || '').includes(q);
+      const carRegMatch = (cleanQ.length > 0 && leadReg.includes(cleanQ)) || (l.vehicle_reg || '').toLowerCase().includes(q);
+      const vehicleModelMatch = (l.vehicle_model || '').toLowerCase().includes(q);
+      const refMatch = (l.ref || '').toLowerCase().includes(q);
+
+      return nameMatch || emailMatch || phoneMatch || carRegMatch || vehicleModelMatch || refMatch;
+    });
+  }
+
+  function highlightMatch(text) {
+    if (!text || !leadSearchQuery) return text || '';
+    const safeText = String(text);
+    const regex = new RegExp(`(${leadSearchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return safeText.replace(regex, '<mark style="background:#fef08a; color:#854d0e; padding:0 3px; border-radius:3px; font-weight:700;">$1</mark>');
+  }
+
+  // -------------------------------------------------------------
+  // ADS LEADS IMPORT ENGINE (EXCEL .XLSX / .XLS & CSV PARSER)
+  // -------------------------------------------------------------
+  window.switchImportMethod = function(method) {
+    const fileSec = document.getElementById('importFileSection');
+    const pasteSec = document.getElementById('importPasteSection');
+    const tabBtnFile = document.getElementById('tabBtnUploadFile');
+    const tabBtnPaste = document.getElementById('tabBtnPasteText');
+
+    if (method === 'file') {
+      fileSec.style.display = 'block';
+      pasteSec.style.display = 'none';
+      tabBtnFile.style.background = '#0284c7';
+      tabBtnFile.style.color = '#ffffff';
+      tabBtnFile.style.border = 'none';
+      tabBtnPaste.style.background = '#f1f5f9';
+      tabBtnPaste.style.color = '#475569';
+      tabBtnPaste.style.border = '1px solid #cbd5e1';
+    } else {
+      fileSec.style.display = 'none';
+      pasteSec.style.display = 'block';
+      tabBtnPaste.style.background = '#0284c7';
+      tabBtnPaste.style.color = '#ffffff';
+      tabBtnPaste.style.border = 'none';
+      tabBtnFile.style.background = '#f1f5f9';
+      tabBtnFile.style.color = '#475569';
+      tabBtnFile.style.border = '1px solid #cbd5e1';
+    }
+  };
+
+  window.handleDragOver = function(e) {
+    e.preventDefault();
+    const zone = document.getElementById('dropZoneLeads');
+    if (zone) zone.style.borderColor = '#0284c7';
+  };
+
+  window.handleDragLeave = function(e) {
+    e.preventDefault();
+    const zone = document.getElementById('dropZoneLeads');
+    if (zone) zone.style.borderColor = '#93c5fd';
+  };
+
+  window.handleFileDrop = function(e) {
+    e.preventDefault();
+    const zone = document.getElementById('dropZoneLeads');
+    if (zone) zone.style.borderColor = '#93c5fd';
+    if (e.dataTransfer && e.dataTransfer.files.length) {
+      handleLeadFileSelect(e.dataTransfer.files);
+    }
+  };
+
+  window.handleLeadFileSelect = function(files) {
+    if (!files || !files.length) return;
+    const file = files[0];
+    const statusEl = document.getElementById('fileUploadStatus');
+    if (statusEl) {
+      statusEl.textContent = `⏳ Reading ${file.name}...`;
+      statusEl.style.display = 'block';
+    }
+
+    const isExcel = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
+
+    if (isExcel && window.XLSX) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheet = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[firstSheet];
+          const rawRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+          processParsedRows(rawRows, file.name);
+        } catch(err) {
+          alert('Error reading Excel spreadsheet: ' + err.message);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      // CSV / TSV fallback parser
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const text = e.target.result;
+          const rawRows = parseCsvOrTsv(text);
+          processParsedRows(rawRows, file.name);
+        } catch(err) {
+          alert('Error reading CSV file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  window.handlePasteInput = function(text) {
+    if (!text || !text.trim()) {
+      clearImportPreview();
+      return;
+    }
+    const rawRows = parseCsvOrTsv(text);
+    processParsedRows(rawRows, 'Pasted Data');
+  };
+
+  function parseCsvOrTsv(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    return lines.map(line => {
+      if (line.includes('\t')) {
+        return line.split('\t').map(c => c.trim().replace(/^["']|["']$/g, ''));
+      }
+      const row = [];
+      let inQuotes = false;
+      let token = '';
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"' || c === "'") {
+          inQuotes = !inQuotes;
+        } else if (c === ',' && !inQuotes) {
+          row.push(token.trim().replace(/^["']|["']$/g, ''));
+          token = '';
+        } else {
+          token += c;
+        }
+      }
+      row.push(token.trim().replace(/^["']|["']$/g, ''));
+      return row;
+    });
+  }
+
+  function processParsedRows(rawRows, sourceLabel) {
+    if (!rawRows || rawRows.length === 0) {
+      alert('The uploaded file does not contain any readable data rows.');
+      return;
+    }
+
+    const rows = rawRows.filter(r => r && r.some(cell => String(cell || '').trim().length > 0));
+    if (rows.length === 0) return;
+
+    let headerRow = rows[0].map(h => String(h || '').trim().toLowerCase());
+    let dataRows = rows.slice(1);
+
+    let nameIdx = headerRow.findIndex(h => /name|full_name|client|customer|lead/i.test(h));
+    let phoneIdx = headerRow.findIndex(h => /phone|mobile|contact|cell|number|whatsapp/i.test(h));
+    let carIdx = headerRow.findIndex(h => /vehicle|car|model|make|automobile/i.test(h));
+    let regIdx = headerRow.findIndex(h => /reg|plate|registration|number_plate/i.test(h));
+    let serviceIdx = headerRow.findIndex(h => /service|treatment|package|inquiry|requirement/i.test(h));
+    let emailIdx = headerRow.findIndex(h => /email|e-mail|mail/i.test(h));
+
+    const isFirstRowHeader = (nameIdx !== -1 || phoneIdx !== -1 || emailIdx !== -1);
+    if (!isFirstRowHeader) {
+      dataRows = rows;
+      nameIdx = 0;
+      phoneIdx = 1;
+      carIdx = 2;
+      regIdx = 3;
+      serviceIdx = 4;
+      emailIdx = 5;
+    } else {
+      if (nameIdx === -1) nameIdx = 0;
+      if (phoneIdx === -1) phoneIdx = 1;
+    }
+
+    const defaultSource = document.getElementById('importLeadSource').value || 'ADS_CAMPAIGN';
+    const defaultService = document.getElementById('importLeadDefaultService').value || 'Studio Consultation';
+
+    pendingImportLeads = [];
+
+    dataRows.forEach((row, i) => {
+      const name = String(row[nameIdx] || '').trim();
+      let phone = String(row[phoneIdx] || '').replace(/[^0-9+]/g, '').trim();
+      const vehicle = String(carIdx !== -1 ? (row[carIdx] || '') : '').trim() || 'Vehicle';
+      const reg = String(regIdx !== -1 ? (row[regIdx] || '') : '').trim().toUpperCase() || 'N/A';
+      const service = String(serviceIdx !== -1 ? (row[serviceIdx] || '') : '').trim() || defaultService;
+      const email = String(emailIdx !== -1 ? (row[emailIdx] || '') : '').trim() || '';
+
+      if (!name && !phone) return;
+
+      const leadId = Date.now() + i;
+      pendingImportLeads.push({
+        id: leadId,
+        ref: 'LEAD-AD-' + Math.floor(1000 + Math.random() * 9000),
+        customer_name: name || 'Ad Lead #' + (i + 1),
+        phone: phone || 'N/A',
+        vehicle_model: vehicle,
+        vehicle_reg: reg,
+        service_name: service,
+        email: email || '',
+        source: defaultSource,
+        stage: 'NEW',
+        created_at: new Date().toISOString().slice(0, 16).replace('T', ' ')
+      });
+    });
+
+    renderImportPreview(sourceLabel);
+  }
+
+  function renderImportPreview(sourceLabel) {
+    const container = document.getElementById('importPreviewContainer');
+    const tbody = document.getElementById('importPreviewTableBody');
+    const badge = document.getElementById('previewCountBadge');
+    const btn = document.getElementById('btnExecuteImport');
+    const statusEl = document.getElementById('fileUploadStatus');
+
+    if (statusEl) {
+      statusEl.textContent = `✓ Parsed ${pendingImportLeads.length} leads from ${sourceLabel}`;
+      statusEl.style.display = 'block';
+    }
+
+    if (pendingImportLeads.length === 0) {
+      if (container) container.style.display = 'none';
+      if (btn) {
+        btn.disabled = true;
+        btn.style.background = '#94a3b8';
+        btn.style.cursor = 'not-allowed';
+      }
+      return;
+    }
+
+    if (container) container.style.display = 'block';
+    if (badge) badge.textContent = `${pendingImportLeads.length} leads ready`;
+
+    if (tbody) {
+      tbody.innerHTML = pendingImportLeads.slice(0, 50).map(l => `
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:6px 10px; font-weight:700; color:#0f172a;">${l.customer_name}</td>
+          <td style="padding:6px 10px; color:#0284c7; font-weight:600;">${l.phone}</td>
+          <td style="padding:6px 10px; color:#334155;">${l.vehicle_model}</td>
+          <td style="padding:6px 10px; font-family:monospace; color:#0f172a;">${l.vehicle_reg}</td>
+          <td style="padding:6px 10px; color:#334155;">${l.service_name}</td>
+          <td style="padding:6px 10px; color:#64748b;">${l.email || '—'}</td>
+        </tr>
+      `).join('') + (pendingImportLeads.length > 50 ? `
+        <tr>
+          <td colspan="6" style="padding:8px 10px; text-align:center; color:#64748b; font-style:italic;">
+            ... and ${pendingImportLeads.length - 50} more rows
+          </td>
+        </tr>
+      ` : '');
+    }
+
+    if (btn) {
+      btn.disabled = false;
+      btn.style.background = '#0284c7';
+      btn.style.cursor = 'pointer';
+      btn.innerHTML = `<span>Import ${pendingImportLeads.length} Leads into Pipeline &rarr;</span>`;
+    }
+  }
+
+  window.clearImportPreview = function() {
+    pendingImportLeads = [];
+    const container = document.getElementById('importPreviewContainer');
+    if (container) container.style.display = 'none';
+    const statusEl = document.getElementById('fileUploadStatus');
+    if (statusEl) statusEl.style.display = 'none';
+    const pasteInput = document.getElementById('importPasteText');
+    if (pasteInput) pasteInput.value = '';
+    const fileInput = document.getElementById('leadFileInput');
+    if (fileInput) fileInput.value = '';
+    const btn = document.getElementById('btnExecuteImport');
+    if (btn) {
+      btn.disabled = true;
+      btn.style.background = '#94a3b8';
+      btn.style.cursor = 'not-allowed';
+      btn.innerHTML = `<span>Import Leads into Pipeline</span>`;
+    }
+  };
+
+  window.executeLeadsImport = async function() {
+    if (!pendingImportLeads || pendingImportLeads.length === 0) return;
+    const btn = document.getElementById('btnExecuteImport');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Saving Leads...';
+    }
+
+    const count = pendingImportLeads.length;
+
+    state.leads = [...pendingImportLeads, ...state.leads];
+    saveCrmState(state);
+
+    try {
+      await fetch('/api/leads/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leads: pendingImportLeads })
+      });
+    } catch(err) {
+      console.warn('[Server sync notice]:', err.message);
+    }
+
+    clearImportPreview();
+    closeModal('modalImportLeads');
+    renderAllCrmTables();
+
+    alert(`🎉 Successfully imported ${count} leads into the Leads Pipeline!\n\nYou can now search them instantly by Mobile Number, Car Number, Email, or Name in the search bar.`);
   };
 
   // CSV Exporter

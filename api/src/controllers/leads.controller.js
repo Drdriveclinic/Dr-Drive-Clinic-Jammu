@@ -172,3 +172,50 @@ export async function getLeads(req, res, next) {
     next(err);
   }
 }
+
+export async function bulkImportLeads(req, res, next) {
+  try {
+    const rawLeads = req.body?.leads;
+    if (!Array.isArray(rawLeads) || rawLeads.length === 0) {
+      return res.status(400).json({ ok: false, error: { message: 'Invalid or empty leads array' } });
+    }
+
+    const currentLeads = getFileLeads();
+    const imported = [];
+
+    for (const item of rawLeads) {
+      const id = item.id || Math.floor(10000 + Math.random() * 90000);
+      const leadRecord = {
+        id,
+        ref: item.ref || `LEAD-${id}`,
+        name: item.customer_name || item.name || 'Ad Lead',
+        customer_name: item.customer_name || item.name || 'Ad Lead',
+        phone: item.phone || '',
+        email: item.email || null,
+        vehicle_type: item.vehicle_type || 'car',
+        vehicle_model: item.vehicle_model || item.vehicle || 'Vehicle',
+        vehicle_reg: item.vehicle_reg || 'N/A',
+        service_slug: item.service_slug || null,
+        service_name: item.service_name || item.service || 'Studio Consultation',
+        source: (item.source || 'ADS_CAMPAIGN').toUpperCase(),
+        message: item.message || item.notes || 'Imported from Ads spreadsheet',
+        stage: item.stage || 'NEW',
+        created_at: item.created_at || new Date().toISOString().replace('T', ' ').slice(0, 19)
+      };
+      imported.push(leadRecord);
+      currentLeads.unshift(leadRecord);
+    }
+
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(currentLeads, null, 2), 'utf8');
+
+    res.status(201).json({
+      ok: true,
+      data: {
+        count: imported.length,
+        leads: imported
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}

@@ -18,6 +18,24 @@ function getFileAppointments() {
   return [];
 }
 
+const LEADS_FILE = path.join(DATA_DIR, 'leads.json');
+
+function saveFileLeadFromBooking(lead) {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    let list = [];
+    if (fs.existsSync(LEADS_FILE)) {
+      list = JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8'));
+    }
+    if (!list.some(l => l.ref === lead.ref)) {
+      list.unshift(lead);
+      fs.writeFileSync(LEADS_FILE, JSON.stringify(list, null, 2), 'utf8');
+    }
+  } catch (e) {
+    console.error('[Save Lead From Booking Error]:', e.message);
+  }
+}
+
 function saveFileAppointment(appt) {
   try {
     if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -30,8 +48,8 @@ function saveFileAppointment(appt) {
 export async function bookAppointment(payload) {
   const {
     service_slug,
-    date,
-    time,
+    date = new Date().toISOString().slice(0, 10),
+    time = '10:00',
     vehicle,
     customer,
     is_recurring = false,
@@ -44,7 +62,7 @@ export async function bookAppointment(payload) {
   const randomNum = Math.floor(10000 + Math.random() * 90000);
   const ref = `DRC-${randomNum}`;
 
-  const cleanTime = time.length === 5 ? `${time}:00` : time;
+  const cleanTime = (time && time.length === 5) ? `${time}:00` : (time || '10:00:00');
 
   const apptRecord = {
     ref,
@@ -65,6 +83,26 @@ export async function bookAppointment(payload) {
   };
 
   saveFileAppointment(apptRecord);
+
+  // Automatically sync every online booking into Leads Pipeline
+  const leadRecord = {
+    id: randomNum,
+    ref,
+    name: customer.name,
+    customer_name: customer.name,
+    phone: customer.phone,
+    email: customer.email || null,
+    vehicle_type: vehicle?.type || 'car',
+    vehicle_model: `${vehicle?.brand || ''} ${vehicle?.model || ''}`.trim() || 'Vehicle',
+    vehicle_reg: vehicle?.registration || 'N/A',
+    service_slug,
+    service_name: service_slug.replace(/-/g, ' ').toUpperCase(),
+    source: 'ONLINE_BOOKING',
+    message: notes ? `${notes} (Online Booking Inquiry)` : `Direct online booking request for ${service_slug}`,
+    stage: 'BAY_SCHEDULED',
+    created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
+  };
+  saveFileLeadFromBooking(leadRecord);
 
   const isDbReady = await db.checkConnection();
 

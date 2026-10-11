@@ -326,11 +326,11 @@
     <!-- RIGHT 7/12: Step Area -->
     <main class="booking-step-area" style="flex: 1; padding: 60px 48px; background: rgba(14, 18, 28, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: space-between;">
       <div>
-        <!-- Top Progress Bar (7 Segments) -->
+        <!-- Top Progress Bar (5 Segments) -->
         <div class="booking-top-bar" style="margin-bottom: 40px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <span class="booking-step-counter" style="font-size:12px; font-weight:800; letter-spacing:0.15em; color:var(--red);">
-              STEP 01 / 07
+              STEP 01 / 05
             </span>
             <span class="booking-step-name" style="font-size:12px; font-weight:700; letter-spacing:0.15em; color:var(--ink); text-transform:uppercase;">
               · VEHICLE TYPE
@@ -339,8 +339,6 @@
 
           <div class="booking-progress-track" style="display:flex; gap:6px; height:4px; background:transparent;">
             <div class="booking-progress-segment is-active" style="flex:1; background:var(--line); transition:background 0.2s;"></div>
-            <div class="booking-progress-segment" style="flex:1; background:var(--line); transition:background 0.2s;"></div>
-            <div class="booking-progress-segment" style="flex:1; background:var(--line); transition:background 0.2s;"></div>
             <div class="booking-progress-segment" style="flex:1; background:var(--line); transition:background 0.2s;"></div>
             <div class="booking-progress-segment" style="flex:1; background:var(--line); transition:background 0.2s;"></div>
             <div class="booking-progress-segment" style="flex:1; background:var(--line); transition:background 0.2s;"></div>
@@ -792,35 +790,11 @@
         </div>
 
         <!-- ================================================================
-             STEP 4: SELECT DATE
+             STEP 4: CONTACT DETAILS
              ================================================================ -->
         <div class="booking-step-panel" data-step="4" style="display:none;">
-          <h2 class="h2-section" style="font-size:36px; margin-bottom:12px;">SELECT APPOINTMENT DATE</h2>
-          <p style="color:var(--text-2); margin-bottom:28px;">Pick a date within the next 14 days. Studio opens 7 days a week.</p>
-
-          <div class="booking-dates-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:12px;">
-            <!-- Loaded dynamically from /api/availability -->
-          </div>
-        </div>
-
-        <!-- ================================================================
-             STEP 5: SELECT TIME SLOT
-             ================================================================ -->
-        <div class="booking-step-panel" data-step="5" style="display:none;">
-          <h2 class="h2-section" style="font-size:36px; margin-bottom:12px;">SELECT TIME SLOT</h2>
-          <p style="color:var(--text-2); margin-bottom:28px;">Bay capacity is monitored in real-time. Fully booked slots are disabled.</p>
-
-          <div class="booking-slots-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:14px;">
-            <!-- Loaded dynamically from /api/availability?date= -->
-          </div>
-        </div>
-
-        <!-- ================================================================
-             STEP 6: CONTACT DETAILS
-             ================================================================ -->
-        <div class="booking-step-panel" data-step="6" style="display:none;">
           <h2 class="h2-section" style="font-size:36px; margin-bottom:12px;">YOUR CONTACT INFO</h2>
-          <p style="color:var(--text-2); margin-bottom:28px;">We will confirm your appointment and slot lock via WhatsApp.</p>
+          <p style="color:var(--text-2); margin-bottom:28px;">Our studio team will coordinate preferred time and confirm slot lock via WhatsApp/Call.</p>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:680px;">
             <div style="grid-column: span 2;">
@@ -848,16 +822,16 @@
             </div>
 
             <div style="grid-column: span 2;">
-              <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Special Requests / Notes</label>
-              <textarea name="notes" rows="3" placeholder="Tell us if your vehicle has pre-existing scratches, ceramic coatings, or specific focus areas..." style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--off);"></textarea>
+              <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Preferred Timing / Special Requests</label>
+              <textarea name="notes" rows="3" placeholder="Tell us your preferred days/timings, pre-existing scratches, ceramic coatings, or specific focus areas..." style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--off);"></textarea>
             </div>
           </div>
         </div>
 
         <!-- ================================================================
-             STEP 7: CONFIRMATION
+             STEP 5: CONFIRMATION
              ================================================================ -->
-        <div class="booking-step-panel" data-step="7" style="display:none;">
+        <div class="booking-step-panel" data-step="5" style="display:none;">
           <h2 class="h2-section" style="font-size:36px; margin-bottom:12px;">REVIEW & CONFIRM</h2>
           <p style="color:var(--text-2); margin-bottom:28px;">Please review your appointment summary before final confirmation.</p>
 

@@ -1,1 +1,53 @@
-[]
+[
+  {
+    "id": 52344,
+    "ref": "LEAD-52344",
+    "name": "Amitabh Jamwal",
+    "customer_name": "Amitabh Jamwal",
+    "phone": "9419155667",
+    "email": "amitabh@example.com",
+    "vehicle_type": "car",
+    "vehicle_model": "Hyundai Creta N Line",
+    "vehicle_reg": "JK 02 AB 1122",
+    "service_slug": null,
+    "service_name": "Ceramic Coating 9H+",
+    "source": "GOOGLE_ADS",
+    "message": "Imported from Ads spreadsheet",
+    "stage": "NEW",
+    "created_at": "2026-10-11 20:58:31"
+  },
+  {
+    "id": 48514,
+    "ref": "LEAD-48514",
+    "name": "Rajesh Sharma",
+    "customer_name": "Rajesh Sharma",
+    "phone": "9419122334",
+    "email": "rajesh@example.com",
+    "vehicle_type": "car",
+    "vehicle_model": "Toyota Fortuner Legender",
+    "vehicle_reg": "JK 02 CD 4567",
+    "service_slug": null,
+    "service_name": "STEK Dynoshield PPF",
+    "source": "META_ADS",
+    "message": "Imported from Ads spreadsheet",
+    "stage": "NEW",
+    "created_at": "2026-10-11 20:58:31"
+  },
+  {
+    "id": 70307,
+    "ref": "DRC-70307",
+    "name": "Gurpreet Singh",
+    "customer_name": "Gurpreet Singh",
+    "phone": "9419188776",
+    "email": "gurpreet@jammu.com",
+    "vehicle_type": "car",
+    "vehicle_model": "Mahindra Thar Roxx",
+    "vehicle_reg": "JK 02 BB 9988",
+    "service_slug": "ceramic-coating",
+    "service_name": "CERAMIC COATING",
+    "source": "ONLINE_BOOKING",
+    "message": "Wants 9H ceramic coating (Online Booking Inquiry)",
+    "stage": "BAY_SCHEDULED",
+    "created_at": "2026-10-11 20:58:09"
+  }
+]

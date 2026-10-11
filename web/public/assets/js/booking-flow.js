@@ -72,8 +72,6 @@ export function initBookingFlow() {
     'VEHICLE TYPE',
     'SELECT SERVICE',
     'VEHICLE DETAILS',
-    'SELECT DATE',
-    'SELECT TIME',
     'CONTACT DETAILS',
     'CONFIRMATION'
   ];
@@ -137,18 +135,10 @@ export function initBookingFlow() {
             <span class="summary-val">${state.registration}</span>
           </div>
         ` : ''}
-        ${state.dateDisplay ? `
-          <div class="summary-row">
-            <span class="summary-label">DATE</span>
-            <span class="summary-val">${state.dateDisplay}</span>
-          </div>
-        ` : ''}
-        ${state.timeDisplay ? `
-          <div class="summary-row">
-            <span class="summary-label">TIME</span>
-            <span class="summary-val">${state.timeDisplay}</span>
-          </div>
-        ` : ''}
+        <div class="summary-row">
+          <span class="summary-label">STUDIO TIMING</span>
+          <span class="summary-val" style="color:#16a34a; font-weight:700;">Confirmed via WhatsApp / Call</span>
+        </div>
         ${state.name ? `
           <div class="summary-row">
             <span class="summary-label">CLIENT</span>
@@ -163,13 +153,11 @@ export function initBookingFlow() {
     if (stepNum === 1) return !!state.vehicleType;
     if (stepNum === 2) return !!state.serviceSlug;
     if (stepNum === 3) return !!state.brand && !!state.model;
-    if (stepNum === 4) return !!state.date;
-    if (stepNum === 5) return !!state.time;
-    if (stepNum === 6) {
+    if (stepNum === 4) {
       const phoneValid = /^[6-9]\d{9}$/.test(state.phone);
       return state.name.length >= 2 && phoneValid;
     }
-    if (stepNum === 7) return state.consent === true;
+    if (stepNum === 5) return state.consent === true;
     return true;
   }
 
@@ -181,7 +169,7 @@ export function initBookingFlow() {
     }
 
     if (nextBtn && submitBtn) {
-      if (state.step === 7) {
+      if (state.step === 5) {
         nextBtn.style.display = 'none';
         submitBtn.style.display = 'inline-flex';
         submitBtn.disabled = !isValid;
@@ -198,7 +186,7 @@ export function initBookingFlow() {
     });
 
     if (stepCounterEl) {
-      stepCounterEl.textContent = `STEP 0${state.step} / 07`;
+      stepCounterEl.textContent = `STEP 0${state.step} / 05`;
     }
     if (stepNameEl) {
       stepNameEl.textContent = `· ${stepNames[state.step - 1]}`;
@@ -207,7 +195,7 @@ export function initBookingFlow() {
 
   function goToStep(stepNum) {
     if (stepNum < 1) stepNum = 1;
-    if (stepNum > 7) stepNum = 7;
+    if (stepNum > 5) stepNum = 5;
 
     state.step = stepNum;
     saveState();
@@ -225,9 +213,7 @@ export function initBookingFlow() {
     });
 
     if (state.step === 2) filterServicesByType();
-    if (state.step === 4) loadCalendarDays();
-    if (state.step === 5) loadTimeSlots();
-    if (state.step === 7) renderConfirmSummary();
+    if (state.step === 5) renderConfirmSummary();
 
     updateSidebar();
     updateButtons();
@@ -520,7 +506,7 @@ export function initBookingFlow() {
   }
 
   // -------------------------------------------------------------
-  // STEP 7: CONFIRMATION TABLE & SUBMISSION
+  // STEP 5: CONFIRMATION TABLE & SUBMISSION
   // -------------------------------------------------------------
   const consentCheckbox = container.querySelector('input[name="consent"]');
   if (consentCheckbox) {
@@ -538,23 +524,24 @@ export function initBookingFlow() {
     table.innerHTML = `
       <div class="confirm-row"><strong>Service:</strong> <span>${state.serviceName}</span></div>
       <div class="confirm-row"><strong>Vehicle:</strong> <span>${state.brand} ${state.model} (${state.vehicleType.toUpperCase()}) ${state.registration ? `• ${state.registration}` : ''}</span></div>
-      <div class="confirm-row"><strong>Schedule:</strong> <span>${state.dateDisplay} at ${state.timeDisplay}</span></div>
+      <div class="confirm-row"><strong>Studio Scheduling:</strong> <span style="color:#16a34a; font-weight:700;">Confirmed via WhatsApp / Call by Studio Team</span></div>
       <div class="confirm-row"><strong>Client:</strong> <span>${state.name} (${state.phone})</span></div>
       ${state.email ? `<div class="confirm-row"><strong>Email:</strong> <span>${state.email}</span></div>` : ''}
-      ${state.notes ? `<div class="confirm-row"><strong>Notes:</strong> <span>${state.notes}</span></div>` : ''}
+      ${state.notes ? `<div class="confirm-row"><strong>Preferred Timing / Notes:</strong> <span>${state.notes}</span></div>` : ''}
     `;
   }
 
   // Submit Handler
   async function submitBooking() {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'SUBMITTING BOOKING...';
+    submitBtn.textContent = 'SUBMITTING CONSULTATION...';
     hideError();
 
+    const todayStr = new Date().toISOString().slice(0, 10);
     const payload = {
       service_slug: state.serviceSlug,
-      date: state.date,
-      time: state.time,
+      date: state.date || todayStr,
+      time: state.time || '10:00',
       vehicle: {
         type: state.vehicleType,
         brand: state.brand,
@@ -586,12 +573,7 @@ export function initBookingFlow() {
       const json = await res.json();
 
       if (!res.ok || !json.ok) {
-        if (json.error?.code === 'SLOT_UNAVAILABLE') {
-          showError('The selected time slot was just taken. Please select another slot.');
-          goToStep(5);
-        } else {
-          showError(json.error?.message || 'Failed to confirm appointment. Please try again.');
-        }
+        showError(json.error?.message || 'Failed to submit appointment. Please try again or WhatsApp studio directly.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'CONFIRM BOOKING →';
         return;
@@ -617,7 +599,7 @@ export function initBookingFlow() {
           vehicle_reg: state.registration || 'N/A',
           source: 'ONLINE_BOOKING',
           stage: 'BAY_SCHEDULED',
-          created_at: `${state.date} ${state.time}`
+          created_at: new Date().toISOString().replace('T', ' ').slice(0, 16)
         });
         localStorage.setItem('tdc_crm_master_state', JSON.stringify(crmState));
       } catch (storageErr) {}
@@ -642,13 +624,13 @@ export function initBookingFlow() {
 
       if (refEl) refEl.textContent = bookingData.ref;
       if (detailsEl) {
-        detailsEl.textContent = `Scheduled for ${bookingData.date} at ${bookingData.time.substring(0, 5)} for ${bookingData.service_name}.`;
+        detailsEl.textContent = `Your consultation inquiry for ${bookingData.service_name} has been received. Our studio team will call / WhatsApp you shortly to confirm your slot.`;
       }
       if (icsBtn) {
         icsBtn.href = `${API_BASE}/appointments/${bookingData.ref}/ics`;
       }
       if (waBtn) {
-        const text = encodeURIComponent(`Hi The Drive Clinic, I just booked appointment ${bookingData.ref} for ${bookingData.service_name}.`);
+        const text = encodeURIComponent(`Hi The Drive Clinic, I just submitted consultation request ${bookingData.ref} for ${bookingData.service_name}.`);
         waBtn.href = `https://wa.me/919419100000?text=${text}`;
       }
     }
