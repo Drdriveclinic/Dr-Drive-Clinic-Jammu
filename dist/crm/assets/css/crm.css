@@ -2131,15 +2131,23 @@ body.crm-body {
 .crm-login-wrap {
   min-height: 100vh;
   width: 100%;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px;
   background: #070707;
   background-image: radial-gradient(circle at 50% 20%, rgba(229, 9, 20, 0.12) 0%, #070707 70%);
   position: fixed;
   inset: 0;
   z-index: 99999;
+}
+
+.crm-login-wrap.crm-login-hidden,
+#crmLoginScreen.crm-login-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
 }
 
 .crm-login-card {
