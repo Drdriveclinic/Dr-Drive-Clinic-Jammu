@@ -14,35 +14,35 @@
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/crm.css">
 </head>
-<body class="crm-body" style="background:#070707; color:#ffffff; font-family:'Space Grotesk', sans-serif;">
+<body class="crm-body" style="background:#f4f6fa; color:#0f172a; font-family:'Space Grotesk', sans-serif;">
 
   <!-- =========================================================================
        LOGIN OVERLAY SCREEN
        ========================================================================= -->
-  <div id="crmLoginScreen" class="crm-login-wrap" style="display:none; position:fixed; inset:0; min-height:100vh; width:100vw; background:#070707; background-image:radial-gradient(circle at 50% 20%, rgba(229,9,20,0.12) 0%, #070707 70%); align-items:center; justify-content:center; padding:20px; z-index:99999;">
-    <div class="crm-login-card" style="width:100%; max-width:440px; background:#111111; border:1px solid rgba(255,255,255,0.14); border-top:3px solid #E50914; border-radius:12px; padding:40px 32px; box-shadow:0 30px 60px rgba(0,0,0,0.85); margin:auto;">
+  <div id="crmLoginScreen" class="crm-login-wrap" style="display:none; position:fixed; inset:0; min-height:100vh; width:100vw; background:#0c0f17; background-image:radial-gradient(circle at 50% 20%, rgba(229,9,20,0.1) 0%, #0c0f17 75%); align-items:center; justify-content:center; padding:20px; z-index:99999;">
+    <div class="crm-login-card" style="width:100%; max-width:440px; background:#ffffff; border:1px solid #e2e8f0; border-top:4px solid #E50914; border-radius:12px; padding:42px 34px; box-shadow:0 25px 60px rgba(0,0,0,0.45); margin:auto;">
       <div class="crm-login-header" style="text-align:center; margin-bottom:28px;">
         <div class="crm-login-logo-box">
-          <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#ffffff; letter-spacing:0.06em; line-height:1;">THE DDC</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#0f172a; letter-spacing:0.06em; line-height:1;">THE DDC</div>
           <span style="font-size:10px; font-weight:800; color:#E50914; letter-spacing:0.2em; text-transform:uppercase;">STUDIO CRM WORKSPACE // JAMMU</span>
         </div>
-        <h2 class="crm-login-title" style="margin-top:18px; font-size:22px; font-weight:700; color:#ffffff;">Admin & Studio Sign In</h2>
-        <p class="crm-login-desc" style="color:#888888; font-size:13px; margin-top:6px;">Manage bay workflow, leads pipeline, job cards, inventory & invoices.</p>
+        <h2 class="crm-login-title" style="margin-top:18px; font-size:22px; font-weight:700; color:#0f172a;">Admin & Studio Sign In</h2>
+        <p class="crm-login-desc" style="color:#64748b; font-size:13px; margin-top:6px;">Manage bay workflow, leads pipeline, job cards, inventory & invoices.</p>
       </div>
 
-      <div id="loginErrorBox" class="crm-login-error" style="display:none; background:rgba(229,9,20,0.15); border:1px solid #E50914; color:#ff6b6b; padding:10px 14px; border-radius:6px; font-size:12.5px; margin-bottom:18px; text-align:center;">
+      <div id="loginErrorBox" class="crm-login-error" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:10px 14px; border-radius:6px; font-size:12.5px; margin-bottom:18px; text-align:center;">
         ⚠️ Invalid email address or password. Please try again.
       </div>
 
       <form id="crmLoginForm" onsubmit="handleCrmLogin(event); return false;" class="crm-login-form">
         <div class="crm-form-group" style="margin-bottom:18px;">
-          <label class="crm-label" style="display:block; color:#aaaaaa; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">Admin Email Address</label>
-          <input type="email" id="loginEmailInput" class="crm-input" placeholder="e.g. care@thedriveclinic.com" required style="width:100%; height:46px; background:#181818; border:1px solid rgba(255,255,255,0.18); border-radius:6px; padding:0 14px; color:#ffffff; font-size:14px; outline:none;">
+          <label class="crm-label" style="display:block; color:#334155; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">Admin Email Address</label>
+          <input type="email" id="loginEmailInput" class="crm-input" placeholder="e.g. care@thedriveclinic.com" required style="width:100%; height:46px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:0 14px; color:#0f172a; font-size:14px; outline:none;">
         </div>
 
         <div class="crm-form-group" style="margin-bottom:24px;">
-          <label class="crm-label" style="display:block; color:#aaaaaa; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">Password</label>
-          <input type="password" id="loginPassInput" class="crm-input" placeholder="Enter studio password" required style="width:100%; height:46px; background:#181818; border:1px solid rgba(255,255,255,0.18); border-radius:6px; padding:0 14px; color:#ffffff; font-size:14px; outline:none;">
+          <label class="crm-label" style="display:block; color:#334155; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">Password</label>
+          <input type="password" id="loginPassInput" class="crm-input" placeholder="Enter studio password" required style="width:100%; height:46px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:0 14px; color:#0f172a; font-size:14px; outline:none;">
         </div>
 
         <button type="submit" id="crmLoginSubmitBtn" class="crm-btn crm-btn-primary" style="width:100%; height:48px; font-size:14px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; background:#E50914; border:none; border-radius:6px; color:#ffffff; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
@@ -50,8 +50,8 @@
         </button>
       </form>
 
-      <div class="crm-login-footer" style="border-top:1px solid rgba(255,255,255,0.08); padding-top:16px; margin-top:24px; text-align:center;">
-        <a href="/" target="_blank" style="font-size:12.5px; color:#888888; text-decoration:none; transition:color 0.2s ease;">&larr; Back to Public Website</a>
+      <div class="crm-login-footer" style="border-top:1px solid #f1f5f9; padding-top:16px; margin-top:24px; text-align:center;">
+        <a href="/" target="_blank" style="font-size:12.5px; color:#64748b; text-decoration:none; transition:color 0.2s ease;">&larr; Back to Public Website</a>
       </div>
     </div>
   </div>
@@ -61,8 +61,8 @@
        ========================================================================= -->
   <div id="crmAppShell" class="crm-shell" style="display:none; min-height:100vh;">
     <!-- SIDEBAR -->
-    <aside class="crm-sidebar" style="background:#0a0a0a; border-right:1px solid rgba(255,255,255,0.09); width:260px; display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; z-index:100;">
-      <div class="crm-sidebar-header" style="padding:22px 20px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between;">
+    <aside class="crm-sidebar" style="background:#0c0f17; border-right:1px solid #1e293b; width:260px; display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; z-index:100;">
+      <div class="crm-sidebar-header" style="padding:22px 20px; border-bottom:1px solid #1e293b; display:flex; align-items:center; justify-content:space-between;">
         <div>
           <a href="/" target="_blank" style="text-decoration:none;">
             <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; color:#ffffff; letter-spacing:0.06em; line-height:1;">THE DDC</div>
@@ -72,7 +72,7 @@
       </div>
 
       <nav class="crm-nav" style="padding:16px 12px; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
-        <div style="font-size:10px; font-weight:800; color:#666666; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px 4px;">OPERATIONS</div>
+        <div style="font-size:10px; font-weight:800; color:#64748b; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px 4px;">OPERATIONS</div>
         
         <a href="#overview" class="crm-nav-link active" onclick="switchCrmTab('overview', this)">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -100,7 +100,7 @@
           <span>Invoices & Billing</span>
         </a>
 
-        <div style="font-size:10px; font-weight:800; color:#666666; letter-spacing:0.15em; text-transform:uppercase; padding:14px 12px 4px;">CUSTOMER CARE</div>
+        <div style="font-size:10px; font-weight:800; color:#64748b; letter-spacing:0.15em; text-transform:uppercase; padding:14px 12px 4px;">CUSTOMER CARE</div>
 
         <a href="#memberships" class="crm-nav-link" onclick="switchCrmTab('memberships', this)">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -114,37 +114,37 @@
       </nav>
 
       <!-- USER PROFILE & LOGOUT -->
-      <div class="crm-sidebar-user" style="padding:14px 16px; border-top:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:space-between;">
+      <div class="crm-sidebar-user" style="padding:14px 16px; border-top:1px solid #1e293b; background:#101522; display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:10px;">
           <div style="width:32px; height:32px; border-radius:50%; background:#E50914; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:#ffffff; letter-spacing:0.5px;">DC</div>
           <div>
             <div id="crmUserName" style="font-size:13px; font-weight:700; color:#ffffff;">Studio Administrator</div>
-            <div style="font-size:10.5px; color:#888888; text-transform:uppercase;">Jammu Studio Owner</div>
+            <div style="font-size:10.5px; color:#94a3b8; text-transform:uppercase;">Jammu Studio Owner</div>
           </div>
         </div>
-        <button type="button" class="crm-btn-icon" title="Log Out" onclick="handleCrmLogout()" style="background:none; border:none; color:#aaaaaa; cursor:pointer; padding:6px;">
+        <button type="button" class="crm-btn-icon" title="Log Out" onclick="handleCrmLogout()" style="background:none; border:none; color:#94a3b8; cursor:pointer; padding:6px;">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         </button>
       </div>
     </aside>
 
     <!-- MAIN CONTENT AREA -->
-    <main class="crm-main" style="margin-left:260px; padding:28px 32px; min-height:100vh; background:#070707;">
+    <main class="crm-main" style="margin-left:260px; padding:28px 32px; min-height:100vh; background:#f4f6fa;">
       <!-- TOP GLOBAL BAR -->
-      <div class="crm-topbar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div class="crm-topbar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid #e2e8f0;">
         <div>
-          <h1 id="crmViewTitle" style="font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:0.04em; margin:0; color:#ffffff;">STUDIO BAY OPERATIONS</h1>
-          <p id="crmViewSubtitle" style="font-size:12.5px; color:#888888; margin:4px 0 0;">Live detailing bay workload, paint correction & coating status in Jammu.</p>
+          <h1 id="crmViewTitle" style="font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:0.04em; margin:0; color:#0f172a;">STUDIO BAY OPERATIONS</h1>
+          <p id="crmViewSubtitle" style="font-size:12.5px; color:#64748b; margin:4px 0 0;">Live detailing bay workload, paint correction & coating status in Jammu.</p>
         </div>
 
         <div style="display:flex; align-items:center; gap:12px;">
-          <button type="button" class="crm-btn crm-btn-secondary" onclick="syncServerData(true)" style="background:#1a1a1a; border:1px solid rgba(229,9,20,0.5); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-            <span style="color:#22c55e;">●</span> <span>🔄 Live Sync</span>
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="syncServerData(true)" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:8px 16px; border-radius:6px; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.05); font-weight:600;">
+            <span style="color:#16a34a;">●</span> <span>🔄 Live Sync</span>
           </button>
-          <a href="/" target="_blank" class="crm-btn crm-btn-secondary" style="background:#141414; border:1px solid rgba(255,255,255,0.14); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <a href="/" target="_blank" class="crm-btn crm-btn-secondary" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:8px 16px; border-radius:6px; font-size:12.5px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.05); font-weight:600;">
             <span>🌐 View Public Site</span>
           </a>
-          <button type="button" class="crm-btn crm-btn-secondary" onclick="exportCurrentTableCsv()" style="background:#141414; border:1px solid rgba(255,255,255,0.14); color:#ffffff; padding:8px 16px; border-radius:6px; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="exportCurrentTableCsv()" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:8px 16px; border-radius:6px; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.05); font-weight:600;">
             <span>📥 Export CSV</span>
           </button>
         </div>
@@ -153,30 +153,30 @@
       <!-- TAB 1: OVERVIEW & BAYS -->
       <section id="tab-overview" class="crm-tab-pane">
         <div class="crm-stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;">
-          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
-            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE IN-BAY VEHICLES</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statInBay">0</div>
-            <div style="font-size:12px; color:#22c55e;">● Detailing bays status</div>
+          <div class="crm-stat-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
+            <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE IN-BAY VEHICLES</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#0f172a; margin-top:6px;" id="statInBay">0</div>
+            <div style="font-size:12px; color:#16a34a; font-weight:600;">● Detailing bays status</div>
           </div>
-          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
-            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">PENDING LEADS</div>
+          <div class="crm-stat-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
+            <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">PENDING LEADS</div>
             <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#E50914; margin-top:6px;" id="statPendingLeads">0</div>
-            <div style="font-size:12px; color:#aaaaaa;">Website inquiries awaiting quote</div>
+            <div style="font-size:12px; color:#64748b;">Website inquiries awaiting quote</div>
           </div>
-          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
-            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE JOB CARDS</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#ffffff; margin-top:6px;" id="statActiveJobs">0</div>
-            <div style="font-size:12px; color:#3b82f6;">Under service / paint prep</div>
+          <div class="crm-stat-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
+            <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">ACTIVE JOB CARDS</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#0f172a; margin-top:6px;" id="statActiveJobs">0</div>
+            <div style="font-size:12px; color:#2563eb; font-weight:600;">Under service / paint prep</div>
           </div>
-          <div class="crm-stat-card" style="background:#111111; border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px;">
-            <div style="font-size:11px; font-weight:800; color:#888888; text-transform:uppercase; letter-spacing:0.1em;">VIP MEMBERS ENROLLED</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#fbbf24; margin-top:6px;" id="statMembersCount">0</div>
-            <div style="font-size:12px; color:#aaaaaa;">Jammu subscription passes</div>
+          <div class="crm-stat-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
+            <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">VIP MEMBERS ENROLLED</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:#d97706; margin-top:6px;" id="statMembersCount">0</div>
+            <div style="font-size:12px; color:#64748b;">Jammu subscription passes</div>
           </div>
         </div>
 
         <!-- 4 STUDIO BAYS GRID -->
-        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.04em; margin-bottom:14px; color:#ffffff;">LIVE DETAILING BAYS</h3>
+        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.04em; margin-bottom:14px; color:#0f172a;">LIVE DETAILING BAYS</h3>
         <div id="liveBaysGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:18px;">
           <!-- Dynamically rendered from active jobs -->
         </div>
@@ -185,22 +185,22 @@
       <!-- TAB 2: LEADS PIPELINE -->
       <section id="tab-leads" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#888888;">All leads received from online booking, contact forms and manual inquiries.</div>
+          <div style="font-size:13px; color:#64748b;">All leads received from online booking, contact forms and manual inquiries.</div>
           <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddLead')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
             + Add New Lead
           </button>
         </div>
 
-        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableLeads" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
-              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Lead Name & WhatsApp</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Vehicle Model</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Service Inquired</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Source</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Stage</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lead Name & WhatsApp</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Vehicle Model</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Service Inquired</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Source</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Stage</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody id="leadsTableBody">
@@ -213,23 +213,23 @@
       <!-- TAB 3: JOB CARDS -->
       <section id="tab-job-cards" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#888888;">Complete customer offline journey: Quotation preparation, product deduction, service status & payment receipt.</div>
+          <div style="font-size:13px; color:#64748b;">Complete customer offline journey: Quotation preparation, product deduction, service status & payment receipt.</div>
           <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalCreateJobCard')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
             + Create New Job Card
           </button>
         </div>
 
-        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableJobCards" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
-              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Job Card #</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer & Vehicle</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Service & Items Used</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Quotation (₹)</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Service Status</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Payment Status</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Job Card #</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer & Vehicle</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Service & Items Used</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Quotation (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Service Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Payment Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody id="jobCardsTableBody">
@@ -242,9 +242,9 @@
       <!-- TAB 4: INVENTORY -->
       <section id="tab-inventory" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#888888;">Live studio stock catalog. Stock is automatically deducted when added to Job Cards.</div>
+          <div style="font-size:13px; color:#64748b;">Live studio stock catalog. Stock is automatically deducted when added to Job Cards.</div>
           <div style="display:flex; gap:10px;">
-            <button type="button" class="crm-btn crm-btn-secondary" onclick="openModal('modalStockIn')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:9px 16px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
+            <button type="button" class="crm-btn crm-btn-secondary" onclick="openModal('modalStockIn')" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:9px 16px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
               📦 Stock In / Restock
             </button>
             <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddProduct')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
@@ -253,16 +253,16 @@
           </div>
         </div>
 
-        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableInventory" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
-              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Product SKU & Item</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Category</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Available Stock</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Unit Cost (₹)</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer Price (₹)</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Product SKU & Item</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Category</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Available Stock</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Unit Cost (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer Price (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody id="inventoryTableBody">
@@ -275,19 +275,19 @@
       <!-- TAB 5: INVOICES -->
       <section id="tab-invoices" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#888888;">All studio billing records, paid status, and print-ready tax invoices.</div>
+          <div style="font-size:13px; color:#64748b;">All studio billing records, paid status, and print-ready tax invoices.</div>
         </div>
 
-        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableInvoices" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
-              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Invoice #</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer & Reg</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Amount (₹)</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Payment Mode</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Status</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Invoice #</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer & Reg</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Amount (₹)</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Payment Mode</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody id="invoicesTableBody">
@@ -300,22 +300,22 @@
       <!-- TAB 6: MEMBERSHIPS -->
       <section id="tab-memberships" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#888888;">VIP Subscription Club passes enrolled from website and studio desk.</div>
+          <div style="font-size:13px; color:#64748b;">VIP Subscription Club passes enrolled from website and studio desk.</div>
           <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalEnrollMember')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
             + Enroll VIP Member
           </button>
         </div>
 
-        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableMemberships" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
-              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Member Pass Code</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer & Phone</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Plan & Cycle</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Remaining Washes</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Status</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase; text-align:right;">Actions</th>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Member Pass Code</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer & Phone</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Plan & Cycle</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Remaining Washes</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody id="membershipsTableBody">
@@ -328,18 +328,18 @@
       <!-- TAB 7: CUSTOMERS & VEHICLES -->
       <section id="tab-customers" class="crm-tab-pane" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#888888;">Complete history of all client vehicles, visits, and studio remarks.</div>
+          <div style="font-size:13px; color:#64748b;">Complete history of all client vehicles, visits, and studio remarks.</div>
         </div>
 
-        <div class="crm-table-card" style="background:#111111; border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;">
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableCustomers" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
-              <tr style="background:#181818; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Customer Name & Phone</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Registered Vehicles</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Total Visits</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Lifetime Spend</th>
-                <th style="padding:14px 16px; font-size:11px; color:#aaaaaa; text-transform:uppercase;">Studio Remarks</th>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer Name & Phone</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Registered Vehicles</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Total Visits</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lifetime Spend</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Studio Remarks</th>
               </tr>
             </thead>
             <tbody id="customersTableBody">
@@ -400,7 +400,7 @@
           </div>
         </div>
         <div class="crm-modal-footer">
-          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddLead')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddLead')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
           <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Save Lead</button>
         </div>
       </form>
@@ -454,7 +454,7 @@
           </div>
 
           <!-- Product Used from Inventory with Stock Deduction -->
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:14px; margin-top:6px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px; margin-top:6px;">
             <div style="font-size:11px; font-weight:800; color:#E50914; text-transform:uppercase; margin-bottom:8px;">📦 INVENTORY PRODUCT DEDUCTION</div>
             <div class="crm-form-row">
               <div class="crm-form-group">
@@ -490,7 +490,7 @@
           </div>
         </div>
         <div class="crm-modal-footer">
-          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalCreateJobCard')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalCreateJobCard')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
           <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Generate Job Card & Deduct Stock</button>
         </div>
       </form>
@@ -547,7 +547,7 @@
           </div>
         </div>
         <div class="crm-modal-footer">
-          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddProduct')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddProduct')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
           <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Save Product</button>
         </div>
       </form>
@@ -602,7 +602,7 @@
           </div>
         </div>
         <div class="crm-modal-footer">
-          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalEnrollMember')" style="background:#222222; border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:8px 16px; border-radius:6px; cursor:pointer;">Cancel</button>
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalEnrollMember')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
           <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Activate VIP Pass</button>
         </div>
       </form>
@@ -790,26 +790,26 @@
         const job = state.jobCards[idx];
         if (job) {
           return `
-            <div style="background:#121212; border:1px solid rgba(255,255,255,0.12); border-left:4px solid ${b.color}; border-radius:8px; padding:20px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:5px solid ${b.color}; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:11px; font-weight:800; color:${b.color}; letter-spacing:0.12em;">${b.name}</span>
-                <span style="background:rgba(234,179,8,0.15); color:#eab308; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">${job.service_status || 'IN PROGRESS'}</span>
+                <span style="background:#fef3c7; color:#b45309; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">${job.service_status || 'IN PROGRESS'}</span>
               </div>
-              <h4 style="font-size:18px; margin:10px 0 4px; color:#ffffff;">${job.customer_name} &bull; ${job.vehicle_model}</h4>
-              <p style="font-size:12.5px; color:#888888; margin:0 0 12px;">Reg: ${job.vehicle_reg || 'N/A'} • ${job.service_name}</p>
-              <div style="font-size:12px; color:#cccccc;">Amount: ₹${Number(job.total_amount).toLocaleString('en-IN')}</div>
+              <h4 style="font-size:18px; margin:10px 0 4px; color:#0f172a; font-weight:700;">${job.customer_name} &bull; ${job.vehicle_model}</h4>
+              <p style="font-size:12.5px; color:#64748b; margin:0 0 12px;">Reg: ${job.vehicle_reg || 'N/A'} • ${job.service_name}</p>
+              <div style="font-size:12px; color:#0f172a; font-weight:700;">Amount: ₹${Number(job.total_amount).toLocaleString('en-IN')}</div>
             </div>
           `;
         }
         return `
-          <div style="background:#121212; border:1px solid rgba(255,255,255,0.08); border-left:4px solid rgba(255,255,255,0.2); border-radius:8px; padding:20px;">
+          <div style="background:#ffffff; border:1px dashed #cbd5e1; border-left:5px solid #16a34a; border-radius:10px; padding:20px; box-shadow:0 1px 4px rgba(15,23,42,0.02);">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:800; color:#888888; letter-spacing:0.12em;">${b.name}</span>
-              <span style="background:rgba(34,197,94,0.15); color:#22c55e; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">AVAILABLE</span>
+              <span style="font-size:11px; font-weight:800; color:#64748b; letter-spacing:0.12em;">${b.name}</span>
+              <span style="background:#dcfce7; color:#15803d; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">AVAILABLE</span>
             </div>
-            <h4 style="font-size:17px; margin:10px 0 4px; color:#ffffff;">Cleanroom Calibrated & Ready</h4>
-            <p style="font-size:12.5px; color:#666666; margin:0 0 12px;">Bay open for incoming detailing or PPF vehicle.</p>
-            <div style="font-size:12px; color:#888888;">Ready for immediate check-in</div>
+            <h4 style="font-size:17px; margin:10px 0 4px; color:#0f172a; font-weight:600;">Cleanroom Calibrated & Ready</h4>
+            <p style="font-size:12.5px; color:#64748b; margin:0 0 12px;">Bay open for incoming detailing or PPF vehicle.</p>
+            <div style="font-size:12px; color:#64748b;">Ready for immediate check-in</div>
           </div>
         `;
       }).join('');
@@ -818,16 +818,16 @@
     // 1. Leads Table
     const leadsTbody = document.getElementById('leadsTableBody');
     leadsTbody.innerHTML = state.leads.length ? state.leads.map(l => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#ffffff;">${l.customer_name}</div>
-          <div style="font-size:12px; color:#888888;">${l.phone}</div>
+          <div style="font-weight:700; color:#0f172a;">${l.customer_name}</div>
+          <div style="font-size:12px; color:#64748b;">${l.phone}</div>
         </td>
-        <td style="padding:12px 16px; color:#cccccc;">${l.vehicle_model} <span style="font-size:11px; color:#888888;">(${l.vehicle_reg || 'N/A'})</span></td>
-        <td style="padding:12px 16px; color:#ffffff; font-weight:600;">${l.service_name}</td>
-        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:4px;">${l.source}</span></td>
+        <td style="padding:12px 16px; color:#334155;">${l.vehicle_model} <span style="font-size:11px; color:#64748b;">(${l.vehicle_reg || 'N/A'})</span></td>
+        <td style="padding:12px 16px; color:#0f172a; font-weight:600;">${l.service_name}</td>
+        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:#f1f5f9; color:#475569; font-weight:600; padding:3px 8px; border-radius:4px;">${l.source}</span></td>
         <td style="padding:12px 16px;">
-          <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#1a1a1a; color:#ffffff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:4px 8px; font-size:11.5px;">
+          <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px;">
             <option value="NEW" ${l.stage === 'NEW' ? 'selected' : ''}>NEW LEAD</option>
             <option value="CONTACTED" ${l.stage === 'CONTACTED' ? 'selected' : ''}>CONTACTED</option>
             <option value="BAY_SCHEDULED" ${l.stage === 'BAY_SCHEDULED' ? 'selected' : ''}>BAY SCHEDULED</option>
@@ -841,10 +841,10 @@
       </tr>
     `).join('') : `
       <tr>
-        <td colspan="6" style="padding:48px 16px; text-align:center; color:#888888;">
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">📥</div>
-          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Active Enquiries Yet</div>
-          <div style="font-size:12px; color:#666666;">New leads and consultations submitted from the website will appear here in real time.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Active Enquiries Yet</div>
+          <div style="font-size:12px; color:#64748b;">New leads and consultations submitted from the website will appear here in real time.</div>
         </td>
       </tr>
     `;
@@ -852,36 +852,36 @@
     // 2. Job Cards Table
     const jobsTbody = document.getElementById('jobCardsTableBody');
     jobsTbody.innerHTML = state.jobCards.length ? state.jobCards.map(j => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#E50914;">${j.id}</td>
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#ffffff;">${j.customer_name}</div>
-          <div style="font-size:12px; color:#888888;">${j.vehicle_model} • ${j.vehicle_reg}</div>
+          <div style="font-weight:700; color:#0f172a;">${j.customer_name}</div>
+          <div style="font-size:12px; color:#64748b;">${j.vehicle_model} • ${j.vehicle_reg}</div>
         </td>
-        <td style="padding:12px 16px; color:#ffffff;">${j.service_name}</td>
-        <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#ffffff;">₹${Number(j.total_amount).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; color:#0f172a;">${j.service_name}</td>
+        <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#0f172a;">₹${Number(j.total_amount).toLocaleString('en-IN')}</td>
         <td style="padding:12px 16px;">
-          <select onchange="updateJobStatus('${j.id}', this.value)" style="background:#1a1a1a; color:#ffffff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:4px 8px; font-size:11.5px;">
+          <select onchange="updateJobStatus('${j.id}', this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px;">
             <option value="UNDER_SERVICE" ${j.service_status === 'UNDER_SERVICE' ? 'selected' : ''}>UNDER SERVICE</option>
             <option value="QUALITY_CHECK" ${j.service_status === 'QUALITY_CHECK' ? 'selected' : ''}>QUALITY CHECK</option>
             <option value="COMPLETED" ${j.service_status === 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
           </select>
         </td>
         <td style="padding:12px 16px;">
-          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${j.payment_status === 'PAID' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}; color:${j.payment_status === 'PAID' ? '#22c55e' : '#ef4444'};">
+          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${j.payment_status === 'PAID' ? '#dcfce7' : '#fee2e2'}; color:${j.payment_status === 'PAID' ? '#15803d' : '#b91c1c'};">
             ${j.payment_status} (${j.payment_mode || 'Pending'})
           </span>
         </td>
         <td style="padding:12px 16px; text-align:right;">
-          ${j.payment_status !== 'PAID' ? `<button onclick="markJobPaid('${j.id}')" style="background:#22c55e; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Mark Paid ✓</button>` : `<span style="font-size:12px; color:#888888;">Invoiced</span>`}
+          ${j.payment_status !== 'PAID' ? `<button onclick="markJobPaid('${j.id}')" style="background:#16a34a; color:#ffffff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Mark Paid ✓</button>` : `<span style="font-size:12px; color:#64748b; font-weight:600;">Invoiced</span>`}
         </td>
       </tr>
     `).join('') : `
       <tr>
-        <td colspan="7" style="padding:48px 16px; text-align:center; color:#888888;">
+        <td colspan="7" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">🚗</div>
-          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Active Bay Job Cards</div>
-          <div style="font-size:12px; color:#666666;">Convert a website lead above or click "+ New Job Card" to assign a vehicle to a studio bay.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Active Bay Job Cards</div>
+          <div style="font-size:12px; color:#64748b;">Convert a website lead above or click "+ New Job Card" to assign a vehicle to a studio bay.</div>
         </td>
       </tr>
     `;
@@ -891,20 +891,20 @@
     const jobProductSelect = document.getElementById('jobProductSelect');
     
     invTbody.innerHTML = state.inventory.map(item => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#ffffff;">${item.name}</div>
+          <div style="font-weight:700; color:#0f172a;">${item.name}</div>
           <div style="font-family:monospace; font-size:11px; color:#E50914;">${item.sku}</div>
         </td>
-        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:4px;">${item.category}</span></td>
+        <td style="padding:12px 16px;"><span style="font-size:10.5px; background:#f1f5f9; color:#475569; font-weight:600; padding:3px 8px; border-radius:4px;">${item.category}</span></td>
         <td style="padding:12px 16px;">
-          <strong style="font-size:14px; color:${item.stock <= 3 ? '#ef4444' : '#22c55e'};">${item.stock}</strong> <span style="font-size:12px; color:#888888;">${item.unit}</span>
+          <strong style="font-size:14px; color:${item.stock <= 3 ? '#dc2626' : '#16a34a'};">${item.stock}</strong> <span style="font-size:12px; color:#64748b;">${item.unit}</span>
         </td>
-        <td style="padding:12px 16px; color:#cccccc;">₹${Number(item.cost).toLocaleString('en-IN')}</td>
-        <td style="padding:12px 16px; font-weight:700; color:#ffffff;">₹${Number(item.price).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; color:#475569;">₹${Number(item.cost).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; font-weight:700; color:#0f172a;">₹${Number(item.price).toLocaleString('en-IN')}</td>
         <td style="padding:12px 16px; text-align:right;">
-          <button onclick="quickDeductStock(${item.id}, 1)" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">-1 Use</button>
-          <button onclick="quickAddStock(${item.id}, 5)" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:4px;">+5 Restock</button>
+          <button onclick="quickDeductStock(${item.id}, 1)" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600;">-1 Use</button>
+          <button onclick="quickAddStock(${item.id}, 5)" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:4px; font-weight:600;">+5 Restock</button>
         </td>
       </tr>
     `).join('');
@@ -917,29 +917,29 @@
     // 4. Invoices Table
     const invTableTbody = document.getElementById('invoicesTableBody');
     invTableTbody.innerHTML = state.invoices.length ? state.invoices.map(inv => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-        <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#ffffff;">${inv.id}</td>
+      <tr style="border-bottom:1px solid #f1f5f9;">
+        <td style="padding:12px 16px; font-family:monospace; font-weight:700; color:#0f172a;">${inv.id}</td>
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#ffffff;">${inv.customer_name}</div>
-          <div style="font-size:12px; color:#888888;">${inv.vehicle_reg} • ${inv.date}</div>
+          <div style="font-weight:700; color:#0f172a;">${inv.customer_name}</div>
+          <div style="font-size:12px; color:#64748b;">${inv.vehicle_reg} • ${inv.date}</div>
         </td>
-        <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#ffffff;">₹${Number(inv.amount).toLocaleString('en-IN')}</td>
-        <td style="padding:12px 16px; color:#cccccc;">${inv.payment_mode}</td>
+        <td style="padding:12px 16px; font-weight:800; font-size:15px; color:#0f172a;">₹${Number(inv.amount).toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; color:#475569;">${inv.payment_mode}</td>
         <td style="padding:12px 16px;">
-          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${inv.status === 'PAID' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}; color:${inv.status === 'PAID' ? '#22c55e' : '#ef4444'};">
+          <span style="font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; background:${inv.status === 'PAID' ? '#dcfce7' : '#fee2e2'}; color:${inv.status === 'PAID' ? '#15803d' : '#b91c1c'};">
             ${inv.status}
           </span>
         </td>
         <td style="padding:12px 16px; text-align:right;">
-          <button onclick="alert('Printing Tax Invoice: ${inv.id}\\nCustomer: ${inv.customer_name}\\nAmount: ₹${Number(inv.amount).toLocaleString('en-IN')}')" style="background:#222222; border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:5px 12px; border-radius:4px; font-size:11.5px; cursor:pointer;">Print Invoice 🖨️</button>
+          <button onclick="alert('Printing Tax Invoice: ${inv.id}\\nCustomer: ${inv.customer_name}\\nAmount: ₹${Number(inv.amount).toLocaleString('en-IN')}')" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:5px 12px; border-radius:4px; font-size:11.5px; cursor:pointer; font-weight:600;">Print Invoice 🖨️</button>
         </td>
       </tr>
     `).join('') : `
       <tr>
-        <td colspan="6" style="padding:48px 16px; text-align:center; color:#888888;">
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">🧾</div>
-          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Invoices Generated Yet</div>
-          <div style="font-size:12px; color:#666666;">Completed jobs and offline billings will generate GST tax invoices here.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Invoices Generated Yet</div>
+          <div style="font-size:12px; color:#64748b;">Completed jobs and offline billings will generate GST tax invoices here.</div>
         </td>
       </tr>
     `;
@@ -947,21 +947,21 @@
     // 5. Memberships Table
     const memTbody = document.getElementById('membershipsTableBody');
     memTbody.innerHTML = state.memberships.length ? state.memberships.map(m => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px; font-family:monospace; font-weight:800; color:#E50914;">${m.member_no}</td>
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#ffffff;">${m.customer_name}</div>
-          <div style="font-size:12px; color:#888888;">${m.phone}</div>
+          <div style="font-weight:700; color:#0f172a;">${m.customer_name}</div>
+          <div style="font-size:12px; color:#64748b;">${m.phone}</div>
         </td>
         <td style="padding:12px 16px;">
-          <div style="color:#ffffff; font-weight:600;">${m.plan_name}</div>
-          <div style="font-size:11.5px; color:#888888;">${m.billing_cycle} Recurring</div>
+          <div style="color:#0f172a; font-weight:600;">${m.plan_name}</div>
+          <div style="font-size:11.5px; color:#64748b;">${m.billing_cycle} Recurring</div>
         </td>
         <td style="padding:12px 16px;">
-          <span style="font-size:14px; font-weight:800; color:#fbbf24;">${m.remaining_washes} Washes</span> Remaining
+          <span style="font-size:14px; font-weight:800; color:#d97706;">${m.remaining_washes} Washes</span> Remaining
         </td>
         <td style="padding:12px 16px;">
-          <span style="font-size:11px; font-weight:800; padding:3px 8px; border-radius:10px; background:rgba(34,197,94,0.15); color:#22c55e;">${m.status}</span>
+          <span style="font-size:11px; font-weight:800; padding:3px 8px; border-radius:10px; background:#dcfce7; color:#15803d;">${m.status}</span>
         </td>
         <td style="padding:12px 16px; text-align:right;">
           <button onclick="deductMemberWash(${m.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">-1 Wash Visit</button>
@@ -969,10 +969,10 @@
       </tr>
     `).join('') : `
       <tr>
-        <td colspan="6" style="padding:48px 16px; text-align:center; color:#888888;">
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">👑</div>
-          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No VIP Members Enrolled Yet</div>
-          <div style="font-size:12px; color:#666666;">Memberships enrolled online or at the studio counter will appear here.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No VIP Members Enrolled Yet</div>
+          <div style="font-size:12px; color:#64748b;">Memberships enrolled online or at the studio counter will appear here.</div>
         </td>
       </tr>
     `;
@@ -980,22 +980,22 @@
     // 6. Customers Table
     const custTbody = document.getElementById('customersTableBody');
     custTbody.innerHTML = state.customers.length ? state.customers.map(c => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#ffffff;">${c.name}</div>
-          <div style="font-size:12px; color:#888888;">${c.phone}</div>
+          <div style="font-weight:700; color:#0f172a;">${c.name}</div>
+          <div style="font-size:12px; color:#64748b;">${c.phone}</div>
         </td>
-        <td style="padding:12px 16px; color:#cccccc;">${c.vehicles}</td>
-        <td style="padding:12px 16px; font-weight:700; color:#ffffff;">${c.visits} visits</td>
-        <td style="padding:12px 16px; font-weight:800; color:#22c55e;">${c.spend}</td>
-        <td style="padding:12px 16px; font-size:12.5px; color:#888888;">${c.notes}</td>
+        <td style="padding:12px 16px; color:#334155;">${c.vehicles}</td>
+        <td style="padding:12px 16px; font-weight:700; color:#0f172a;">${c.visits} visits</td>
+        <td style="padding:12px 16px; font-weight:800; color:#16a34a;">${c.spend}</td>
+        <td style="padding:12px 16px; font-size:12.5px; color:#64748b;">${c.notes}</td>
       </tr>
     `).join('') : `
       <tr>
-        <td colspan="5" style="padding:48px 16px; text-align:center; color:#888888;">
+        <td colspan="5" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">👤</div>
-          <div style="font-size:15px; font-weight:700; color:#ffffff; margin-bottom:4px;">No Customer Records Yet</div>
-          <div style="font-size:12px; color:#666666;">Customer profiles are created automatically as appointments and job cards are logged.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Customer Records Yet</div>
+          <div style="font-size:12px; color:#64748b;">Customer profiles are created automatically as appointments and job cards are logged.</div>
         </td>
       </tr>
     `;

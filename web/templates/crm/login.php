@@ -14,13 +14,10 @@
   <div class="crm-login-wrap">
     <div class="crm-login-card">
       <div class="crm-login-header">
-        <a href="/" class="crm-brand-block" style="justify-content: center; margin-bottom: 12px;">
-          <div class="crm-brand-icon">D/</div>
-          <div class="crm-brand-text">
-            <span class="crm-brand-name">THE DRIVE CLINIC</span>
-            <span class="crm-brand-sub">STUDIO MANAGEMENT</span>
-          </div>
-        </a>
+        <div class="crm-login-logo-box" style="margin-bottom: 8px;">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#0f172a; letter-spacing:0.06em; line-height:1;">THE DDC</div>
+          <span style="font-size:10px; font-weight:800; color:#E50914; letter-spacing:0.2em; text-transform:uppercase;">STUDIO CRM WORKSPACE // JAMMU</span>
+        </div>
         <h2 class="crm-login-title">Sign in to Studio Workspace</h2>
         <p class="crm-login-desc">Access live bay management, leads pipeline, and inventory.</p>
       </div>
