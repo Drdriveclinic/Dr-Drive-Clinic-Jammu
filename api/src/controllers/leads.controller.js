@@ -219,3 +219,21 @@ export async function bulkImportLeads(req, res, next) {
     next(err);
   }
 }
+
+export async function deleteLead(req, res, next) {
+  try {
+    const id = req.params.id;
+    const currentLeads = getFileLeads();
+    const updatedLeads = currentLeads.filter(l => String(l.id) !== String(id) && String(l.ref) !== String(id));
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(updatedLeads, null, 2), 'utf8');
+
+    const isDbReady = await db.checkConnection();
+    if (isDbReady) {
+      await db.query('DELETE FROM leads WHERE id = ?', [id]);
+    }
+
+    res.json({ ok: true, data: { message: 'Lead deleted successfully', id } });
+  } catch (err) {
+    next(err);
+  }
+}

@@ -465,14 +465,14 @@
 
 .crm-input {
   width: 100%;
-  height: 46px;
-  background: #181818;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  height: 44px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
   padding: 0 14px;
   font-family: var(--font-body);
   font-size: 14px;
-  color: #ffffff;
+  color: #0f172a;
   outline: none;
   box-sizing: border-box;
   transition: all 0.2s ease;
@@ -480,12 +480,14 @@
 
 .crm-input:focus {
   border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.25);
-  background: #202020;
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+  background: #ffffff;
+  color: #0f172a;
 }
 
 .crm-input::placeholder {
-  color: #666666;
+  color: #94a3b8;
+  opacity: 1;
 }
 
 .crm-modal-footer {

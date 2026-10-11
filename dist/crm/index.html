@@ -14,6 +14,38 @@
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/crm.css">
 
+  <style>
+    /* Universal High-Contrast Inputs & Placeholders for Studio CRM */
+    input, textarea, select, .crm-input, input.crm-input, textarea.crm-input, select.crm-input {
+      background-color: #ffffff !important;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      -webkit-text-fill-color: #0f172a !important;
+      border: 1px solid #cbd5e1 !important;
+      opacity: 1 !important;
+    }
+    input:focus, textarea:focus, select:focus, .crm-input:focus, input.crm-input:focus, textarea.crm-input:focus, select.crm-input:focus {
+      background-color: #ffffff !important;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      -webkit-text-fill-color: #0f172a !important;
+      border-color: #E50914 !important;
+      box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15) !important;
+      outline: none !important;
+    }
+    ::placeholder, input::placeholder, textarea::placeholder, .crm-input::placeholder {
+      color: #94a3b8 !important;
+      -webkit-text-fill-color: #94a3b8 !important;
+      opacity: 1 !important;
+      font-weight: 400 !important;
+    }
+    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+      color: #94a3b8 !important;
+      -webkit-text-fill-color: #94a3b8 !important;
+      opacity: 1 !important;
+    }
+  </style>
+
   <!-- SheetJS for Excel (.xlsx/.xls) Parsing -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
@@ -190,54 +222,140 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
           <div>
             <div style="font-size:16px; font-weight:800; color:#0f172a; letter-spacing:-0.01em;">Studio Leads & Inquiries Pipeline</div>
-            <div style="font-size:12.5px; color:#64748b;">Direct website bookings, consultation requests, and ad campaign leads.</div>
+            <div style="font-size:12.5px; color:#64748b;">Manage fresh inquiries, track callbacks, send ready leads to job cards & clean waste leads.</div>
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button type="button" class="crm-btn" onclick="openModal('modalImportLeads')" style="background:#0284c7; color:#ffffff; border:none; padding:9px 16px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 3px rgba(2,132,199,0.25);">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <!-- View Mode Switcher -->
+            <div style="display:inline-flex; background:#f1f5f9; padding:3px; border-radius:8px; border:1px solid #e2e8f0;">
+              <button type="button" id="btnViewKanban" onclick="switchLeadsView('kanban')" style="background:#0f172a; color:#ffffff; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                <span>🗂️</span> Pipeline Cards
+              </button>
+              <button type="button" id="btnViewLog" onclick="switchLeadsView('log')" style="background:transparent; color:#475569; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                <span>📑</span> Leads Master Log
+              </button>
+            </div>
+            <button type="button" class="crm-btn" onclick="openModal('modalImportLeads')" style="background:#0284c7; color:#ffffff; border:none; padding:8px 14px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 3px rgba(2,132,199,0.25);">
               <span>📊</span> Upload Leads (Excel / CSV)
             </button>
-            <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddLead')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddLead')" style="background:#E50914; color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-weight:700; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
               <span>+</span> Add Manual Lead
             </button>
           </div>
         </div>
 
-        <!-- SEARCH BAR & STAGE FILTER BAR -->
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:16px; background:#ffffff; padding:12px 16px; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,0.03);">
+        <!-- SEARCH BAR & PIPELINE QUICK STATS -->
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:18px; background:#ffffff; padding:12px 16px; border:1px solid #e2e8f0; border-radius:8px; box-shadow:0 1px 3px rgba(15,23,42,0.03);">
           <div style="flex:1; min-width:280px; position:relative;">
-            <input type="text" id="leadSearchInput" oninput="handleLeadSearch(this.value)" placeholder="🔍 Search leads by Mobile No., Car Number, Email, or Name..." style="width:100%; padding:9px 36px 9px 34px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; color:#0f172a; outline:none; background:#ffffff;">
-            <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; color:#94a3b8; pointer-events:none;">🔍</span>
+            <input type="text" id="leadSearchInput" class="crm-input" oninput="handleLeadSearch(this.value)" placeholder="🔍 Search by Mobile Number, Car Number, Email, or Name..." style="width:100%; height:40px; padding:0 36px 0 34px;">
+            <span style="position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:14px; color:#94a3b8; pointer-events:none;">🔍</span>
             <button type="button" id="leadSearchClearBtn" onclick="clearLeadSearch()" style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:none; color:#94a3b8; font-size:14px; cursor:pointer; font-weight:700;">✕</button>
           </div>
           <div style="display:flex; gap:8px; align-items:center;">
-            <select id="leadStageFilter" onchange="handleLeadStageFilter(this.value)" style="border:1px solid #cbd5e1; border-radius:6px; padding:9px 12px; font-size:12.5px; background:#ffffff; color:#334155; outline:none;">
-              <option value="ALL">All Stages</option>
-              <option value="NEW">New Leads</option>
-              <option value="CONTACTED">Contacted</option>
-              <option value="BAY_SCHEDULED">Bay Scheduled</option>
-              <option value="WON">Converted (Won)</option>
-              <option value="LOST">Lost</option>
+            <select id="leadSourceFilter" onchange="handleLeadSourceFilter(this.value)" class="crm-input" style="height:40px; padding:0 12px; font-size:12px; width:auto;">
+              <option value="ALL">All Sources</option>
+              <option value="ONLINE_BOOKING">Online Booking</option>
+              <option value="WEBSITE">Website Forms</option>
+              <option value="META_ADS">Meta Ads</option>
+              <option value="GOOGLE_ADS">Google Ads</option>
+              <option value="MANUAL">Manual Inquiries</option>
             </select>
-            <span id="leadSearchCount" style="font-size:12px; font-weight:700; color:#64748b; background:#f1f5f9; padding:6px 12px; border-radius:4px; white-space:nowrap;"></span>
+            <span id="leadSearchCount" style="font-size:12px; font-weight:700; color:#64748b; background:#f1f5f9; padding:8px 12px; border-radius:6px; white-space:nowrap;"></span>
           </div>
         </div>
 
-        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
-          <table class="crm-table" id="tableLeads" style="width:100%; border-collapse:collapse; text-align:left;">
-            <thead>
-              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lead Name & Contact</th>
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Vehicle & Reg No.</th>
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Service Inquired</th>
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Source</th>
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Stage</th>
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="leadsTableBody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
+        <!-- VIEW 1: KANBAN PIPELINE (CARDS VIEW) -->
+        <div id="leadsKanbanView" style="display:block;">
+          <div style="display:grid; grid-template-columns:repeat(5, minmax(240px, 1fr)); gap:16px; overflow-x:auto; padding-bottom:14px; align-items:start;">
+            
+            <!-- COLUMN 1: NEW / UNTOUCHED LEADS -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-top:4px solid #f59e0b; border-radius:10px; padding:12px; min-height:500px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="font-size:12px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:5px; text-transform:uppercase;">
+                  <span>🆕 Untouched Leads</span>
+                </div>
+                <span id="badgeKanbanNew" style="background:#fef3c7; color:#b45309; font-weight:800; font-size:11px; padding:2px 8px; border-radius:10px;">0</span>
+              </div>
+              <div style="font-size:11px; color:#64748b; margin-bottom:12px;">Fresh inquiries needing callback</div>
+              <div id="kanbanCardsNew" style="display:flex; flex-direction:column; gap:10px; flex:1;"></div>
+            </div>
+
+            <!-- COLUMN 2: CONTACTED LEADS -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-top:4px solid #3b82f6; border-radius:10px; padding:12px; min-height:500px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="font-size:12px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:5px; text-transform:uppercase;">
+                  <span>📞 Contacted</span>
+                </div>
+                <span id="badgeKanbanContacted" style="background:#dbeafe; color:#1d4ed8; font-weight:800; font-size:11px; padding:2px 8px; border-radius:10px;">0</span>
+              </div>
+              <div style="font-size:11px; color:#64748b; margin-bottom:12px;">Called or WhatsApped client</div>
+              <div id="kanbanCardsContacted" style="display:flex; flex-direction:column; gap:10px; flex:1;"></div>
+            </div>
+
+            <!-- COLUMN 3: READY / BAY SCHEDULED -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-top:4px solid #10b981; border-radius:10px; padding:12px; min-height:500px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="font-size:12px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:5px; text-transform:uppercase;">
+                  <span>🚗 Ready for Bay</span>
+                </div>
+                <span id="badgeKanbanReady" style="background:#d1fae5; color:#065f46; font-weight:800; font-size:11px; padding:2px 8px; border-radius:10px;">0</span>
+              </div>
+              <div style="font-size:11px; color:#64748b; margin-bottom:12px;">Slot fixed; ready for Job Card</div>
+              <div id="kanbanCardsReady" style="display:flex; flex-direction:column; gap:10px; flex:1;"></div>
+            </div>
+
+            <!-- COLUMN 4: CONVERTED (WON) -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-top:4px solid #8b5cf6; border-radius:10px; padding:12px; min-height:500px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="font-size:12px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:5px; text-transform:uppercase;">
+                  <span>🎉 Converted (Won)</span>
+                </div>
+                <span id="badgeKanbanWon" style="background:#ede9fe; color:#5b21b6; font-weight:800; font-size:11px; padding:2px 8px; border-radius:10px;">0</span>
+              </div>
+              <div style="font-size:11px; color:#64748b; margin-bottom:12px;">Sent to Job Card & Bays</div>
+              <div id="kanbanCardsWon" style="display:flex; flex-direction:column; gap:10px; flex:1;"></div>
+            </div>
+
+            <!-- COLUMN 5: WASTE / DROPPED LEADS -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-top:4px solid #ef4444; border-radius:10px; padding:12px; min-height:500px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="font-size:12px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:5px; text-transform:uppercase;">
+                  <span>🗑️ Waste / Dropped</span>
+                </div>
+                <span id="badgeKanbanLost" style="background:#fee2e2; color:#991b1b; font-weight:800; font-size:11px; padding:2px 8px; border-radius:10px;">0</span>
+              </div>
+              <div style="font-size:11px; color:#64748b; margin-bottom:12px;">Junk or cold leads (can delete)</div>
+              <div id="kanbanCardsLost" style="display:flex; flex-direction:column; gap:10px; flex:1;"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- VIEW 2: LEADS MASTER LOG (FULL AUDIT TABLE) -->
+        <div id="leadsLogView" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="font-size:13px; font-weight:700; color:#0f172a;">Full Leads & Historical Log Registry</div>
+            <button type="button" onclick="exportCurrentTableCsv()" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding:6px 14px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+              📥 Export Leads Log to CSV
+            </button>
+          </div>
+          <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
+            <table class="crm-table" id="tableLeads" style="width:100%; border-collapse:collapse; text-align:left;">
+              <thead>
+                <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lead # & Date</th>
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lead Name & Contact</th>
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Vehicle & Reg No.</th>
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Service Inquired</th>
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Source</th>
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Stage</th>
+                  <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -850,6 +968,76 @@
     checkAuth();
   };
 
+  // Leads Pipeline Views & Controls
+  let leadSourceFilterVal = 'ALL';
+
+  window.handleLeadSourceFilter = function(source) {
+    leadSourceFilterVal = source || 'ALL';
+    renderAllCrmTables();
+  };
+
+  window.switchLeadsView = function(mode) {
+    const kanbanView = document.getElementById('leadsKanbanView');
+    const logView = document.getElementById('leadsLogView');
+    const btnKanban = document.getElementById('btnViewKanban');
+    const btnLog = document.getElementById('btnViewLog');
+
+    if (mode === 'log') {
+      if (kanbanView) kanbanView.style.display = 'none';
+      if (logView) logView.style.display = 'block';
+      if (btnLog) {
+        btnLog.style.background = '#ffffff';
+        btnLog.style.color = '#0f172a';
+        btnLog.style.boxShadow = '0 1px 3px rgba(15,23,42,0.1)';
+      }
+      if (btnKanban) {
+        btnKanban.style.background = 'transparent';
+        btnKanban.style.color = '#475569';
+        btnKanban.style.boxShadow = 'none';
+      }
+    } else {
+      if (kanbanView) kanbanView.style.display = 'block';
+      if (logView) logView.style.display = 'none';
+      if (btnKanban) {
+        btnKanban.style.background = '#ffffff';
+        btnKanban.style.color = '#0f172a';
+        btnKanban.style.boxShadow = '0 1px 3px rgba(15,23,42,0.1)';
+      }
+      if (btnLog) {
+        btnLog.style.background = 'transparent';
+        btnLog.style.color = '#475569';
+        btnLog.style.boxShadow = 'none';
+      }
+    }
+  };
+
+  window.deleteLeadPermanently = async function(id) {
+    const lead = state.leads.find(l => l.id == id);
+    const leadName = lead ? (lead.customer_name || 'this record') : 'this record';
+    if (!confirm(`Are you sure you want to permanently delete lead "${leadName}"?\n\nThis will remove it from your CRM pipeline, master logs, and database.`)) {
+      return;
+    }
+
+    state.leads = state.leads.filter(l => l.id != id);
+    saveCrmState(state);
+
+    // Call server DELETE route
+    try {
+      await fetch('/api/leads/' + id, { method: 'DELETE' });
+    } catch(err) {
+      console.warn('Backend delete lead notification:', err.message);
+    }
+
+    // Also purge from any client-cached leads
+    try {
+      const pub = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
+      const upd = pub.filter(l => l.id != id);
+      localStorage.setItem('tdc_crm_leads', JSON.stringify(upd));
+    } catch(e) {}
+
+    renderAllCrmTables();
+  };
+
   // Tab switching
   window.switchCrmTab = function(tabId, linkEl) {
     document.querySelectorAll('.crm-tab-pane').forEach(p => p.style.display = 'none');
@@ -945,51 +1133,196 @@
       }).join('');
     }
 
-    // 1. Leads Table (Filtered by Search & Stage)
-    const leadsTbody = document.getElementById('leadsTableBody');
+    // 1. Leads Kanban Columns & Master Log Table
     const filteredLeads = getFilteredLeads();
     const countEl = document.getElementById('leadSearchCount');
     if (countEl) {
       countEl.textContent = `${filteredLeads.length} of ${state.leads.length} lead${state.leads.length === 1 ? '' : 's'}`;
     }
 
-    leadsTbody.innerHTML = filteredLeads.length ? filteredLeads.map(l => `
-      <tr style="border-bottom:1px solid #f1f5f9;">
-        <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#0f172a; font-size:14px;">${highlightMatch(l.customer_name || l.name || 'Lead')}</div>
-          <div style="font-size:12px; color:#0284c7; font-weight:700; margin-top:2px;">📱 ${highlightMatch(l.phone || 'No Phone')}</div>
-          ${l.email ? `<div style="font-size:11.5px; color:#64748b; margin-top:1px;">✉️ ${highlightMatch(l.email)}</div>` : ''}
-        </td>
-        <td style="padding:12px 16px;">
-          <div style="color:#1e293b; font-weight:600; font-size:13.5px;">${highlightMatch(l.vehicle_model || 'Vehicle')}</div>
-          <div style="font-size:11.5px; font-weight:800; color:#0f172a; font-family:monospace; background:#f1f5f9; display:inline-block; padding:2px 7px; border-radius:4px; border:1px solid #e2e8f0; margin-top:4px; letter-spacing:0.04em;">
-            🚗 ${highlightMatch(l.vehicle_reg || 'REG N/A')}
+    // Helper: Card renderer for Kanban board
+    function createKanbanCardHtml(l) {
+      const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
+      const phone10 = cleanPhone.length > 10 ? cleanPhone.slice(-10) : cleanPhone;
+      
+      const src = (l.source || 'WEBSITE').toUpperCase();
+      let srcBg = '#f1f5f9', srcColor = '#475569';
+      if (src.includes('BOOKING')) { srcBg = '#dcfce7'; srcColor = '#15803d'; }
+      else if (src.includes('META') || src.includes('FACEBOOK') || src.includes('INSTAGRAM')) { srcBg = '#dbeafe'; srcColor = '#1d4ed8'; }
+      else if (src.includes('GOOGLE')) { srcBg = '#fef3c7'; srcColor = '#b45309'; }
+      else if (src.includes('MANUAL')) { srcBg = '#e2e8f0'; srcColor = '#334155'; }
+
+      const stage = l.stage || 'NEW';
+
+      return `
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; flex-direction:column; gap:8px;">
+          <!-- Top Row: Ref & Source -->
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-family:monospace; font-size:10.5px; font-weight:800; color:#64748b;">${highlightMatch(l.ref || ('#LEAD-' + l.id))}</span>
+            <span style="font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px; text-transform:uppercase; background:${srcBg}; color:${srcColor};">${src}</span>
           </div>
-        </td>
-        <td style="padding:12px 16px; color:#0f172a; font-weight:600; font-size:13px;">${l.service_name}</td>
-        <td style="padding:12px 16px;"><span style="font-size:10px; background:#f1f5f9; color:#475569; font-weight:800; padding:3px 8px; border-radius:4px; text-transform:uppercase;">${l.source}</span></td>
-        <td style="padding:12px 16px;">
-          <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:600;">
-            <option value="NEW" ${l.stage === 'NEW' ? 'selected' : ''}>NEW LEAD</option>
-            <option value="CONTACTED" ${l.stage === 'CONTACTED' ? 'selected' : ''}>CONTACTED</option>
-            <option value="BAY_SCHEDULED" ${l.stage === 'BAY_SCHEDULED' ? 'selected' : ''}>BAY SCHEDULED</option>
-            <option value="WON" ${l.stage === 'WON' ? 'selected' : ''}>CONVERTED (WON)</option>
-            <option value="LOST" ${l.stage === 'LOST' ? 'selected' : ''}>LOST</option>
-          </select>
-        </td>
-        <td style="padding:12px 16px; text-align:right;">
-          <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">Convert to Job Card &rarr;</button>
-        </td>
-      </tr>
-    `).join('') : `
-      <tr>
-        <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
-          <div style="font-size:32px; margin-bottom:10px;">🔍</div>
-          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Matching Leads Found</div>
-          <div style="font-size:12px; color:#64748b;">No records match your search criteria. Try a different mobile number, car registration, email or name.</div>
-        </td>
-      </tr>
-    `;
+
+          <!-- Customer Name & Contacts -->
+          <div>
+            <div style="font-weight:700; font-size:13.5px; color:#0f172a; line-height:1.25;">${highlightMatch(l.customer_name || l.name || 'Client')}</div>
+            <div style="display:flex; gap:6px; align-items:center; margin-top:4px; flex-wrap:wrap;">
+              <a href="tel:+91${phone10}" style="text-decoration:none; display:inline-flex; align-items:center; gap:3px; font-size:11.5px; font-weight:700; color:#0284c7; background:#f0f9ff; padding:2px 6px; border-radius:4px; border:1px solid #bae6fd;">
+                <span>📞</span> ${highlightMatch(l.phone || 'No phone')}
+              </a>
+              ${phone10 ? `
+              <a href="https://wa.me/91${phone10}?text=Hello%20${encodeURIComponent(l.customer_name || 'Sir')}%2C%20this%20is%20The%20Drive%20Clinic%20Jammu.%20Regarding%20your%20inquiry%20for%20${encodeURIComponent(l.service_name || 'detailing')}..." target="_blank" rel="noopener" style="text-decoration:none; display:inline-flex; align-items:center; gap:3px; font-size:11px; font-weight:700; color:#15803d; background:#dcfce7; padding:2px 6px; border-radius:4px; border:1px solid #bbf7d0;">
+                <span>💬 WA</span>
+              </a>` : ''}
+            </div>
+            ${l.email ? `<div style="font-size:10.5px; color:#64748b; margin-top:3px; word-break:break-all;">✉️ ${highlightMatch(l.email)}</div>` : ''}
+          </div>
+
+          <!-- Vehicle & Service -->
+          <div style="background:#f8fafc; border:1px solid #eef2f6; border-radius:6px; padding:6px 8px;">
+            <div style="font-size:12px; font-weight:700; color:#1e293b; display:flex; justify-content:space-between; align-items:center;">
+              <span>🚗 ${highlightMatch(l.vehicle_model || 'Vehicle')}</span>
+              <span style="font-family:monospace; font-size:10px; font-weight:800; background:#e2e8f0; color:#0f172a; padding:1px 4px; border-radius:3px;">${highlightMatch(l.vehicle_reg || 'N/A')}</span>
+            </div>
+            <div style="font-size:11.5px; font-weight:600; color:#E50914; margin-top:3px;">🛠️ ${l.service_name || 'Detailing'}</div>
+          </div>
+
+          <!-- Stage-Specific Action Buttons -->
+          <div style="padding-top:4px; border-top:1px solid #f1f5f9;">
+            ${stage === 'NEW' ? `
+              <div style="display:flex; gap:4px; margin-bottom:4px;">
+                <button onclick="updateLeadStage(${l.id}, 'CONTACTED')" style="background:#3b82f6; color:#ffffff; border:none; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">📞 Contacted</button>
+                <button onclick="updateLeadStage(${l.id}, 'BAY_SCHEDULED')" style="background:#10b981; color:#ffffff; border:none; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">🚗 Ready</button>
+                <button onclick="deleteLeadPermanently(${l.id})" title="Delete lead" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer;">🗑️</button>
+              </div>
+              <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">🛠️ Send to Job Card &rarr;</button>
+            ` : stage === 'CONTACTED' ? `
+              <div style="display:flex; gap:4px; margin-bottom:4px;">
+                <button onclick="updateLeadStage(${l.id}, 'BAY_SCHEDULED')" style="background:#10b981; color:#ffffff; border:none; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">🚗 Mark Ready</button>
+                <button onclick="updateLeadStage(${l.id}, 'LOST')" style="background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer;">Waste</button>
+              </div>
+              <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">🛠️ Send to Job Card &rarr;</button>
+            ` : stage === 'BAY_SCHEDULED' ? `
+              <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:7px 10px; border-radius:4px; font-size:12px; font-weight:800; cursor:pointer; width:100%; box-shadow:0 2px 6px rgba(229,9,20,0.25); margin-bottom:4px;">
+                🛠️ Send to Job Card &rarr;
+              </button>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button onclick="updateLeadStage(${l.id}, 'CONTACTED')" style="background:none; border:none; color:#64748b; font-size:10px; font-weight:700; cursor:pointer; padding:0;">↩ Back to Contacted</button>
+                <button onclick="updateLeadStage(${l.id}, 'LOST')" style="background:none; border:none; color:#ef4444; font-size:10px; font-weight:700; cursor:pointer; padding:0;">Mark Waste</button>
+              </div>
+            ` : stage === 'WON' ? `
+              <div style="background:#ede9fe; color:#6d28d9; padding:4px 6px; border-radius:4px; font-size:11px; font-weight:700; text-align:center; margin-bottom:4px;">🎉 Converted to Job Card</div>
+              <button onclick="switchCrmTab('job-cards', document.querySelector('a[href=\\'#job-cards\\']'))" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; width:100%;">View Job Cards &rarr;</button>
+            ` : `
+              <div style="background:#fee2e2; color:#991b1b; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:700; text-align:center; margin-bottom:4px;">Waste / Dropped Lead</div>
+              <div style="display:flex; gap:4px;">
+                <button onclick="deleteLeadPermanently(${l.id})" style="background:#ef4444; color:#ffffff; border:none; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">🗑️ Delete</button>
+                <button onclick="updateLeadStage(${l.id}, 'NEW')" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">↩ Restore</button>
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    // Split into 5 distinct pipeline stages
+    const leadsNew = filteredLeads.filter(l => (l.stage || 'NEW') === 'NEW');
+    const leadsContacted = filteredLeads.filter(l => l.stage === 'CONTACTED');
+    const leadsReady = filteredLeads.filter(l => l.stage === 'BAY_SCHEDULED');
+    const leadsWon = filteredLeads.filter(l => l.stage === 'WON');
+    const leadsLost = filteredLeads.filter(l => l.stage === 'LOST');
+
+    // Update column badge counters
+    const badgeNew = document.getElementById('badgeKanbanNew');
+    const badgeContacted = document.getElementById('badgeKanbanContacted');
+    const badgeReady = document.getElementById('badgeKanbanReady');
+    const badgeWon = document.getElementById('badgeKanbanWon');
+    const badgeLost = document.getElementById('badgeKanbanLost');
+    if (badgeNew) badgeNew.textContent = leadsNew.length;
+    if (badgeContacted) badgeContacted.textContent = leadsContacted.length;
+    if (badgeReady) badgeReady.textContent = leadsReady.length;
+    if (badgeWon) badgeWon.textContent = leadsWon.length;
+    if (badgeLost) badgeLost.textContent = leadsLost.length;
+
+    // Render cards into respective columns
+    const emptyMsg = (text) => `<div style="padding:28px 10px; text-align:center; color:#94a3b8; font-size:12px; border:1px dashed #cbd5e1; border-radius:8px; background:#ffffff;">${text}</div>`;
+
+    const elNew = document.getElementById('kanbanCardsNew');
+    const elContacted = document.getElementById('kanbanCardsContacted');
+    const elReady = document.getElementById('kanbanCardsReady');
+    const elWon = document.getElementById('kanbanCardsWon');
+    const elLost = document.getElementById('kanbanCardsLost');
+
+    if (elNew) elNew.innerHTML = leadsNew.length ? leadsNew.map(createKanbanCardHtml).join('') : emptyMsg('No untouched leads');
+    if (elContacted) elContacted.innerHTML = leadsContacted.length ? leadsContacted.map(createKanbanCardHtml).join('') : emptyMsg('No contacted leads');
+    if (elReady) elReady.innerHTML = leadsReady.length ? leadsReady.map(createKanbanCardHtml).join('') : emptyMsg('No bay-ready leads');
+    if (elWon) elWon.innerHTML = leadsWon.length ? leadsWon.map(createKanbanCardHtml).join('') : emptyMsg('No converted leads');
+    if (elLost) elLost.innerHTML = leadsLost.length ? leadsLost.map(createKanbanCardHtml).join('') : emptyMsg('No waste / dropped leads');
+
+    // Render Master Audit Log Table
+    const leadsTbody = document.getElementById('leadsTableBody');
+    if (leadsTbody) {
+      leadsTbody.innerHTML = filteredLeads.length ? filteredLeads.map(l => {
+        const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
+        const phone10 = cleanPhone.length > 10 ? cleanPhone.slice(-10) : cleanPhone;
+
+        return `
+          <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s ease;" onmouseenter="this.style.background='#f8fafc'" onmouseleave="this.style.background='transparent'">
+            <td style="padding:12px 16px;">
+              <div style="font-family:monospace; font-size:12px; font-weight:800; color:#0f172a;">${highlightMatch(l.ref || ('#LEAD-' + l.id))}</div>
+              <div style="font-size:11px; color:#64748b; margin-top:2px;">${l.created_at || 'Recently'}</div>
+            </td>
+            <td style="padding:12px 16px;">
+              <div style="font-weight:700; color:#0f172a; font-size:14px;">${highlightMatch(l.customer_name || l.name || 'Lead')}</div>
+              <div style="display:flex; gap:6px; align-items:center; margin-top:3px; flex-wrap:wrap;">
+                <a href="tel:+91${phone10}" style="font-size:12px; color:#0284c7; font-weight:700; text-decoration:none;">📱 ${highlightMatch(l.phone || 'No Phone')}</a>
+                ${phone10 ? `
+                <a href="https://wa.me/91${phone10}?text=Hello%20${encodeURIComponent(l.customer_name || 'Sir')}%2C%20this%20is%20The%20Drive%20Clinic%20Jammu." target="_blank" rel="noopener" style="font-size:11px; background:#dcfce7; color:#15803d; font-weight:700; padding:1px 6px; border-radius:4px; text-decoration:none;">WhatsApp</a>` : ''}
+              </div>
+              ${l.email ? `<div style="font-size:11.5px; color:#64748b; margin-top:2px;">✉️ ${highlightMatch(l.email)}</div>` : ''}
+            </td>
+            <td style="padding:12px 16px;">
+              <div style="color:#1e293b; font-weight:600; font-size:13.5px;">${highlightMatch(l.vehicle_model || 'Vehicle')}</div>
+              <div style="font-size:11.5px; font-weight:800; color:#0f172a; font-family:monospace; background:#f1f5f9; display:inline-block; padding:2px 7px; border-radius:4px; border:1px solid #e2e8f0; margin-top:4px; letter-spacing:0.04em;">
+                🚗 ${highlightMatch(l.vehicle_reg || 'REG N/A')}
+              </div>
+            </td>
+            <td style="padding:12px 16px; color:#0f172a; font-weight:600; font-size:13px;">${l.service_name}</td>
+            <td style="padding:12px 16px;">
+              <span style="font-size:10px; background:#f1f5f9; color:#475569; font-weight:800; padding:3px 8px; border-radius:4px; text-transform:uppercase;">${l.source || 'WEBSITE'}</span>
+            </td>
+            <td style="padding:12px 16px;">
+              <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:700; outline:none;">
+                <option value="NEW" ${l.stage === 'NEW' ? 'selected' : ''}>🆕 UNTOUCHED</option>
+                <option value="CONTACTED" ${l.stage === 'CONTACTED' ? 'selected' : ''}>📞 CONTACTED</option>
+                <option value="BAY_SCHEDULED" ${l.stage === 'BAY_SCHEDULED' ? 'selected' : ''}>🚗 READY FOR BAY</option>
+                <option value="WON" ${l.stage === 'WON' ? 'selected' : ''}>🎉 CONVERTED (WON)</option>
+                <option value="LOST" ${l.stage === 'LOST' ? 'selected' : ''}>🗑️ WASTE / DROPPED</option>
+              </select>
+            </td>
+            <td style="padding:12px 16px; text-align:right;">
+              <div style="display:inline-flex; gap:6px; align-items:center;">
+                ${l.stage !== 'WON' ? `
+                <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                  🛠️ Send to Job Card
+                </button>` : `
+                <span style="font-size:11px; font-weight:800; color:#15803d; background:#dcfce7; padding:4px 10px; border-radius:12px;">Converted ✓</span>`}
+                <button onclick="deleteLeadPermanently(${l.id})" title="Delete lead from logs" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('') : `
+        <tr>
+          <td colspan="7" style="padding:48px 16px; text-align:center; color:#64748b;">
+            <div style="font-size:32px; margin-bottom:10px;">🔍</div>
+            <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Matching Leads Found</div>
+            <div style="font-size:12px; color:#64748b;">No records match your search criteria. Try a different mobile number, car registration, email or name.</div>
+          </td>
+        </tr>
+      `;
+    }
 
     // 2. Job Cards Table
     const jobsTbody = document.getElementById('jobCardsTableBody');
@@ -1406,7 +1739,18 @@
       if (leadStageFilter !== 'ALL' && l.stage !== leadStageFilter) {
         return false;
       }
-      // 2. Search query filter
+
+      // 2. Lead Source filter
+      if (leadSourceFilterVal && leadSourceFilterVal !== 'ALL') {
+        const src = (l.source || '').toUpperCase();
+        if (leadSourceFilterVal === 'ONLINE_BOOKING' && !src.includes('BOOKING')) return false;
+        if (leadSourceFilterVal === 'WEBSITE' && !src.includes('WEBSITE') && !src.includes('CONTACT') && !src.includes('ESTIMATE')) return false;
+        if (leadSourceFilterVal === 'META_ADS' && !src.includes('META') && !src.includes('FACEBOOK') && !src.includes('INSTAGRAM')) return false;
+        if (leadSourceFilterVal === 'GOOGLE_ADS' && !src.includes('GOOGLE')) return false;
+        if (leadSourceFilterVal === 'MANUAL' && !src.includes('MANUAL')) return false;
+      }
+
+      // 3. Search query filter
       if (!leadSearchQuery) return true;
 
       const q = leadSearchQuery;
