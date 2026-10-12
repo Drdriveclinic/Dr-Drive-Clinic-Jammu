@@ -234,6 +234,14 @@
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Customers & Vehicles</span>
         </a>
+
+        <div style="font-size:10px; font-weight:800; color:#64748b; letter-spacing:0.15em; text-transform:uppercase; padding:14px 12px 4px;">SECURITY & ACCESS</div>
+
+        <a href="#team" class="crm-nav-link" onclick="switchCrmTab('team', this)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Staff & User Access</span>
+          <span class="crm-nav-badge" id="badgeUserCount" style="margin-left:auto; background:#0284c7; color:#ffffff; font-size:10px; font-weight:800; padding:2px 7px; border-radius:10px;">1</span>
+        </a>
       </nav>
 
       <!-- USER PROFILE & LOGOUT -->
@@ -620,6 +628,37 @@
               </tr>
             </thead>
             <tbody id="customersTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 8: STAFF & USER ACCESS CONTROL -->
+      <section id="tab-team" class="crm-tab-pane" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+          <div>
+            <div style="font-size:16px; font-weight:800; color:#0f172a; letter-spacing:-0.01em;">Staff & User Access Control</div>
+            <div style="font-size:12.5px; color:#64748b;">Manage authorized accounts who can log in to The Drive Clinic CRM. Add new staff access or delete/revoke user access instantly.</div>
+          </div>
+          <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddUser')" style="background:#E50914; color:#ffffff; border:none; padding:8px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(229,9,20,0.25);">
+            <span>➕</span> Add New Staff User
+          </button>
+        </div>
+
+        <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
+          <table class="crm-table" id="tableUsers" style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Staff Name & Account</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Login Email</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Assigned Role</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Access Level</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Status</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -1130,6 +1169,52 @@
     </div>
   </div>
 
+  <!-- 6. Modal: Add New Staff User -->
+  <div class="crm-modal-backdrop" id="modalAddUser">
+    <div class="crm-modal" onclick="event.stopPropagation()">
+      <div class="crm-modal-header">
+        <h3 class="crm-modal-title">Create New Staff Access</h3>
+        <button class="crm-modal-close" onclick="closeModal('modalAddUser')">&times;</button>
+      </div>
+      <form onsubmit="handleCreateUserAccess(event)">
+        <div class="crm-modal-body">
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Staff Member Full Name *</label>
+              <input type="text" id="newUserName" class="crm-input" placeholder="e.g. Sunil Mahajan" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Login Email Address *</label>
+              <input type="email" id="newUserEmail" class="crm-input" placeholder="e.g. sunil@thedriveclinic.com" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Login Password *</label>
+              <input type="text" id="newUserPass" class="crm-input" placeholder="Assign password (min 6 chars)" minlength="6" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Role & Permissions *</label>
+              <select id="newUserRole" class="crm-input" required>
+                <option value="Studio Manager">Studio Manager (Full Operations)</option>
+                <option value="Senior Detailer">Senior Detailer (Bay & Job Cards)</option>
+                <option value="Front Desk Executive">Front Desk Executive (Leads & Appointments)</option>
+                <option value="Inventory Officer">Inventory Officer (Stock & Parts)</option>
+              </select>
+            </div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px; font-size:12px; color:#475569;">
+            ℹ️ This staff member will immediately be able to sign in to The Drive Clinic CRM using their designated email and password. You can revoke or delete their access anytime.
+          </div>
+        </div>
+        <div class="crm-modal-footer">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddUser')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Grant Access & Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- =========================================================================
        CRM STATE MANAGER & CLIENT STORAGE SCRIPT
        ========================================================================= -->
@@ -1147,7 +1232,19 @@
     ],
     invoices: [],
     memberships: [],
-    customers: []
+    customers: [],
+    users: [
+      {
+        id: 'master-owner',
+        name: 'The Drive Clinic Owner',
+        email: 'care@thedriveclinic.com',
+        role: 'Master Administrator',
+        access_level: 'Full Superadmin Access',
+        status: 'ACTIVE',
+        created_at: '2026-10-01',
+        isMaster: true
+      }
+    ]
   };
 
   // State initialization with localStorage fallback and dummy data purge
@@ -1160,6 +1257,9 @@
         if (parsed.leads && parsed.leads.some(l => l.customer_name === 'Simranjeet Singh' || l.customer_name === 'Dr. Ankur Gupta')) {
           localStorage.removeItem('tdc_crm_master_state');
           return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        }
+        if (!parsed.users || !Array.isArray(parsed.users) || parsed.users.length === 0) {
+          parsed.users = JSON.parse(JSON.stringify(DEFAULT_STATE.users));
         }
         return parsed;
       }
@@ -1214,26 +1314,47 @@
     const email = emailEl.value.trim().toLowerCase();
     const pass = passEl.value.trim();
 
-    const isStudioEmail = email.includes('thedriveclinic.com') ||
-      ['care@thedriveclinic.com', 'owner@thedriveclinic.com', 'admin@thedriveclinic.com', 'admin', 'care', 'owner'].includes(email);
-    
-    const validPasses = ['clinic2026', 'theddc2026', 'admin123', 'admin2026', 'ddc2026', 'clinic', 'admin', 'thedriveclinic'];
+    // 1. Strict Master Admin Check (Password strictly: Thedriveclinic@2026)
+    const isMasterEmail = ['care@thedriveclinic.com', 'owner@thedriveclinic.com', 'admin@thedriveclinic.com', 'admin', 'care', 'owner'].includes(email) || email.endsWith('@thedriveclinic.com');
+    const isMasterPassword = (pass === 'Thedriveclinic@2026');
 
-    if (isStudioEmail && (validPasses.includes(pass) || pass.length >= 6)) {
+    if (isMasterEmail && isMasterPassword) {
       sessionStorage.setItem('tdc_crm_logged_user', JSON.stringify({
-        email: email.includes('@') ? email : (email + '@thedriveclinic.com'),
-        name: email.includes('care') ? 'Care Desk / Studio Admin' : 'Studio Administrator',
-        role: 'owner'
+        email: email.includes('@') ? email : 'care@thedriveclinic.com',
+        name: 'The Drive Clinic Owner',
+        role: 'Master Administrator'
       }));
       const errBox = document.getElementById('loginErrorBox');
       if (errBox) errBox.style.display = 'none';
       checkAuth();
       return true;
-    } else {
-      const errBox = document.getElementById('loginErrorBox');
-      if (errBox) errBox.style.display = 'block';
-      return false;
     }
+
+    // 2. Dynamic Staff User Check (Users granted access in CRM Team Management)
+    const activeUsers = state.users || [];
+    const matchedUser = activeUsers.find(u => 
+      u.email && u.email.toLowerCase() === email && u.password === pass && u.status === 'ACTIVE'
+    );
+
+    if (matchedUser) {
+      sessionStorage.setItem('tdc_crm_logged_user', JSON.stringify({
+        email: matchedUser.email,
+        name: matchedUser.name,
+        role: matchedUser.role
+      }));
+      const errBox = document.getElementById('loginErrorBox');
+      if (errBox) errBox.style.display = 'none';
+      checkAuth();
+      return true;
+    }
+
+    // Access Denied: All other logins removed completely
+    const errBox = document.getElementById('loginErrorBox');
+    if (errBox) {
+      errBox.textContent = '⚠️ Invalid login credentials. Use master password or ask administrator for access.';
+      errBox.style.display = 'block';
+    }
+    return false;
   };
 
   window.handleCrmLogout = function() {
@@ -1328,7 +1449,8 @@
       'inventory': ['STUDIO INVENTORY MANAGER', 'Live stock management with auto-deduction on job cards.'],
       'invoices': ['INVOICES & STUDIO BILLING', 'Tax invoices, receipts, and payment status verification.'],
       'memberships': ['VIP SUBSCRIPTION PASSES', 'Track recurring detailing packages and member wash allowances.'],
-      'customers': ['CUSTOMER & VEHICLE DATABASE', 'Comprehensive registry of studio clients and service history.']
+      'customers': ['CUSTOMER & VEHICLE DATABASE', 'Comprehensive registry of studio clients and service history.'],
+      'team': ['STAFF & USER ACCESS CONTROL', 'Manage studio credentials, staff logins, and grant or revoke CRM access.']
     };
 
     if (titles[tabId]) {
@@ -1836,7 +1958,121 @@
         </td>
       </tr>
     `;
+
+    // 7. Staff & User Access Table
+    const usersTbody = document.getElementById('usersTableBody');
+    if (usersTbody) {
+      if (!state.users || !Array.isArray(state.users) || state.users.length === 0) {
+        state.users = JSON.parse(JSON.stringify(DEFAULT_STATE.users));
+      }
+      
+      const badgeUser = document.getElementById('badgeUserCount');
+      if (badgeUser) badgeUser.textContent = state.users.length;
+
+      usersTbody.innerHTML = state.users.map(u => `
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:34px; height:34px; border-radius:50%; background:${u.isMaster ? '#E50914' : '#0284c7'}; color:#ffffff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;">
+                ${(u.name || 'US').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}
+              </div>
+              <div>
+                <div style="font-weight:700; color:#0f172a; font-size:13.5px;">${u.name}</div>
+                <div style="font-size:11px; color:#64748b;">Added on ${u.created_at || 'Recently'}</div>
+              </div>
+            </div>
+          </td>
+          <td style="padding:12px 16px;">
+            <span style="font-family:monospace; font-weight:700; color:#0f172a; font-size:13px;">${u.email}</span>
+          </td>
+          <td style="padding:12px 16px;">
+            <span style="font-size:12px; font-weight:700; color:#0f172a;">${u.role}</span>
+          </td>
+          <td style="padding:12px 16px;">
+            <span style="font-size:11px; background:#f1f5f9; color:#475569; padding:3px 8px; border-radius:4px; font-weight:600;">${u.access_level || 'Full Access'}</span>
+          </td>
+          <td style="padding:12px 16px;">
+            <span style="font-size:11px; font-weight:800; padding:3px 8px; border-radius:10px; background:#dcfce7; color:#15803d;">
+              ${u.status || 'ACTIVE'}
+            </span>
+          </td>
+          <td style="padding:12px 16px; text-align:right;">
+            ${u.isMaster ? `
+              <span style="font-size:11.5px; font-weight:700; color:#64748b; background:#f8fafc; border:1px solid #e2e8f0; padding:4px 10px; border-radius:4px;">
+                🔒 Primary Owner
+              </span>
+            ` : `
+              <button onclick="deleteUserAccess('${u.id}')" title="Revoke & Delete Access" style="background:#fee2e2; border:1px solid #fecaca; color:#dc2626; padding:5px 12px; border-radius:4px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                <span>🗑️</span> Revoke Access
+              </button>
+            `}
+          </td>
+        </tr>
+      `).join('');
+    }
   }
+
+  // User Access Management Handlers
+  window.handleCreateUserAccess = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const nameEl = document.getElementById('newUserName');
+    const emailEl = document.getElementById('newUserEmail');
+    const passEl = document.getElementById('newUserPass');
+    const roleEl = document.getElementById('newUserRole');
+    if (!nameEl || !emailEl || !passEl) return;
+
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim().toLowerCase();
+    const password = passEl.value.trim();
+    const role = roleEl ? roleEl.value : 'Studio Staff';
+
+    if (!name || !email || !password) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    if (!state.users) state.users = [];
+
+    if (email === 'care@thedriveclinic.com' || state.users.some(u => u.email.toLowerCase() === email)) {
+      alert('A user with this email address already exists. Please assign a unique email.');
+      return;
+    }
+
+    const newUser = {
+      id: Date.now(),
+      name,
+      email,
+      password,
+      role,
+      access_level: role.includes('Manager') ? 'Full Operations' : (role.includes('Detailer') ? 'Bay & Job Cards' : 'Standard'),
+      status: 'ACTIVE',
+      created_at: new Date().toISOString().slice(0, 10),
+      isMaster: false
+    };
+
+    state.users.push(newUser);
+    saveCrmState(state);
+    closeModal('modalAddUser');
+    nameEl.value = '';
+    emailEl.value = '';
+    passEl.value = '';
+    alert(`✓ User access granted successfully for ${name} (${email}). They can now log in using their password.`);
+  };
+
+  window.deleteUserAccess = function(id) {
+    const user = (state.users || []).find(u => String(u.id) === String(id));
+    if (!user) return;
+    if (user.isMaster) {
+      alert('⚠️ Master Administrator account is protected and cannot be deleted.');
+      return;
+    }
+    if (!confirm(`Are you sure you want to revoke and delete access for "${user.name}" (${user.email})?\n\nThis user will immediately be blocked from logging into The Drive Clinic CRM.`)) {
+      return;
+    }
+    state.users = state.users.filter(u => String(u.id) !== String(id));
+    saveCrmState(state);
+    alert(`✓ Access revoked and account deleted for ${user.name}.`);
+  };
 
   // Live Sync with Server APIs
   async function syncServerData() {

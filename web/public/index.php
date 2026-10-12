@@ -1149,14 +1149,13 @@ if ($requestUri === '/crm/login') {
             header('Location: /crm');
             exit;
         } else {
-            // Studio admin access authentication
+            // Studio master admin access authentication (Strict password: Thedriveclinic@2026)
             $validEmails = ['care@thedriveclinic.com', 'owner@thedriveclinic.com', 'admin@thedriveclinic.com', 'admin', 'care', 'owner'];
-            $validPasses = ['clinic2026', 'theddc2026', 'admin123', 'admin2026', 'ddc2026', 'clinic', 'admin', 'thedriveclinic'];
             $lowerEmail = strtolower($email);
-            if ((in_array($lowerEmail, $validEmails) || strpos($lowerEmail, 'thedriveclinic.com') !== false) && (in_array($pass, $validPasses) || strlen($pass) >= 6)) {
+            if ((in_array($lowerEmail, $validEmails) || strpos($lowerEmail, 'thedriveclinic.com') !== false) && $pass === 'Thedriveclinic@2026') {
                 $_SESSION['crm_user'] = [
                     'id' => 1,
-                    'name' => (strpos($lowerEmail, 'care') !== false ? 'Care Desk / Studio Admin' : 'Studio Administrator'),
+                    'name' => (strpos($lowerEmail, 'care') !== false ? 'Care Desk / Studio Admin' : 'The Drive Clinic Owner'),
                     'email' => $email,
                     'role' => 'owner'
                 ];

@@ -14,9 +14,8 @@
   <div class="crm-login-wrap">
     <div class="crm-login-card">
       <div class="crm-login-header">
-        <div class="crm-login-logo-box" style="margin-bottom: 8px;">
-          <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#0f172a; letter-spacing:0.06em; line-height:1;">THE DDC</div>
-          <span style="font-size:10px; font-weight:800; color:#E50914; letter-spacing:0.2em; text-transform:uppercase;">STUDIO CRM WORKSPACE // JAMMU</span>
+        <div class="crm-login-logo-box" style="display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:12px;">
+          <img src="/assets/brand/logo-white.svg" alt="THE TDC" style="height:54px; width:auto; max-width:230px;" onerror="this.onerror=null; this.src='/assets/brand/logo.svg';">
         </div>
         <h2 class="crm-login-title">Sign in to Studio Workspace</h2>
         <p class="crm-login-desc">Access live bay management, leads pipeline, and inventory.</p>
