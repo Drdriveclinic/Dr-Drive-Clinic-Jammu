@@ -603,11 +603,16 @@
 
 @media (max-width: 768px) {
   .site-header {
-    padding: 14px 0 !important;
+    padding: 12px 0 !important;
   }
   .nav-logo-img {
-    height: 32px;
-    max-width: 170px;
+    height: 38px !important;
+    width: auto !important;
+    max-width: 195px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    object-fit: contain !important;
   }
   .nav-actions .btn {
     display: none; /* Hide top Book Now on mobile to avoid overcrowding; mobile bottom bar handles booking */
@@ -616,11 +621,16 @@
 
 @media (max-width: 480px) {
   .nav-logo-img {
-    height: 28px;
-    max-width: 150px;
+    height: 34px !important;
+    width: auto !important;
+    max-width: 175px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    object-fit: contain !important;
   }
   .nav-container {
-    gap: 16px;
+    gap: 12px;
   }
 }
 

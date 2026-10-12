@@ -46,6 +46,237 @@
     }
 
     /* =========================================================================
+       MOBILE RESPONSIVENESS & TOUCH CONTROLS
+       ========================================================================= */
+    .crm-mobile-topbar {
+      display: none;
+    }
+    .crm-sidebar-backdrop {
+      display: none;
+    }
+    .crm-sidebar-close-btn {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      /* Mobile Header */
+      .crm-mobile-topbar {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background: #0c0f17;
+        border-bottom: 1px solid #1e293b;
+        padding: 0 16px;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 105;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      }
+
+      .crm-mobile-toggle-btn {
+        background: #1e293b;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.2s ease;
+      }
+      .crm-mobile-toggle-btn:active {
+        background: #334155;
+      }
+      .crm-mobile-toggle-btn span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: #ffffff;
+        border-radius: 2px;
+      }
+
+      /* Sidebar Drawer */
+      .crm-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+        z-index: 200 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 8px 0 32px rgba(0, 0, 0, 0.75) !important;
+      }
+      body.crm-sidebar-open .crm-sidebar {
+        transform: translateX(0) !important;
+      }
+
+      .crm-sidebar-close-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: #1e293b !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      /* Backdrop Overlay */
+      .crm-sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(3px);
+        z-index: 150;
+      }
+      body.crm-sidebar-open .crm-sidebar-backdrop {
+        display: block !important;
+      }
+
+      /* Main Workspace Viewport */
+      .crm-main {
+        margin-left: 0 !important;
+        margin-top: 56px !important;
+        padding: 16px 12px 64px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box;
+        overflow-x: hidden;
+      }
+
+      /* Topbar within views */
+      .crm-topbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        margin-bottom: 20px !important;
+      }
+      .crm-topbar-search,
+      .crm-topbar input {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .crm-topbar > div:last-child {
+        width: 100% !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+      }
+      .crm-topbar > div:last-child > * {
+        flex: 1 1 calc(50% - 4px) !important;
+        justify-content: center !important;
+        text-align: center !important;
+      }
+
+      /* Stats KPI Grid */
+      .crm-stats-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+      }
+      .crm-stat-card {
+        padding: 14px 12px !important;
+      }
+      .crm-stat-card > div:nth-child(2) {
+        font-size: 26px !important;
+      }
+
+      /* Studio Bays Grid */
+      #liveBaysGrid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+
+      /* Leads Pipeline Kanban */
+      #leadsKanbanView {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 12px !important;
+      }
+      #leadsKanbanView > div {
+        flex-wrap: nowrap !important;
+        min-width: min-content;
+      }
+      #leadsKanbanView > div > div {
+        min-width: 275px !important;
+        max-width: 85vw !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* All Table Cards & Horizontal Scroll */
+      .crm-card,
+      .crm-table-card,
+      div[style*="overflow-x:auto"],
+      div[style*="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px"] {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        min-width: 580px !important;
+      }
+
+      /* Universal Modals on Mobile */
+      .crm-modal-backdrop,
+      div[id^="modal"] {
+        padding: 12px 8px !important;
+        align-items: flex-start !important;
+      }
+      .crm-modal-backdrop > div:first-child,
+      div[id^="modal"] > div:first-child {
+        width: 100% !important;
+        max-width: 96vw !important;
+        margin: 8px auto !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+        padding: 18px 14px !important;
+        border-radius: 12px !important;
+      }
+      div[style*="grid-template-columns:1fr 1fr"],
+      div[style*="grid-template-columns: 1fr 1fr"],
+      div[style*="grid-template-columns:repeat(2,1fr)"] {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+
+      /* Login Screen on Mobile */
+      .crm-login-wrap {
+        padding: 16px !important;
+      }
+      .crm-login-card {
+        width: 100% !important;
+        max-width: 390px !important;
+        padding: 24px 18px !important;
+        margin: 10px auto !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .crm-stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+      .crm-topbar > div:last-child > * {
+        flex: 1 1 100% !important;
+      }
+    }
+
+    /* =========================================================================
        TAX INVOICE PRINTING STYLES & CLEAN A4 MEDIA QUERY
        ========================================================================= */
     #modalPrintInvoice {
@@ -184,14 +415,33 @@
        MAIN UNIFIED CRM SHELL (ONLY ONE UNIFIED CRM PANEL)
        ========================================================================= -->
   <div id="crmAppShell" class="crm-shell" style="display:none; min-height:100vh;">
+    <!-- MOBILE TOP BAR (HIGH CONTRAST BRAND LOGO & HAMBURGER ON PHONES) -->
+    <header class="crm-mobile-topbar" id="crmMobileTopbar">
+      <button type="button" class="crm-mobile-toggle-btn" id="crmMobileMenuToggle" onclick="toggleCrmMobileMenu()" aria-label="Toggle CRM Navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <a href="#overview" onclick="switchCrmTab('overview', document.querySelector('.crm-nav-link'))" style="display:flex; align-items:center; text-decoration:none;">
+        <img src="/assets/brand/logo-white.svg" alt="THE DRIVE CLINIC" style="height:34px; width:auto; max-width:170px; display:block;" onerror="this.onerror=null; this.src='/assets/brand/logo.svg';">
+      </a>
+      <div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:800; color:#10b981; background:rgba(16,185,129,0.14); padding:4px 8px; border-radius:12px; border:1px solid rgba(16,185,129,0.25);">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10b981;"></span> LIVE
+      </div>
+    </header>
+
+    <!-- MOBILE SIDEBAR BACKDROP OVERLAY -->
+    <div class="crm-sidebar-backdrop" id="crmSidebarBackdrop" onclick="closeCrmMobileMenu()"></div>
+
     <!-- SIDEBAR -->
     <aside class="crm-sidebar" style="background:#0c0f17; border-right:1px solid #1e293b; width:260px; display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; z-index:100;">
-      <div class="crm-sidebar-header" style="padding:22px 20px; border-bottom:1px solid #1e293b; display:flex; align-items:center; justify-content:space-between;">
+      <div class="crm-sidebar-header" style="padding:18px 20px; border-bottom:1px solid #1e293b; display:flex; align-items:center; justify-content:space-between;">
         <div>
           <a href="/" target="_blank" style="text-decoration:none; display:flex; align-items:center;">
-            <img src="/assets/brand/logo.svg" alt="THE TDC" style="height:44px; width:auto; max-width:190px;" onerror="this.onerror=null; this.src='/assets/brand/logo-dark.svg';">
+            <img src="/assets/brand/logo-white.svg" alt="THE DRIVE CLINIC" style="height:42px; width:auto; max-width:190px;" onerror="this.onerror=null; this.src='/assets/brand/logo.svg';">
           </a>
         </div>
+        <button type="button" class="crm-sidebar-close-btn" id="crmSidebarCloseBtn" onclick="closeCrmMobileMenu()" aria-label="Close Navigation">✕</button>
       </div>
 
       <nav class="crm-nav" style="padding:16px 12px; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
@@ -3165,28 +3415,37 @@
         <!-- TOP HEADER: THE TDC LOGO & STUDIO METADATA -->
         <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2.5px solid #E50914; padding-bottom:16px; margin-bottom:18px;">
           <div>
-            <!-- THE TDC Vector Logo with Iconic Supercar Silhouette -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 68" width="220" height="62" fill="none" style="display:block;">
+            <!-- THE TDC Vector Logo with Exact Sports Car Silhouette -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 84" width="230" height="60" fill="none" style="display:block;">
               <defs>
                 <linearGradient id="invRedGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#E50914" />
                   <stop offset="100%" stop-color="#B91C1C" />
                 </linearGradient>
               </defs>
-              <!-- Aerodynamic supercar roofline silhouette -->
-              <path d="M 14 21 C 34 17, 62 13, 86 9 C 102 5, 118 2.5, 138 2.5 C 158 2.5, 176 6, 192 12 C 206 17, 220 20, 230 21" stroke="url(#invRedGlow)" stroke-width="2.6" stroke-linecap="round" fill="none" />
-              <path d="M 90 9 C 104 5, 118 3.5, 136 3.5 C 154 3.5, 168 6, 180 11" stroke="#334155" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.8" />
-              <path d="M 28 21 C 44 18, 64 15, 80 12" stroke="url(#invRedGlow)" stroke-width="1.6" stroke-linecap="round" opacity="0.85" />
-              <circle cx="226" cy="19" r="1.6" fill="url(#invRedGlow)" />
-              <text x="14" y="49" font-family="'Montserrat', system-ui, sans-serif" font-size="20" font-weight="900" font-style="italic" letter-spacing="0.12em" fill="#0F172A">THE</text>
-              <polygon points="74,29 80,29 73,51 67,51" fill="url(#invRedGlow)" />
-              <text x="86" y="51" font-family="'Impact', sans-serif" font-size="34" font-weight="900" font-style="italic" letter-spacing="0.04em">
-                <tspan fill="#0F172A">T</tspan>
-                <tspan fill="url(#invRedGlow)" dx="1">D</tspan>
-                <tspan fill="#0F172A" dx="1">C</tspan>
+              <g transform="translate(10, 2)">
+                <path d="M 18 29 C 32 27, 48 24, 68 20 C 92 15, 118 7, 148 6 C 172 6, 196 9, 218 16 C 228 20, 238 25, 246 31 L 243 33 L 248 32 C 258 32, 276 33, 290 35 C 296 37, 301 40, 302 44 C 298 45, 292 45, 286 44 C 280 39, 272 36, 258 36 C 248 36, 240 40, 236 45" 
+                      stroke="#0F172A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <path d="M 152 10 C 174 10, 194 13, 212 19 C 220 22, 226 26, 232 30" 
+                      stroke="#334155" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.85" />
+                <ellipse cx="244" cy="31" rx="2.5" ry="1.2" fill="#0F172A" />
+                <path d="M 236 45 C 240 39, 249 35, 260 35 C 271 35, 279 38, 284 44" 
+                      stroke="#0F172A" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M 30 33 C 50 30, 80 25, 110 20 C 132 18, 150 18, 166 21 C 176 23, 184 27, 194 33 C 204 37, 218 37, 235 37 C 246 37, 252 36, 256 34" 
+                      stroke="url(#invRedGlow)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <circle cx="258" cy="27" r="1.5" fill="url(#invRedGlow)" />
+                <circle cx="258" cy="32" r="1.5" fill="url(#invRedGlow)" />
+                <polygon points="18,23 19,28 24,29 19,30 18,35 17,30 12,29 17,28" fill="#E50914" />
+                <polygon points="224,12 225,17 230,18 225,19 224,24 223,19 218,18 223,17" fill="#E50914" />
+              </g>
+              <text x="18" y="60" font-family="'Montserrat', system-ui, sans-serif" font-size="14" font-weight="900" font-style="italic" letter-spacing="0.14em" fill="#0F172A">THE</text>
+              <polygon points="62,48 67,48 61,64 56,64" fill="url(#invRedGlow)" />
+              <text x="74" y="63" font-family="'Montserrat', 'Impact', sans-serif" font-size="24" font-weight="900" font-style="italic" letter-spacing="0.04em">
+                <tspan fill="#0F172A">DRIVE </tspan>
+                <tspan fill="url(#invRedGlow)">CLINIC</tspan>
               </text>
-              <line x1="86" y1="56" x2="174" y2="56" stroke="url(#invRedGlow)" stroke-width="2.5" stroke-linecap="round" />
-              <text x="86" y="64" font-family="'Space Grotesk', system-ui, sans-serif" font-size="7" font-weight="800" letter-spacing="0.22em" fill="#64748B">THE DRIVE CLINIC // JAMMU</text>
+              <line x1="74" y1="69" x2="276" y2="69" stroke="url(#invRedGlow)" stroke-width="2" stroke-linecap="round" />
+              <text x="74" y="78" font-family="'Space Grotesk', system-ui, sans-serif" font-size="7.5" font-weight="800" letter-spacing="0.24em" fill="#475569">WHERE CARS GET THEIR SHINE BACK • THE TDC</text>
             </svg>
             <div style="font-size:11px; color:#475569; margin-top:8px; line-height:1.4;">
               <strong>The Drive Clinic</strong> — Premium Detailing & Protection Studio<br>

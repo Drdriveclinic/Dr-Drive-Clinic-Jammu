@@ -8,11 +8,11 @@ $hasLogo = file_exists($logoPath);
 ?>
 <header class="site-header header-transparent">
   <div class="container nav-container">
-    <a href="/" class="nav-brand" aria-label="THE DDC - Home" data-major-nav>
+    <a href="/" class="nav-brand" aria-label="THE DRIVE CLINIC - Home" data-major-nav>
       <?php if ($hasLogo): ?>
-        <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
+        <img src="/assets/brand/logo-white.svg" alt="THE DRIVE CLINIC" class="nav-logo-img" width="190" height="42" onerror="this.onerror=null; this.src='/assets/brand/logo-official.png';">
       <?php else: ?>
-        <div class="logo-fallback">[ THE DDC ]</div>
+        <img src="/assets/brand/logo-official.png" alt="THE DRIVE CLINIC" class="nav-logo-img" width="190" height="42">
       <?php endif; ?>
     </a>
 
@@ -131,6 +131,11 @@ $hasLogo = file_exists($logoPath);
 <!-- Mobile Full-Screen Navigation Drawer -->
 <div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true">
   <div class="mobile-menu-inner">
+    <div class="mobile-menu-brand-header" style="padding-bottom: 20px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
+      <a href="/" data-major-nav style="display:inline-block;">
+        <img src="/assets/brand/logo-white.svg" alt="THE DRIVE CLINIC" style="height:38px; width:auto; max-width:190px; display:block;" onerror="this.onerror=null; this.src='/assets/brand/logo-official.png';">
+      </a>
+    </div>
     <nav class="mobile-menu-nav">
       <a href="/" class="mobile-menu-link <?= $activeNav === 'home' ? 'active' : '' ?>" data-major-nav>HOME</a>
       

@@ -1,52 +1,104 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 68" width="240" height="68" fill="none" aria-label="THE TDC">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 84" width="320" height="84" fill="none" aria-label="THE DRIVE CLINIC">
   <defs>
-    <linearGradient id="redGlowWhite" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#E50914" />
+    <linearGradient id="redGlowW" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF1E27" />
+      <stop offset="50%" stop-color="#E50914" />
       <stop offset="100%" stop-color="#B91C1C" />
     </linearGradient>
+    <linearGradient id="silverGlossW" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+    <filter id="sparkleGlowW" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="0.8" result="glow" />
+      <feComposite in="SourceGraphic" in2="glow" operator="over" />
+    </filter>
   </defs>
 
-  <!-- ICONIC SUPERCAR ROOFLINE & SILHOUETTE (FOR LIGHT / PRINT INVOICE BACKGROUNDS) -->
-  <!-- Aerodynamic roofline sweep -->
-  <path d="M 14 21 C 34 17, 62 13, 86 9 C 102 5, 118 2.5, 138 2.5 C 158 2.5, 176 6, 192 12 C 206 17, 220 20, 230 21" stroke="url(#redGlowWhite)" stroke-width="2.6" stroke-linecap="round" fill="none" />
-  <!-- Windshield and greenhouse canopy -->
-  <path d="M 90 9 C 104 5, 118 3.5, 136 3.5 C 154 3.5, 168 6, 180 11" stroke="#334155" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.8" />
-  <!-- Aerodynamic hood intake accent -->
-  <path d="M 28 21 C 44 18, 64 15, 80 12" stroke="url(#redGlowWhite)" stroke-width="1.6" stroke-linecap="round" opacity="0.85" />
-  <circle cx="226" cy="19" r="1.6" fill="url(#redGlowWhite)" />
+  <!-- =========================================================================
+       ICONIC SPORTS CAR SILHOUETTE (EXACT SHAPE FROM ORIGINAL LOGO)
+       Coupe/Supercar facing right: rear spoiler, sweeping roofline, windshield with mirror,
+       low hood, front nose, front wheel arch, dynamic lower red body scoop, and sparkle glints.
+       ========================================================================= -->
+  <g id="car-silhouette-white" transform="translate(10, 2)">
+    <!-- Main Upper Roofline & Body Contour (Pure White) -->
+    <path d="M 18 29 C 32 27, 48 24, 68 20 C 92 15, 118 7, 148 6 C 172 6, 196 9, 218 16 C 228 20, 238 25, 246 31 L 243 33 L 248 32 C 258 32, 276 33, 290 35 C 296 37, 301 40, 302 44 C 298 45, 292 45, 286 44 C 280 39, 272 36, 258 36 C 248 36, 240 40, 236 45" 
+          stroke="url(#silverGlossW)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    
+    <!-- Inner Greenhouse & Side Window Line -->
+    <path d="M 152 10 C 174 10, 194 13, 212 19 C 220 22, 226 26, 232 30" 
+          stroke="url(#silverGlossW)" stroke-width="1.3" stroke-linecap="round" fill="none" opacity="0.85" />
 
-  <!-- BRAND TYPOGRAPHY: "THE TDC" -->
-  <text x="14" y="49" 
-        font-family="'Montserrat', 'Inter', system-ui, sans-serif" 
-        font-size="20" 
-        font-weight="900" 
-        font-style="italic" 
-        letter-spacing="0.12em" 
-        fill="#0F172A">THE</text>
+    <!-- Side-view mirror pod detail -->
+    <ellipse cx="244" cy="31" rx="2.5" ry="1.2" fill="url(#silverGlossW)" />
 
-  <!-- Racing Slanted Red Slash -->
-  <polygon points="74,29 80,29 73,51 67,51" fill="url(#redGlowWhite)" />
+    <!-- Front Wheel Arch Highlight Curve -->
+    <path d="M 236 45 C 240 39, 249 35, 260 35 C 271 35, 279 38, 284 44" 
+          stroke="url(#silverGlossW)" stroke-width="2" stroke-linecap="round" fill="none" />
 
-  <!-- "TDC" - Ultra-Bold Display Lettering with Iconic Center Red D -->
-  <text x="86" y="51" 
-        font-family="'Impact', 'Arial Black', sans-serif" 
-        font-size="34" 
-        font-weight="900" 
-        font-style="italic" 
-        letter-spacing="0.04em">
-    <tspan fill="#0F172A">T</tspan>
-    <tspan fill="url(#redGlowWhite)" dx="1">D</tspan>
-    <tspan fill="#0F172A" dx="1">C</tspan>
-  </text>
+    <!-- Front Headlight & Nose Glint Accent -->
+    <path d="M 290 36 C 296 38, 300 41, 302 44 C 301 46, 298 47, 295 47" 
+          stroke="url(#silverGlossW)" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.9" />
 
-  <!-- Racing Red Underline Accent -->
-  <line x1="86" y1="56" x2="174" y2="56" stroke="url(#redGlowWhite)" stroke-width="2.5" stroke-linecap="round" />
-  
-  <!-- Subtitle Tagline -->
-  <text x="86" y="64" 
-        font-family="'Space Grotesk', system-ui, sans-serif" 
-        font-size="7" 
-        font-weight="800" 
-        letter-spacing="0.22em" 
-        fill="#64748B">THE DRIVE CLINIC // JAMMU</text>
+    <!-- Iconic Dynamic Red Lower Body Scoop & Speed Line -->
+    <path d="M 30 33 C 50 30, 80 25, 110 20 C 132 18, 150 18, 166 21 C 176 23, 184 27, 194 33 C 204 37, 218 37, 235 37 C 246 37, 252 36, 256 34" 
+          stroke="url(#redGlowW)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- Rear Tail Accent Dots (Speed Pulse) -->
+    <circle cx="258" cy="27" r="1.5" fill="url(#redGlowW)" />
+    <circle cx="258" cy="32" r="1.5" fill="url(#redGlowW)" />
+
+    <!-- Iconic 4-Point Detailing Starlight Glints -->
+    <g transform="translate(18, 29)" filter="url(#sparkleGlowW)">
+      <polygon points="0,-6 1,-1 6,0 1,1 0,6 -1,1 -6,0 -1,-1" fill="#FFFFFF" />
+      <circle cx="0" cy="0" r="1.2" fill="#FFFFFF" />
+    </g>
+    <g transform="translate(150, 6)" filter="url(#sparkleGlowW)">
+      <polygon points="0,-5 1,-1 5,0 1,1 0,5 -1,1 -5,0 -1,-1" fill="#FFFFFF" opacity="0.9" />
+      <circle cx="0" cy="0" r="1" fill="#FFFFFF" />
+    </g>
+    <g transform="translate(224, 18)" filter="url(#sparkleGlowW)">
+      <polygon points="0,-6 1,-1 6,0 1,1 0,6 -1,1 -6,0 -1,-1" fill="#FFFFFF" />
+      <circle cx="0" cy="0" r="1.2" fill="#FFFFFF" />
+    </g>
+    <g transform="translate(296, 38)" filter="url(#sparkleGlowW)">
+      <polygon points="0,-5 1,-1 5,0 1,1 0,5 -1,1 -5,0 -1,-1" fill="#FFFFFF" />
+      <circle cx="0" cy="0" r="1" fill="#FFFFFF" />
+    </g>
+  </g>
+
+  <!-- =========================================================================
+       BRAND TYPOGRAPHY: 100% PURE WHITE & RADIANT RED (NEVER DARK SLATE)
+       ========================================================================= -->
+  <g id="brand-typography-white">
+    <text x="18" y="60" 
+          font-family="'Montserrat', 'Space Grotesk', system-ui, sans-serif" 
+          font-size="14" 
+          font-weight="900" 
+          font-style="italic" 
+          letter-spacing="0.14em" 
+          fill="#FFFFFF">THE</text>
+
+    <polygon points="62,48 67,48 61,64 56,64" fill="url(#redGlowW)" />
+
+    <text x="74" y="63" 
+          font-family="'Montserrat', 'Impact', 'Arial Black', sans-serif" 
+          font-size="24" 
+          font-weight="900" 
+          font-style="italic" 
+          letter-spacing="0.04em">
+      <tspan fill="#FFFFFF">DRIVE </tspan>
+      <tspan fill="url(#redGlowW)">CLINIC</tspan>
+    </text>
+
+    <line x1="74" y1="69" x2="276" y2="69" stroke="url(#redGlowW)" stroke-width="2" stroke-linecap="round" />
+
+    <text x="74" y="78" 
+          font-family="'Space Grotesk', system-ui, sans-serif" 
+          font-size="7.5" 
+          font-weight="800" 
+          letter-spacing="0.24em" 
+          fill="#F1F5F9">WHERE CARS GET THEIR SHINE BACK • THE TDC</text>
+  </g>
 </svg>

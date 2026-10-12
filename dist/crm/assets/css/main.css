@@ -747,8 +747,12 @@
 
 @media (max-width: 480px) {
   .nav-logo-img {
-    height: 30px !important;
-    max-width: 160px !important;
+    height: 34px !important;
+    width: auto !important;
+    max-width: 175px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .mobile-menu-inner {

@@ -11,11 +11,11 @@ $year = date('Y');
     <div class="footer-top">
       <!-- Column 1: Brand & Tagline -->
       <div>
-        <a href="/" class="nav-brand" aria-label="THE DDC - Home">
+        <a href="/" class="nav-brand" aria-label="THE DRIVE CLINIC - Home">
           <?php if ($hasLogo): ?>
-            <img src="/assets/brand/logo-white.svg" alt="THE DDC Logo" class="nav-logo-img" width="190" height="38">
+            <img src="/assets/brand/logo-white.svg" alt="THE DRIVE CLINIC" class="nav-logo-img" width="190" height="42" onerror="this.onerror=null; this.src='/assets/brand/logo-official.png';">
           <?php else: ?>
-            <div class="logo-fallback">[ THE DDC ]</div>
+            <img src="/assets/brand/logo-official.png" alt="THE DRIVE CLINIC" class="nav-logo-img" width="190" height="42">
           <?php endif; ?>
         </a>
         <h3 class="footer-brand-title">WHERE CARS GET<br>THEIR SHINE BACK.</h3>
