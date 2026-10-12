@@ -1,7 +1,7 @@
 {
   "name": "the-drive-clinic-jammu",
   "version": "2.0.0",
-  "description": "THE DDC — Luxury Automotive Detailing Studio in Jammu",
+  "description": "THE TDC — Luxury Automotive Detailing Studio in Jammu",
   "main": "index.js",
   "type": "module",
   "scripts": {

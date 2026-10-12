@@ -88,7 +88,7 @@ export async function sendLeadNotificationEmail(lead) {
 <body>
   <div class="wrapper">
     <div class="header">
-      <div class="brand-title">THE DDC</div>
+      <div class="brand-title">THE TDC</div>
       <div class="brand-tag">THE DRIVE CLINIC // STUDIO MANAGEMENT // JAMMU</div>
     </div>
     <div class="content">
@@ -215,7 +215,7 @@ export async function sendBookingNotificationEmail(booking) {
 <body>
   <div class="wrapper">
     <div class="header">
-      <div class="brand-title">THE DDC</div>
+      <div class="brand-title">THE TDC</div>
       <div class="brand-tag">THE DRIVE CLINIC // STUDIO BOOKINGS // JAMMU</div>
     </div>
     <div class="content">

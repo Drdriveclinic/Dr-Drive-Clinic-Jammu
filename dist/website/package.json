@@ -1,7 +1,7 @@
 {
   "name": "the-ddc-website",
   "version": "2.0.0",
-  "description": "THE DDC — Public Website Domain Build",
+  "description": "THE TDC — Public Website Domain Build",
   "scripts": {
     "start": "npx serve ."
   }

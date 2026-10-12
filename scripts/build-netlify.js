@@ -1,5 +1,5 @@
 /**
- * THE DDC — Dual Deployment Exporter (Website & Standalone CRM)
+ * THE TDC — Dual Deployment Exporter (Website & Standalone CRM)
  * Separates Website and CRM into two independent, standalone deployment packages
  * for distinct domains (e.g. theddc.in & crm.theddc.in).
  */
@@ -62,7 +62,7 @@ function copyDirRecursive(src, dest) {
 }
 
 async function build() {
-  console.log('🚀 Building THE DDC Separated Deployments (Website & CRM)...');
+  console.log('🚀 Building THE TDC Separated Deployments (Website & CRM)...');
 
   // 1. Ensure clean directories
   [DIST_DIR, WEBSITE_DIST_DIR, CRM_DIST_DIR].forEach(dir => {
@@ -100,7 +100,7 @@ async function build() {
       // Client-side Cross-Domain Lead & Booking Bridge
       const crmBridgeScript = `
         <script>
-        // THE DDC — Cross-Domain Lead & Booking Sync Bridge
+        // THE TDC — Cross-Domain Lead & Booking Sync Bridge
         (function() {
           const CRM_ENDPOINT = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 'https://crm.theddc.in/api';
 
@@ -163,7 +163,7 @@ async function build() {
   fs.writeFileSync(path.join(WEBSITE_DIST_DIR, 'package.json'), JSON.stringify({
     name: "the-ddc-website",
     version: "2.0.0",
-    description: "THE DDC — Public Website Domain Build",
+    description: "THE TDC — Public Website Domain Build",
     scripts: {
       "start": "npx serve ."
     }

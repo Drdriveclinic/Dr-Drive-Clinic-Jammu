@@ -7,7 +7,7 @@ export async function notify(event) {
   const { type, ref, customer, service, date, time, vehicle, message, source } = event;
 
   console.log('====================================================');
-  console.log(`[THE DDC NOTIFY]: New ${type.toUpperCase()} Event`);
+  console.log(`[THE TDC NOTIFY]: New ${type.toUpperCase()} Event`);
   console.log(`- Reference: ${ref || 'N/A'}`);
   console.log(`- Customer:  ${customer?.name} (${customer?.phone})`);
   console.log(`- Service:   ${service?.name || service}`);

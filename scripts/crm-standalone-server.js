@@ -58,7 +58,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     ok: true,
     status: 'healthy',
-    service: 'THE DDC Standalone Studio CRM',
+    service: 'THE TDC Standalone Studio CRM',
     timestamp: new Date().toISOString()
   });
 });
@@ -108,7 +108,7 @@ app.post('/api/appointments', (req, res) => {
   });
   writeFileData(LEADS_FILE, leads);
 
-  res.json({ ok: true, data: { appointment_id: appt.id, ref: 'DDC-' + appt.id.toString().slice(-4) } });
+  res.json({ ok: true, data: { appointment_id: appt.id, ref: 'TDC-' + appt.id.toString().slice(-4) } });
 });
 
 app.get('/api/appointments', (req, res) => {
@@ -131,5 +131,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`[THE DDC CRM] Live on http://localhost:${PORT}`);
+  console.log(`[THE TDC CRM] Live on http://localhost:${PORT}`);
 });

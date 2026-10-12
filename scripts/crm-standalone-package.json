@@ -1,7 +1,7 @@
 {
   "name": "the-ddc-studio-crm",
   "version": "2.0.0",
-  "description": "THE DDC — Standalone Luxury Detailing Studio CRM",
+  "description": "THE TDC — Standalone Luxury Detailing Studio CRM",
   "type": "module",
   "main": "server.js",
   "scripts": {

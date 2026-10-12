@@ -1,5 +1,5 @@
 /**
- * THE DDC — Cloud & Node.js Production Build Script
+ * THE TDC — Cloud & Node.js Production Build Script
  * Prepares static distribution, assets, and verified CRM bundles.
  */
 
@@ -31,7 +31,7 @@ function copyDirRecursive(src, dest) {
   }
 }
 
-console.log('🚀 Running THE DDC Node.js Production Build...');
+console.log('🚀 Running THE TDC Node.js Production Build...');
 
 // 1. Ensure dist and crm directories exist
 [DIST_DIR, CRM_DIST_DIR].forEach(dir => {
@@ -76,4 +76,4 @@ if (!fs.existsSync(apiDataDir)) {
   }
 });
 
-console.log('✅ THE DDC Production Build Completed Successfully!');
+console.log('✅ THE TDC Production Build Completed Successfully!');
