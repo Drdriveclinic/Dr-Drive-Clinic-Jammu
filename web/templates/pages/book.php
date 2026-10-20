@@ -145,7 +145,6 @@ $serviceImages = [
                    data-image="<?= htmlspecialchars($svcThumb) ?>"
                    data-category="<?= htmlspecialchars($svc['category']) ?>"
                    data-vehicle-types="<?= htmlspecialchars($svc['vehicle_types']) ?>"
-                   data-duration="<?= htmlspecialchars($svc['duration_note'] ?: '[CONFIRM DURATION]') ?>"
                    style="padding:16px 20px; cursor:pointer; transition:all 0.2s ease; border-radius:8px; display:flex; gap:20px; align-items:center;">
                 
                 <div style="width:96px; height:80px; border-radius:6px; overflow:hidden; flex-shrink:0; border:1px solid rgba(255,255,255,0.12);">
@@ -162,9 +161,6 @@ $serviceImages = [
                         <?= htmlspecialchars($svc['name']) ?>
                       </h4>
                     </div>
-                    <span style="font-size:12px; font-weight:700; color:var(--text-3); font-family:monospace; background:rgba(255,255,20,0.06); padding:4px 8px; border-radius:4px;">
-                      <?= htmlspecialchars($svc['duration_note'] ?: 'Variable') ?>
-                    </span>
                   </div>
                   <p style="font-size:13px; color:var(--text-2); line-height:1.45; margin:0;">
                     <?= htmlspecialchars($svc['short_desc']) ?>
@@ -322,6 +318,6 @@ $serviceImages = [
 
 <script>
 window.THE_DRIVE_CLINIC_CONFIG = {
-  apiBaseUrl: 'http://localhost:5000/api'
+  apiBaseUrl: '/api'
 };
 </script>

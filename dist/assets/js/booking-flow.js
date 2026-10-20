@@ -4,10 +4,7 @@ export function initBookingFlow() {
   const container = document.querySelector('.booking-flow-container');
   if (!container) return;
 
-  const API_BASE = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || 
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-      ? (window.location.port === '5000' || window.location.port === '8000' ? '/api' : 'http://localhost:5000/api') 
-      : '/api');
+  const API_BASE = window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || '/api';
 
   // State
   let state = {

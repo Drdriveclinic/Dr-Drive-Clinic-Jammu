@@ -208,6 +208,28 @@ if ($requestUri === '/memberships') {
     ]);
 }
 
+// Client Self-Service Garage Portal
+if ($requestUri === '/portal' || $requestUri === '/customer-panel' || $requestUri === '/my-garage') {
+    render('pages/customer-portal', [
+        'pageTitle' => 'My Studio Garage & Digital Concierge | The Drive Clinic Jammu',
+        'metaDesc'  => 'Client self-service garage portal: live detailing bay tracker, GST tax invoice download, and digital PPF warranty certificates.',
+        'activeNav' => 'portal'
+    ]);
+}
+
+// Dedicated Printable & PDF Views
+if (preg_match('#^/crm/invoices/([0-9]+)/print$#', $requestUri, $matches)) {
+    $invoiceId = (int)$matches[1];
+    require dirname(__DIR__) . '/templates/crm/invoice-print.php';
+    exit;
+}
+
+if (preg_match('#^/crm/warranty/([0-9]+)/print$#', $requestUri, $matches)) {
+    $certId = (int)$matches[1];
+    require dirname(__DIR__) . '/templates/crm/warranty-print.php';
+    exit;
+}
+
 // ==========================================
 // CRM API ENDPOINTS
 // ==========================================
@@ -398,6 +420,375 @@ if ($requestUri === '/crm/api/invoices/pay' && $requestMethod === 'POST') {
     exit;
 }
 
+if ($requestUri === '/crm/api/invoices/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $custName = trim($input['customer_name'] ?? '');
+    $custPhone = trim($input['customer_phone'] ?? '');
+    $custEmail = trim($input['customer_email'] ?? '');
+    $vehModel = trim($input['vehicle_model'] ?? 'Car');
+    $vehReg = trim($input['vehicle_reg'] ?? '');
+    $items = $input['items'] ?? [];
+    $discount = (float)($input['discount'] ?? 0);
+    $hasGst = !empty($input['has_gst']);
+    $paymentStatus = trim($input['payment_status'] ?? 'PENDING');
+    $paymentMethod = trim($input['payment_method'] ?? 'UPI');
+    $paidAmount = (float)($input['paid_amount'] ?? 0);
+    $notes = trim($input['notes'] ?? '');
+
+    if (empty($custName) || empty($custPhone)) {
+        echo json_encode(['success' => false, 'error' => 'Customer name and phone are required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $invNo = 'INV-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+
+        // Sync customer
+        $cust = Database::queryOne("SELECT id FROM customers WHERE phone = ?", [$custPhone]);
+        if ($cust) {
+            $custId = (int)$cust['id'];
+        } else {
+            $cStmt = $db->prepare("INSERT INTO customers (name, phone, whatsapp, email, created_at) VALUES (?, ?, ?, ?, ?)");
+            $cStmt->execute([$custName, $custPhone, $custPhone, $custEmail ?: null, $now]);
+            $custId = (int)$db->lastInsertId();
+        }
+
+        // Sync vehicle
+        $vCheck = Database::queryOne("SELECT id FROM vehicles WHERE customer_id = ? AND model = ?", [$custId, $vehModel]);
+        if ($vCheck) {
+            $vehId = (int)$vCheck['id'];
+        } else {
+            $vStmt = $db->prepare("INSERT INTO vehicles (customer_id, type, brand, model, registration, created_at) VALUES (?, 'Car', 'Vehicle', ?, ?, ?)");
+            $vStmt->execute([$custId, $vehModel, $vehReg, $now]);
+            $vehId = (int)$db->lastInsertId();
+        }
+
+        // Compute subtotal from items
+        $subtotal = 0.0;
+        foreach ($items as $it) {
+            $qty = (float)($it['qty'] ?? 1);
+            $rate = (float)($it['rate'] ?? $it['price'] ?? 0);
+            $subtotal += ($qty * $rate);
+        }
+        $netSubtotal = max(0, $subtotal - $discount);
+        $gstAmount = $hasGst ? round($netSubtotal * 0.18, 2) : 0;
+        $grandTotal = $netSubtotal + $gstAmount;
+        if ($paymentStatus === 'PAID' && $paidAmount <= 0) {
+            $paidAmount = $grandTotal;
+        }
+
+        $invStmt = $db->prepare("
+            INSERT INTO invoices (
+                invoice_no, customer_id, vehicle_id, subtotal, discount, gst_amount,
+                grand_total, payment_status, payment_method, paid_amount, notes,
+                items_json, customer_name, customer_phone, customer_email,
+                vehicle_model, vehicle_reg, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $invStmt->execute([
+            $invNo, $custId, $vehId, $subtotal, $discount, $gstAmount,
+            $grandTotal, $paymentStatus, $paymentMethod, $paidAmount, $notes,
+            json_encode($items), $custName, $custPhone, $custEmail ?: null,
+            $vehModel, $vehReg, $now
+        ]);
+        $invoiceId = (int)$db->lastInsertId();
+
+        echo json_encode([
+            'success' => true,
+            'invoice_id' => $invoiceId,
+            'invoice_no' => $invNo,
+            'message' => "Invoice {$invNo} generated for {$custName}!"
+        ]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/job-cards/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $custName = trim($input['customer_name'] ?? '');
+    $custPhone = trim($input['customer_phone'] ?? '');
+    $vehModel = trim($input['vehicle_model'] ?? 'Car');
+    $vehReg = trim($input['vehicle_reg'] ?? '');
+    $bayNo = (int)($input['bay_no'] ?? 1);
+    $assignedTech = trim($input['assigned_tech'] ?? 'Master Tech');
+    $serviceNames = trim($input['service_names'] ?? 'Custom Detailing');
+    $itemsJson = is_string($input['items_json'] ?? null) ? $input['items_json'] : json_encode($input['items'] ?? []);
+    $totalAmount = (float)($input['total_amount'] ?? 0);
+    $fuelLevel = trim($input['fuel_level'] ?? '1/2 Tank');
+    $odometer = trim($input['odometer'] ?? '');
+    $technicianNotes = trim($input['technician_notes'] ?? '');
+
+    if (empty($custName) || empty($custPhone)) {
+        echo json_encode(['success' => false, 'error' => 'Customer name and phone are required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $cardNo = 'JC-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+
+        // Sync customer
+        $cust = Database::queryOne("SELECT id FROM customers WHERE phone = ?", [$custPhone]);
+        if ($cust) {
+            $custId = (int)$cust['id'];
+        } else {
+            $cStmt = $db->prepare("INSERT INTO customers (name, phone, whatsapp, created_at) VALUES (?, ?, ?, ?)");
+            $cStmt->execute([$custName, $custPhone, $custPhone, $now]);
+            $custId = (int)$db->lastInsertId();
+        }
+
+        // Sync vehicle
+        $vCheck = Database::queryOne("SELECT id FROM vehicles WHERE customer_id = ? AND model = ?", [$custId, $vehModel]);
+        if ($vCheck) {
+            $vehId = (int)$vCheck['id'];
+        } else {
+            $vStmt = $db->prepare("INSERT INTO vehicles (customer_id, type, brand, model, registration, created_at) VALUES (?, 'Car', 'Vehicle', ?, ?, ?)");
+            $vStmt->execute([$custId, $vehModel, $vehReg, $now]);
+            $vehId = (int)$db->lastInsertId();
+        }
+
+        $jcStmt = $db->prepare("
+            INSERT INTO job_cards (
+                card_no, customer_id, vehicle_id, bay_no, assigned_tech, status,
+                fuel_level, odometer, service_names, items_json, technician_notes,
+                total_amount, created_at
+            ) VALUES (?, ?, ?, ?, ?, 'IN_PROGRESS', ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $jcStmt->execute([
+            $cardNo, $custId, $vehId, $bayNo, $assignedTech,
+            $fuelLevel, $odometer, $serviceNames, $itemsJson, $technicianNotes,
+            $totalAmount, $now
+        ]);
+        $jcId = (int)$db->lastInsertId();
+
+        // Also add lead in service
+        $ref = 'LEAD-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+        $lStmt = $db->prepare("
+            INSERT INTO leads (
+                lead_no, customer_name, phone, vehicle_model, vehicle_reg,
+                service_name, estimated_amount, source, stage, remarks,
+                quote_total, payment_status, assigned_tech, bay_no, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Studio Check-in', 'IN_SERVICE', ?, ?, 'UNPAID', ?, ?, ?, ?)
+        ");
+        $lStmt->execute([
+            $ref, $custName, $custPhone, $vehModel, $vehReg,
+            $serviceNames, $totalAmount, $technicianNotes, $totalAmount,
+            $assignedTech, $bayNo, $now, $now
+        ]);
+
+        echo json_encode([
+            'success' => true,
+            'job_card_id' => $jcId,
+            'card_no' => $cardNo,
+            'message' => "Job card {$cardNo} created for {$custName} in Bay 0{$bayNo}!"
+        ]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/job-cards/status' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+    $id = (int)($input['id'] ?? 0);
+    $status = trim($input['status'] ?? 'COMPLETED');
+    if ($id > 0) {
+        $now = date('Y-m-d H:i:s');
+        Database::getConnection()->exec("UPDATE job_cards SET status = '{$status}', completed_at = '{$now}' WHERE id = {$id}");
+        echo json_encode(['success' => true, 'message' => "Job card marked {$status}!"]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/expenses/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $category = trim($_POST['category'] ?? 'Chemicals & Consumables');
+    $title = trim($_POST['title'] ?? '');
+    $amount = (float)($_POST['amount'] ?? 0);
+    $paidTo = trim($_POST['paid_to'] ?? '');
+    $paymentMethod = trim($_POST['payment_method'] ?? 'UPI');
+    $receiptNo = trim($_POST['receipt_no'] ?? '');
+    $date = trim($_POST['date'] ?? date('Y-m-d'));
+    $notes = trim($_POST['notes'] ?? '');
+
+    if (empty($title) || $amount <= 0) {
+        echo json_encode(['success' => false, 'error' => 'Title and positive amount are required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $expNo = 'EXP-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+        $stmt = $db->prepare("INSERT INTO expenses (expense_no, category, title, amount, paid_to, payment_method, receipt_no, date, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$expNo, $category, $title, $amount, $paidTo, $paymentMethod, $receiptNo, $date, $notes, $now]);
+        echo json_encode(['success' => true, 'message' => "Expense {$expNo} logged successfully!"]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/expenses/delete' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+    $id = (int)($input['id'] ?? 0);
+    if ($id > 0) {
+        Database::getConnection()->exec("DELETE FROM expenses WHERE id = {$id}");
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/staff/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $name = trim($_POST['name'] ?? '');
+    $role = trim($_POST['role'] ?? 'Master Detailer');
+    $phone = trim($_POST['phone'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $baseSalary = (float)($_POST['base_salary'] ?? 0);
+    $incentive = (float)($_POST['incentive_per_job'] ?? 1000);
+    $joinDate = trim($_POST['join_date'] ?? date('Y-m-d'));
+    $status = trim($_POST['status'] ?? 'ACTIVE');
+
+    if (empty($name) || empty($phone)) {
+        echo json_encode(['success' => false, 'error' => 'Staff name and phone are required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $stmt = $db->prepare("INSERT INTO staff (name, role, phone, email, base_salary, incentive_per_job, status, join_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $role, $phone, $email ?: null, $baseSalary, $incentive, $status, $joinDate, $now]);
+        echo json_encode(['success' => true, 'message' => "Staff member {$name} registered!"]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/salary/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $staffId = (int)($_POST['staff_id'] ?? 0);
+    $staffName = trim($_POST['staff_name'] ?? '');
+    $monthName = trim($_POST['month_name'] ?? date('F Y'));
+    $baseSalary = (float)($_POST['base_salary'] ?? 0);
+    $incentive = (float)($_POST['incentive_amount'] ?? 0);
+    $bonus = (float)($_POST['bonus'] ?? 0);
+    $deductions = (float)($_POST['deductions'] ?? 0);
+    $netPaid = (float)($_POST['net_paid'] ?? (($baseSalary + $incentive + $bonus) - $deductions));
+    $paymentMethod = trim($_POST['payment_method'] ?? 'UPI');
+    $paymentDate = trim($_POST['payment_date'] ?? date('Y-m-d'));
+    $notes = trim($_POST['notes'] ?? '');
+
+    if (empty($staffName) || $netPaid <= 0) {
+        echo json_encode(['success' => false, 'error' => 'Valid staff member and payout amount required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $payoutNo = 'PAY-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+        $stmt = $db->prepare("INSERT INTO salary_payouts (payout_no, staff_id, staff_name, month_name, base_salary, incentive_amount, bonus, deductions, net_paid, payment_method, payment_date, status, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PAID', ?, ?)");
+        $stmt->execute([$payoutNo, $staffId, $staffName, $monthName, $baseSalary, $incentive, $bonus, $deductions, $netPaid, $paymentMethod, $paymentDate, $notes, $now]);
+        echo json_encode(['success' => true, 'message' => "Salary {$payoutNo} recorded for {$staffName}!"]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/warranty/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $custName = trim($_POST['customer_name'] ?? '');
+    $custPhone = trim($_POST['customer_phone'] ?? '');
+    $vehModel = trim($_POST['vehicle_model'] ?? 'Car');
+    $vehReg = trim($_POST['vehicle_reg'] ?? '');
+    $productBrand = trim($_POST['product_brand'] ?? 'STEK DYNOshield TPU');
+    $batchNo = trim($_POST['roll_batch_no'] ?? '');
+    $years = (int)($_POST['warranty_years'] ?? 5);
+    $scope = trim($_POST['coverage_scope'] ?? 'Full Body');
+    $installDate = trim($_POST['install_date'] ?? date('Y-m-d'));
+    $nextInsp = trim($_POST['next_inspection_date'] ?? date('Y-m-d', strtotime('+6 months')));
+    $notes = trim($_POST['notes'] ?? '');
+
+    if (empty($custName) || empty($batchNo)) {
+        echo json_encode(['success' => false, 'error' => 'Customer name and roll batch number are required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $certNo = 'TDC-WAR-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+        $expiryDate = date('Y-m-d', strtotime("+{$years} years", strtotime($installDate)));
+
+        // Sync customer
+        $cust = Database::queryOne("SELECT id FROM customers WHERE phone = ?", [$custPhone]);
+        $custId = $cust ? (int)$cust['id'] : null;
+
+        $stmt = $db->prepare("
+            INSERT INTO warranty_certificates (
+                cert_no, customer_id, service_slug, product_brand, roll_batch_no,
+                warranty_years, coverage_scope, install_date, expiry_date,
+                next_inspection_date, status, customer_name, customer_phone,
+                vehicle_model, vehicle_reg, notes, created_at
+            ) VALUES (?, ?, 'ppf', ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $certNo, $custId, $productBrand, $batchNo,
+            $years, $scope, $installDate, $expiryDate,
+            $nextInsp, $custName, $custPhone,
+            $vehModel, $vehReg, $notes, $now
+        ]);
+        $certId = (int)$db->lastInsertId();
+
+        echo json_encode([
+            'success' => true,
+            'cert_id' => $certId,
+            'cert_no' => $certNo,
+            'message' => "Warranty certificate {$certNo} issued for {$custName}!"
+        ]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/whatsapp/campaign' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+    $name = trim($input['name'] ?? 'Seasonal Broadcast');
+    $audience = trim($input['audience_group'] ?? 'ALL');
+    $msg = trim($input['message_template'] ?? '');
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+        $campNo = 'CAMP-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+        $stmt = $db->prepare("INSERT INTO whatsapp_campaigns (campaign_no, name, audience_group, message_template, status, recipient_count, created_at) VALUES (?, ?, ?, ?, 'ACTIVE_QUEUE', 0, ?)");
+        $stmt->execute([$campNo, $name, $audience, $msg, $now]);
+        echo json_encode(['success' => true, 'campaign_no' => $campNo]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
 // GoDaddy Business Email Dispatcher (care@thedriveclinic.com)
 function dispatchGoDaddyEmail(string $type, array $data): void {
     global $config;
@@ -534,11 +925,15 @@ if ($requestUri === '/api/appointments' && $requestMethod === 'POST') {
         $cleanTime = strlen($time) === 5 ? "{$time}:00" : $time;
         $now = date('Y-m-d H:i:s');
 
-        // Customer upsert
-        $db->prepare("INSERT OR IGNORE INTO customers (name, phone, whatsapp, email, created_at) VALUES (?, ?, ?, ?, ?)")
-           ->execute([$name, $phone, $phone, $email ?: null, $now]);
+        // Customer check and insert
         $custRow = Database::queryOne("SELECT id FROM customers WHERE phone = ?", [$phone]);
-        $customerId = (int)($custRow['id'] ?? 1);
+        if ($custRow) {
+            $customerId = (int)$custRow['id'];
+        } else {
+            $db->prepare("INSERT INTO customers (name, phone, whatsapp, email, created_at) VALUES (?, ?, ?, ?, ?)")
+               ->execute([$name, $phone, $phone, $email ?: null, $now]);
+            $customerId = (int)$db->lastInsertId();
+        }
 
         // Vehicle
         $vBrand = $vehicle['brand'] ?? 'Car';
@@ -1262,14 +1657,11 @@ if ($requestUri === '/crm/services') {
 }
 
 if ($requestUri === '/crm/payments') {
-    renderCrm('generic', [
-        'pageTitle'    => 'Payments & Operating Expenses | The Drive Clinic CRM',
+    renderCrm('payments', [
+        'pageTitle'    => 'Payment & Expense Ledger | The Drive Clinic CRM',
         'activeNav'    => 'payments',
-        'crumbSection' => 'Business',
-        'crumbPage'    => 'Payments & Expenses',
-        'moduleTitle'  => 'Payments & Operating Expenses',
-        'moduleDesc'   => 'Track digital UPI, POS card swipes, cash collections, and studio consumable expenditures.',
-        'moduleBadge'  => 'BUSINESS'
+        'crumbSection' => 'Finance',
+        'crumbPage'    => 'Payment & Expense Ledger'
     ]);
 }
 
@@ -1277,20 +1669,17 @@ if ($requestUri === '/crm/memberships') {
     renderCrm('memberships', [
         'pageTitle'    => 'Studio Club Memberships & VIP Passes | The Drive Clinic CRM',
         'activeNav'    => 'memberships',
-        'crumbSection' => 'Business',
+        'crumbSection' => 'Clients & Billing',
         'crumbPage'    => 'Memberships'
     ]);
 }
 
 if ($requestUri === '/crm/team') {
-    renderCrm('generic', [
-        'pageTitle'    => 'Team & Workshop Payroll | The Drive Clinic CRM',
+    renderCrm('team', [
+        'pageTitle'    => 'Technicians & Salary Payroll | The Drive Clinic CRM',
         'activeNav'    => 'team',
-        'crumbSection' => 'Operations',
-        'crumbPage'    => 'Team & Payroll',
-        'moduleTitle'  => 'Technicians & Workshop Payroll',
-        'moduleDesc'   => 'Master detailers, PPF applicators, attendance, and job commission tracking.',
-        'moduleBadge'  => 'OPERATIONS'
+        'crumbSection' => 'Finance & Team',
+        'crumbPage'    => 'Salary & Team'
     ]);
 }
 
@@ -1307,23 +1696,20 @@ if ($requestUri === '/crm/follow-ups') {
 }
 
 if ($requestUri === '/crm/whatsapp') {
-    renderCrm('generic', [
-        'pageTitle'    => 'WhatsApp Marketing & Campaigns | The Drive Clinic CRM',
+    renderCrm('whatsapp', [
+        'pageTitle'    => 'WhatsApp Marketing Hub & Broadcasts | The Drive Clinic CRM',
         'activeNav'    => 'whatsapp',
-        'crumbSection' => 'Operations',
-        'crumbPage'    => 'WhatsApp Campaigns',
-        'moduleTitle'  => 'WhatsApp Broadcast Campaigns',
-        'moduleDesc'   => 'Seasonal monsoon protection, festive detailing offers, and delivery notifications.',
-        'moduleBadge'  => 'OPERATIONS'
+        'crumbSection' => 'Growth',
+        'crumbPage'    => 'WhatsApp Campaigns'
     ]);
 }
 
-if ($requestUri === '/crm/analytics') {
+if ($requestUri === '/crm/analytics' || $requestUri === '/crm/revenue') {
     renderCrm('analytics', [
-        'pageTitle'    => 'Studio Analytics & Performance | The Drive Clinic CRM',
+        'pageTitle'    => 'Executive Revenue CRM & Profit Ledger | The Drive Clinic CRM',
         'activeNav'    => 'analytics',
-        'crumbSection' => 'Operations',
-        'crumbPage'    => 'Analytics'
+        'crumbSection' => 'Finance',
+        'crumbPage'    => 'Revenue CRM'
     ]);
 }
 

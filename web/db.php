@@ -90,7 +90,173 @@ class Database {
             self::seedSqlite($pdo);
         }
 
+        self::ensureExtendedSchema($pdo);
+
         return $pdo;
+    }
+
+    private static function ensureExtendedSchema(PDO $pdo): void {
+        // Extended CRM Tables
+        $pdo->exec('CREATE TABLE IF NOT EXISTS expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            expense_no TEXT UNIQUE,
+            category TEXT NOT NULL,
+            title TEXT NOT NULL,
+            amount REAL NOT NULL,
+            paid_to TEXT,
+            payment_method TEXT DEFAULT "UPI",
+            receipt_no TEXT,
+            date TEXT NOT NULL,
+            notes TEXT,
+            created_at TEXT NOT NULL
+        );');
+
+        $pdo->exec('CREATE TABLE IF NOT EXISTS staff (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            role TEXT NOT NULL,
+            phone TEXT,
+            email TEXT,
+            base_salary REAL DEFAULT 0,
+            incentive_per_job REAL DEFAULT 0,
+            status TEXT DEFAULT "ACTIVE",
+            join_date TEXT,
+            created_at TEXT NOT NULL
+        );');
+
+        $pdo->exec('CREATE TABLE IF NOT EXISTS salary_payouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            payout_no TEXT UNIQUE,
+            staff_id INTEGER,
+            staff_name TEXT NOT NULL,
+            month_name TEXT NOT NULL,
+            base_salary REAL NOT NULL,
+            incentive_amount REAL DEFAULT 0,
+            bonus REAL DEFAULT 0,
+            deductions REAL DEFAULT 0,
+            net_paid REAL NOT NULL,
+            payment_method TEXT DEFAULT "UPI",
+            payment_date TEXT NOT NULL,
+            status TEXT DEFAULT "PAID",
+            notes TEXT,
+            created_at TEXT NOT NULL
+        );');
+
+        $pdo->exec('CREATE TABLE IF NOT EXISTS whatsapp_campaigns (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            campaign_no TEXT UNIQUE,
+            name TEXT NOT NULL,
+            audience_group TEXT NOT NULL,
+            message_template TEXT NOT NULL,
+            status TEXT DEFAULT "COMPLETED",
+            recipient_count INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL
+        );');
+
+        // Safe column additions via ALTER TABLE
+        $invoiceCols = array_column($pdo->query('PRAGMA table_info(invoices)')->fetchAll(), 'name');
+        if (!in_array('items_json', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN items_json TEXT;');
+        if (!in_array('customer_name', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN customer_name TEXT;');
+        if (!in_array('customer_phone', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN customer_phone TEXT;');
+        if (!in_array('customer_email', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN customer_email TEXT;');
+        if (!in_array('vehicle_model', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN vehicle_model TEXT;');
+        if (!in_array('vehicle_reg', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN vehicle_reg TEXT;');
+        if (!in_array('lead_id', $invoiceCols)) @$pdo->exec('ALTER TABLE invoices ADD COLUMN lead_id INTEGER;');
+
+        $jobCardCols = array_column($pdo->query('PRAGMA table_info(job_cards)')->fetchAll(), 'name');
+        if (!in_array('items_json', $jobCardCols)) @$pdo->exec('ALTER TABLE job_cards ADD COLUMN items_json TEXT;');
+
+        $warrantyCols = array_column($pdo->query('PRAGMA table_info(warranty_certificates)')->fetchAll(), 'name');
+        if (!in_array('customer_name', $warrantyCols)) @$pdo->exec('ALTER TABLE warranty_certificates ADD COLUMN customer_name TEXT;');
+        if (!in_array('customer_phone', $warrantyCols)) @$pdo->exec('ALTER TABLE warranty_certificates ADD COLUMN customer_phone TEXT;');
+        if (!in_array('vehicle_model', $warrantyCols)) @$pdo->exec('ALTER TABLE warranty_certificates ADD COLUMN vehicle_model TEXT;');
+        if (!in_array('vehicle_reg', $warrantyCols)) @$pdo->exec('ALTER TABLE warranty_certificates ADD COLUMN vehicle_reg TEXT;');
+        if (!in_array('coverage_scope', $warrantyCols)) @$pdo->exec('ALTER TABLE warranty_certificates ADD COLUMN coverage_scope TEXT;');
+        if (!in_array('notes', $warrantyCols)) @$pdo->exec('ALTER TABLE warranty_certificates ADD COLUMN notes TEXT;');
+
+        // Seed initial staff if empty
+        $staffCount = (int)$pdo->query('SELECT COUNT(*) FROM staff')->fetchColumn();
+        if ($staffCount === 0) {
+            $now = date('Y-m-d H:i:s');
+            $staffList = [
+                ['Aman Verma', 'Master PPF Applicator', '+91 94191 88201', 'aman.v@thedriveclinic.com', 38000, 1500, 'ACTIVE', '2023-01-15'],
+                ['Rajesh Dogra', 'Senior Paint Correction Specialist', '+91 94192 11942', 'rajesh.d@thedriveclinic.com', 32000, 1000, 'ACTIVE', '2023-04-10'],
+                ['Simranjeet Singh', 'Ceramic & Graphene Specialist', '+91 98765 44321', 'simran@thedriveclinic.com', 30000, 1200, 'ACTIVE', '2023-07-01'],
+                ['Vikrant Sharma', 'Decontamination & Steam Lead', '+91 94193 55102', 'vikrant@thedriveclinic.com', 22000, 500, 'ACTIVE', '2024-02-01']
+            ];
+            $st = $pdo->prepare('INSERT INTO staff (name, role, phone, email, base_salary, incentive_per_job, status, join_date, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            foreach ($staffList as $s) {
+                $st->execute([...$s, $now]);
+            }
+        }
+
+        // Seed initial expenses if empty
+        $expCount = (int)$pdo->query('SELECT COUNT(*) FROM expenses')->fetchColumn();
+        if ($expCount === 0) {
+            $now = date('Y-m-d H:i:s');
+            $sampleExpenses = [
+                ['EXP-2026-001', 'Workshop Rent', 'Studio Bay Lease — Nanak Nagar (October 2026)', 65000, 'Commercial Properties Jammu', 'Bank Transfer', 'LEASE-OCT-26', date('Y-m-02'), 'Studio premises lease', $now],
+                ['EXP-2026-002', 'PPF & Film Rolls', 'STEK DYNOshield Gloss Master Roll (15m x 1.52m)', 82000, 'STEK India Official Dist.', 'Bank Transfer', 'INV-STEK-8812', date('Y-m-05'), 'Optically clear TPU self-healing film', $now],
+                ['EXP-2026-003', 'Chemicals & Consumables', 'Koch-Chemie Heavy Cut H9.02 & M3.02 Pastes + S0.02 Sealant', 14500, 'AutoCare Imports Delhi', 'UPI', 'UPI-98214431', date('Y-m-08'), 'German compounding chemicals restock', $now],
+                ['EXP-2026-004', 'Electricity & Power', 'Jammu Power Distribution Corp (Studio 3-Phase + Silent Gen)', 18400, 'JPDCL Jammu', 'UPI', 'ELEC-JK-8491', date('Y-m-12'), '3-Phase industrial bay power & cleanroom HVAC', $now],
+                ['EXP-2026-005', 'Microfibers & Pads', 'Liquid Elements 800 GSM Edgeless Towels & Lake Country Foam Pads', 9200, 'Detailers Hub India', 'Card', 'POS-DH-771', date('Y-m-14'), 'Paint-safe buffing microfiber towels', $now],
+                ['EXP-2026-006', 'Staff Welfare & Meals', 'Detailing Bay Team Refreshments & Studio Tea/Lunch', 4600, 'Local Vendors', 'Cash', 'VOUCHER-08', date('Y-m-16'), 'Workshop crew pantry', $now]
+            ];
+            $et = $pdo->prepare('INSERT INTO expenses (expense_no, category, title, amount, paid_to, payment_method, receipt_no, date, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            foreach ($sampleExpenses as $e) {
+                $et->execute($e);
+            }
+        }
+
+        // Seed sample salary payouts if empty
+        $salCount = (int)$pdo->query('SELECT COUNT(*) FROM salary_payouts')->fetchColumn();
+        if ($salCount === 0) {
+            $now = date('Y-m-d H:i:s');
+            $samplePayouts = [
+                ['PAY-2026-01', 1, 'Aman Verma', 'September 2026', 38000, 7500, 2000, 0, 47500, 'Bank Wire', '2026-10-01', 'PAID', 'PPF Lead — 5 Full wraps completed', $now],
+                ['PAY-2026-02', 2, 'Rajesh Dogra', 'September 2026', 32000, 5000, 1000, 0, 38000, 'UPI', '2026-10-01', 'PAID', 'Paint Correction Lead — 5 Ceramic jobs', $now],
+                ['PAY-2026-03', 3, 'Simranjeet Singh', 'September 2026', 30000, 4800, 1000, 0, 35800, 'UPI', '2026-10-01', 'PAID', 'Coating Specialist — 4 Full coatings', $now],
+                ['PAY-2026-04', 4, 'Vikrant Sharma', 'September 2026', 22000, 2500, 500, 0, 25000, 'Cash', '2026-10-01', 'PAID', 'Steam & Decon technician', $now]
+            ];
+            $spt = $pdo->prepare('INSERT INTO salary_payouts (payout_no, staff_id, staff_name, month_name, base_salary, incentive_amount, bonus, deductions, net_paid, payment_method, payment_date, status, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            foreach ($samplePayouts as $sp) {
+                $spt->execute($sp);
+            }
+        }
+
+        // Seed sample PPF warranty certificates if empty
+        $warCount = (int)$pdo->query('SELECT COUNT(*) FROM warranty_certificates')->fetchColumn();
+        if ($warCount === 0) {
+            $now = date('Y-m-d H:i:s');
+            $sampleWarranties = [
+                ['TDC-WAR-2026-001', 1, 1, 'ppf', 'STEK DYNOshield TPU', 'STK-2026-B849', 7, '2026-08-15', '2033-08-15', '2027-02-15', 'ACTIVE', $now, 'Vikram Sharma', '+91 94191 22334', 'BMW 320d M-Sport', 'JK 02 CQ 7788', 'Full Body Wrap + Headlights', 'Complete edge-wrapped gloss TPU installation'],
+                ['TDC-WAR-2026-002', 2, 2, 'ppf', 'Garware Premium Plus', 'GAR-PP-4921', 5, '2026-09-02', '2031-09-02', '2027-03-02', 'ACTIVE', $now, 'Gurpreet Singh', '+91 94192 77881', 'Mahindra Thar Roxx', 'JK 02 DB 0001', 'High Impact Package (Front Bumper, Bonnet, Fenders, ORVMs)', 'Frontal highway stone chip defense'],
+                ['TDC-WAR-2026-003', 3, 3, 'ceramic-coating', 'Gtechniq Crystal Serum Ultra 9H', 'GTECH-CSU-902', 5, '2026-09-18', '2031-09-18', '2027-03-18', 'ACTIVE', $now, 'Rohit Jamwal', '+91 94191 55667', 'Mercedes-Benz E220d', 'JK 02 BW 9999', 'Full Body Paint + Alloy Wheels + Glass', 'Molecular composite ceramic quartz matrix']
+            ];
+            $wt = $pdo->prepare('INSERT INTO warranty_certificates (cert_no, customer_id, vehicle_id, service_slug, product_brand, roll_batch_no, warranty_years, install_date, expiry_date, next_inspection_date, status, created_at, customer_name, customer_phone, vehicle_model, vehicle_reg, coverage_scope, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            foreach ($sampleWarranties as $w) {
+                $wt->execute($w);
+            }
+        }
+
+        // Seed initial sample invoice if empty
+        $invCount = (int)$pdo->query('SELECT COUNT(*) FROM invoices')->fetchColumn();
+        if ($invCount === 0) {
+            $now = date('Y-m-d H:i:s');
+            $sampleItems = json_encode([
+                ['name' => 'STEK DYNOshield Full Body PPF Installation', 'type' => 'service', 'qty' => 1, 'rate' => 75000, 'total' => 75000],
+                ['name' => 'Gtechniq G1 ClearVision Smart Glass Treatment', 'type' => 'product', 'qty' => 1, 'rate' => 3500, 'total' => 3500]
+            ]);
+            $sub = 78500;
+            $gst = round($sub * 0.18, 2);
+            $total = $sub + $gst;
+            $it = $pdo->prepare('INSERT INTO invoices (invoice_no, customer_id, vehicle_id, subtotal, discount, gst_amount, grand_total, payment_status, payment_method, paid_amount, notes, created_at, items_json, customer_name, customer_phone, customer_email, vehicle_model, vehicle_reg) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $it->execute([
+                'INV-2026-001', 1, 1, $sub, 0, $gst, $total, 'PAID', 'UPI', $total,
+                'Full body PPF & Smart Glass coating delivered in Bay 01', $now,
+                $sampleItems, 'Vikram Sharma', '+91 94191 22334', 'vikram.sharma@example.com', 'BMW 320d M-Sport', 'JK 02 CQ 7788'
+            ]);
+        }
     }
 
     private static function seedSqlite(PDO $pdo): void {
