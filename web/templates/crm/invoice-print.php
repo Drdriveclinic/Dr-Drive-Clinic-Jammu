@@ -65,7 +65,7 @@ $waText = urlencode(
     "💳 *Payment Status:* {$paymentStatus} (" . ($paymentMethod ?: 'Pending') . ")\n\n" .
     "📄 *View / Download Invoice PDF:* {$invoiceUrl}\n\n" .
     "Thank you for choosing The Drive Clinic Jammu!\n" .
-    "📍 Nanak Nagar, Jammu • 📞 +91 94191 00000"
+    "📍 Nanak Nagar, Jammu • 📞 +91 70061 34729"
 );
 $waShareLink = "https://wa.me/{$cleanPhone}?text={$waText}";
 ?>
@@ -417,7 +417,7 @@ $waShareLink = "https://wa.me/{$cleanPhone}?text={$waText}";
         <div class="brand-sub">Luxury Automotive Detailing Studio • Jammu</div>
         <div class="studio-meta">
           <strong>Nanak Nagar, Jammu, Jammu & Kashmir 180004</strong><br>
-          Phone: +91 94191 00000 • Email: care@thedriveclinic.com<br>
+          Phone: +91 70061 34729 • Email: care@thedriveclinic.com<br>
           GSTIN: 01AABCT1234F1Z8 (Jammu & Kashmir) • State Code: 01
         </div>
       </div>

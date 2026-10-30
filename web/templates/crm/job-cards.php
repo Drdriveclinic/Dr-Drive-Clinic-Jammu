@@ -210,7 +210,7 @@ $activeJobs = array_filter($jobCards, fn($j) => ($j['status'] ?? '') === 'IN_PRO
           </div>
           <div class="crm-form-group">
             <label class="crm-label">Customer Phone *</label>
-            <input type="tel" name="customer_phone" class="crm-input" placeholder="+91 94191 XXXXX" required>
+            <input type="tel" name="customer_phone" class="crm-input" placeholder="+91 70061 34729" required>
           </div>
         </div>
 

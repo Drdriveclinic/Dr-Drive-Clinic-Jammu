@@ -141,7 +141,7 @@ export async function sendLeadNotificationEmail(lead) {
     </div>
     <div class="footer">
       This notification was automatically dispatched to <strong>care@thedriveclinic.com</strong> via GoDaddy Business Mail.<br>
-      The Drive Clinic &bull; 90 Nanak Nagar, Jammu, J&K &bull; +91 94191 00000
+      The Drive Clinic &bull; 90 Nanak Nagar, Jammu, J&K &bull; +91 70061 34729
     </div>
   </div>
 </body>
@@ -273,7 +273,7 @@ export async function sendBookingNotificationEmail(booking) {
     </div>
     <div class="footer">
       Dispatched automatically to <strong>care@thedriveclinic.com</strong> via GoDaddy Business Mail.<br>
-      The Drive Clinic &bull; 90 Nanak Nagar, Jammu, J&K &bull; +91 94191 00000
+      The Drive Clinic &bull; 90 Nanak Nagar, Jammu, J&K &bull; +91 70061 34729
     </div>
   </div>
 </body>

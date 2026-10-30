@@ -1060,8 +1060,8 @@ $serviceStudioImages = [
         <div>
           <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:6px;">PHONE & WHATSAPP</div>
           <p style="font-size:16px; color:var(--ink);">
-            <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>" style="font-weight:700;"><?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?></a> • 
-            <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '919419100000') ?>" target="_blank" rel="noopener" class="text-link">WhatsApp →</a>
+            <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>" style="font-weight:700;"><?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?></a> • 
+            <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '917006134729') ?>" target="_blank" rel="noopener" class="text-link">WhatsApp →</a>
           </p>
         </div>
 
@@ -1117,7 +1117,7 @@ $serviceStudioImages = [
       <a href="/book" class="btn btn-red" style="padding: 0 44px;" data-cursor="BOOK">
         BOOK YOUR SERVICE →
       </a>
-      <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '919419100000') ?>" target="_blank" rel="noopener" class="btn btn-ghost" data-cursor="CHAT">
+      <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '917006134729') ?>" target="_blank" rel="noopener" class="btn btn-ghost" data-cursor="CHAT">
         WHATSAPP US →
       </a>
     </div>

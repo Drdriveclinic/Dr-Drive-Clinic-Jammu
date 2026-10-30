@@ -242,7 +242,7 @@
           </div>
           <div class="crm-form-group">
             <label class="crm-label">Phone / WhatsApp *</label>
-            <input type="tel" name="phone" class="crm-input" placeholder="e.g. +91 94191 22334" required>
+            <input type="tel" name="phone" class="crm-input" placeholder="e.g. +91 70061 34729" required>
           </div>
         </div>
 

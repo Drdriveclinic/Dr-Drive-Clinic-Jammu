@@ -212,7 +212,7 @@ $hasLogo = file_exists($logoPath);
       <a href="/book" class="btn btn-red mobile-book-btn" data-major-nav>BOOK STUDIO APPOINTMENT →</a>
       <div class="mobile-studio-info">
         <div class="mobile-info-item">📍 Nanak Nagar, Jammu</div>
-        <div class="mobile-info-item">📞 <?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?></div>
+        <div class="mobile-info-item">📞 <?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?></div>
       </div>
     </div>
   </div>

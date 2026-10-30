@@ -87,7 +87,7 @@ if (!empty($searchQuery)) {
         <p style="color: var(--grey); font-size: 14px; margin-bottom: 20px;">
           We couldn't find active garage records for "<strong><?= htmlspecialchars($searchQuery) ?></strong>". Please ensure your registered mobile number is entered correctly.
         </p>
-        <a href="https://wa.me/919419100000?text=Hi%20The%20Drive%20Clinic,%20I%20need%20help%20locating%20my%20vehicle%20service%20record." target="_blank" class="btn btn-ghost-dark" style="color:#fff; border-color:rgba(255,255,255,0.2);">
+        <a href="https://wa.me/917006134729?text=Hi%20The%20Drive%20Clinic,%20I%20need%20help%20locating%20my%20vehicle%20service%20record." target="_blank" class="btn btn-ghost-dark" style="color:#fff; border-color:rgba(255,255,255,0.2);">
           Contact Studio Concierge on WhatsApp →
         </a>
       </div>

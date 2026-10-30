@@ -68,7 +68,7 @@ $serviceImages = [
       </div>
 
       <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; font-size: 13px; color: var(--text-3);">
-        Need immediate assistance? <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>" style="color:var(--white); font-weight:700;">Call Studio</a> or <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '919419100000') ?>" target="_blank" rel="noopener" style="color:var(--red);">WhatsApp</a>
+        Need immediate assistance? <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>" style="color:var(--white); font-weight:700;">Call Studio</a> or <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '917006134729') ?>" target="_blank" rel="noopener" style="color:var(--red);">WhatsApp</a>
       </div>
     </aside>
 
@@ -221,7 +221,7 @@ $serviceImages = [
 
             <div>
               <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">Phone (10-Digit Mobile) *</label>
-              <input type="tel" name="customer_phone" required pattern="[6-9][0-9]{9}" placeholder="9419100000" maxlength="10" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--off); font-family:monospace; font-size:16px;">
+              <input type="tel" name="customer_phone" required pattern="[6-9][0-9]{9}" placeholder="7006134729" maxlength="10" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:var(--off); font-family:monospace; font-size:16px;">
             </div>
 
             <div>
@@ -311,7 +311,7 @@ $serviceImages = [
     <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
       <a href="/" class="btn btn-dark">BACK TO HOME →</a>
       <a href="#" class="btn btn-red success-ics-btn" download>ADD TO CALENDAR (.ICS) →</a>
-      <a href="https://wa.me/919419100000" target="_blank" rel="noopener" class="btn btn-ghost-dark success-wa-btn">WHATSAPP US →</a>
+      <a href="https://wa.me/917006134729" target="_blank" rel="noopener" class="btn btn-ghost-dark success-wa-btn">WHATSAPP US →</a>
     </div>
   </div>
 </div>

@@ -2,6 +2,17 @@
 [build]
   publish = "dist"
   command = "node scripts/build-netlify.js"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/appointments"
+  to = "/.netlify/functions/appointments"
+  status = 200
+
+[[redirects]]
+  from = "/api/leads"
+  to = "/.netlify/functions/leads"
+  status = 200
 
 [[redirects]]
   from = "/crm/login"

@@ -31,7 +31,7 @@ export function generateAppointmentIcs(appointment) {
     `DTSTART:${dtStart}`,
     `DTEND:${dtEnd}`,
     `SUMMARY:The Drive Clinic: ${service_name || 'Vehicle Detailing'} [${ref}]`,
-    `DESCRIPTION:Appointment Ref: ${ref}\\nClient: ${customer_name || 'Client'}\\nService: ${service_name || 'Detailing'}\\nStudio: The Drive Clinic\\nAddress: Nanak Nagar, Jammu, J&K 180004\\nPhone: +91 94191 00000`,
+    `DESCRIPTION:Appointment Ref: ${ref}\\nClient: ${customer_name || 'Client'}\\nService: ${service_name || 'Detailing'}\\nStudio: The Drive Clinic\\nAddress: Nanak Nagar, Jammu, J&K 180004\\nPhone: +91 70061 34729`,
     'LOCATION:The Drive Clinic, Nanak Nagar, Jammu, Jammu & Kashmir 180004, India',
     'STATUS:CONFIRMED',
     'BEGIN:VALARM',

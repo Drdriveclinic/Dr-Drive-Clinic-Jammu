@@ -46,8 +46,8 @@ $services = $services ?? [];
           <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:6px;">
             PHONE NUMBER
           </div>
-          <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>" style="font-size:18px; font-weight:700; color:var(--ink); transition:color 0.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink)'">
-            <?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>
+          <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>" style="font-size:18px; font-weight:700; color:var(--ink); transition:color 0.2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink)'">
+            <?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>
           </a>
         </div>
 
@@ -56,7 +56,7 @@ $services = $services ?? [];
           <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:6px;">
             WHATSAPP CONCIERGE
           </div>
-          <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '919419100000') ?>" target="_blank" rel="noopener" class="text-link" style="font-size:16px;">
+          <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '917006134729') ?>" target="_blank" rel="noopener" class="text-link" style="font-size:16px;">
             Chat with Studio on WhatsApp →
           </a>
         </div>
@@ -66,8 +66,8 @@ $services = $services ?? [];
           <div style="font-size:12px; font-weight:700; color:var(--red); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:6px;">
             EMAIL ADDRESS
           </div>
-          <a href="mailto:<?= htmlspecialchars($settings['email'] ?? 'info@thedriveclinic.com') ?>" class="text-link" style="font-size:16px;">
-            <?= htmlspecialchars($settings['email'] ?? 'info@thedriveclinic.com') ?>
+          <a href="mailto:<?= htmlspecialchars($settings['email'] ?? 'care@thedriveclinic.com') ?>" class="text-link" style="font-size:16px;">
+            <?= htmlspecialchars($settings['email'] ?? 'care@thedriveclinic.com') ?>
           </a>
         </div>
 
@@ -137,7 +137,7 @@ $services = $services ?? [];
 
           <div>
             <label style="display:block; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; color:var(--white);">10-Digit Mobile Phone *</label>
-            <input type="tel" name="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="9419100000" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-family:monospace; font-size:15px;">
+            <input type="tel" name="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="7006134729" style="width:100%; border:1px solid var(--line); padding:14px 16px; background:rgba(255,255,255,0.05); color:var(--white); font-family:monospace; font-size:15px;">
           </div>
         </div>
 

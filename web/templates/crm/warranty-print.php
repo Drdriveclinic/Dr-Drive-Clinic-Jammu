@@ -46,7 +46,7 @@ $waText = urlencode(
     "🔍 *Next Inspection / Top-Up:* {$nextInsp}\n\n" .
     "📄 *View & Download Official Digital Certificate:* {$certUrl}\n\n" .
     "Please present this certificate during your scheduled 6-month inspection.\n\n" .
-    "The Drive Clinic • Jammu's Premier Detailing Studio • +91 94191 00000"
+    "The Drive Clinic • Jammu's Premier Detailing Studio • +91 70061 34729"
 );
 $waShareLink = "https://wa.me/{$cleanPhone}?text={$waText}";
 ?>

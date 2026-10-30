@@ -63,7 +63,7 @@ $currentUrl = $siteUrl . ($_SERVER['REQUEST_URI'] ?? '/');
       "longitude": "74.871234"
     },
     "url": "<?= $siteUrl ?>",
-    "telephone": "<?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>",
+    "telephone": "<?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>",
     "priceRange": "$$",
     "openingHoursSpecification": [
       {

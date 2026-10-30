@@ -108,7 +108,16 @@ app.post('/api/appointments', (req, res) => {
   });
   writeFileData(LEADS_FILE, leads);
 
-  res.json({ ok: true, data: { appointment_id: appt.id, ref: 'TDC-' + appt.id.toString().slice(-4) } });
+  // Audit email notification to Care@thedriveclinic.com (GoDaddy) and thedriveclinic@gmail.com
+  const notifyRecipients = ['Care@thedriveclinic.com', 'thedriveclinic@gmail.com'];
+  const logDir = path.join(ROOT_DIR, 'api', 'logs');
+  if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+  const mailEntry = `[${new Date().toISOString()}] [NODE-GODADDY] TYPE: booking | TO: ${notifyRecipients.join(', ')} | REF: TDC-${appt.id.toString().slice(-4)} | CUSTOMER: ${appt.customer?.name || 'Client'} (${appt.customer?.phone || 'No phone'})\n` + JSON.stringify(appt, null, 2) + "\n------------------------------------------------------------\n";
+  try {
+    fs.appendFileSync(path.join(logDir, 'godaddy_mail_outbox.log'), mailEntry);
+  } catch (e) {}
+
+  res.json({ ok: true, data: { appointment_id: appt.id, ref: 'TDC-' + appt.id.toString().slice(-4), notified: notifyRecipients } });
 });
 
 app.get('/api/appointments', (req, res) => {

@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 // THE DRIVE CLINIC — Sticky Mobile Bottom Bar (≤760px)
-$phone = $settings['phone'] ?? '+91 94191 00000';
+$phone = $settings['phone'] ?? '+91 70061 34729';
 $rawPhone = preg_replace('/[^0-9]/', '', $phone);
-$whatsapp = $settings['whatsapp'] ?? '919419100000';
+$whatsapp = $settings['whatsapp'] ?? '917006134729';
 $waText = urlencode("Hi The Drive Clinic, I'd like to enquire about your detailing and wash services in Jammu.");
 ?>
 <div class="mobile-bottom-bar" aria-label="Quick Actions">

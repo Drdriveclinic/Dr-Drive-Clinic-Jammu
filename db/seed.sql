@@ -5,8 +5,8 @@ USE `drive_clinic`;
 INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ('business_name', 'THE DRIVE CLINIC'),
 ('tagline', 'WHERE CARS GET THEIR SHINE BACK'),
-('phone', '+91 94191 00000'),
-('whatsapp', '919419100000'),
+('phone', '+91 70061 34729'),
+('whatsapp', '917006134729'),
 ('email', 'info@thedriveclinic.com'),
 ('address', 'Nanak Nagar, Jammu, Jammu & Kashmir 180004, India'),
 ('map_embed_url', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13426.123456789!2d74.871234!3d32.701234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDQyJzA0LjQiTiA3NMKwNTInMTYuNCJF!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin'),

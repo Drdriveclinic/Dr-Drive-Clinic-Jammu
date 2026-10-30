@@ -789,10 +789,16 @@ if ($requestUri === '/crm/api/whatsapp/campaign' && $requestMethod === 'POST') {
     exit;
 }
 
-// GoDaddy Business Email Dispatcher (care@thedriveclinic.com)
+// GoDaddy Business Email Dispatcher (Care@thedriveclinic.com & thedriveclinic@gmail.com)
 function dispatchGoDaddyEmail(string $type, array $data): void {
     global $config;
-    $recipient = $config['mail']['to'] ?? 'care@thedriveclinic.com';
+    $recipients = ['Care@thedriveclinic.com', 'thedriveclinic@gmail.com'];
+    if (!empty($config['mail']['recipients']) && is_array($config['mail']['recipients'])) {
+        $recipients = $config['mail']['recipients'];
+    } elseif (!empty($config['mail']['to'])) {
+        $recipients = array_map('trim', explode(',', $config['mail']['to']));
+    }
+
     $name = $data['name'] ?? $data['customer_name'] ?? 'Website Client';
     $service = $data['service'] ?? $data['service_name'] ?? 'Studio Detailing';
     $ref = $data['ref'] ?? $data['lead_no'] ?? ('DRC-' . rand(1000, 9999));
@@ -805,7 +811,7 @@ function dispatchGoDaddyEmail(string $type, array $data): void {
     $waLink = $cleanPhone ? "https://wa.me/" . (str_starts_with($cleanPhone, '91') ? $cleanPhone : "91" . $cleanPhone) : 'N/A';
 
     $body = "THE DRIVE CLINIC // STUDIO MANAGEMENT // JAMMU\n";
-    $body .= "Target Mailbox: care@thedriveclinic.com\n";
+    $body .= "Target Mailboxes: Care@thedriveclinic.com (GoDaddy) & thedriveclinic@gmail.com\n";
     $body .= "====================================================\n";
     $body .= "EVENT: " . strtoupper($type) . "\n";
     $body .= "REFERENCE: {$ref}\n";
@@ -821,16 +827,67 @@ function dispatchGoDaddyEmail(string $type, array $data): void {
     $body .= "====================================================\n";
     $body .= "Open CRM: " . ($config['site_url'] ?? 'http://localhost:8000') . "/crm\n";
 
-    $headers = "From: " . ($config['mail']['from'] ?? 'care@thedriveclinic.com') . "\r\n" .
-               "Reply-To: " . ($data['email'] ?? 'care@thedriveclinic.com') . "\r\n" .
-               "X-Mailer: PHP/" . phpversion();
+    $fromEmail = $config['mail']['from'] ?? 'Care@thedriveclinic.com';
+    $replyTo = !empty($data['email']) ? $data['email'] : $fromEmail;
+    $toHeader = implode(', ', $recipients);
 
-    @mail($recipient, $subject, $body, $headers);
+    $headers = "From: The Drive Clinic Studio <{$fromEmail}>\r\n" .
+               "Reply-To: {$replyTo}\r\n" .
+               "Cc: thedriveclinic@gmail.com\r\n" .
+               "MIME-Version: 1.0\r\n" .
+               "Content-Type: text/plain; charset=UTF-8\r\n" .
+               "X-Mailer: TheDriveClinic-GoDaddy/PHP " . phpversion();
+
+    @mail($toHeader, $subject, $body, $headers);
+
+    // Optional direct GoDaddy SMTP socket delivery if password is set
+    $smtpHost = $config['mail']['host'] ?? 'smtpout.secureserver.net';
+    $smtpUser = $config['mail']['username'] ?? 'Care@thedriveclinic.com';
+    $smtpPass = $config['mail']['password'] ?? '';
+    if (!empty($smtpPass)) {
+        try {
+            $context = stream_context_create([
+                'ssl' => ['verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true]
+            ]);
+            $smtpSocket = @stream_socket_client("ssl://{$smtpHost}:465", $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $context);
+            if ($smtpSocket) {
+                fgets($smtpSocket, 512);
+                fwrite($smtpSocket, "EHLO " . ($_SERVER['SERVER_NAME'] ?? 'localhost') . "\r\n");
+                while ($resp = fgets($smtpSocket, 512)) { if (substr($resp, 3, 1) === ' ') break; }
+                fwrite($smtpSocket, "AUTH LOGIN\r\n");
+                fgets($smtpSocket, 512);
+                fwrite($smtpSocket, base64_encode($smtpUser) . "\r\n");
+                fgets($smtpSocket, 512);
+                fwrite($smtpSocket, base64_encode($smtpPass) . "\r\n");
+                $authResp = fgets($smtpSocket, 512);
+                if (str_starts_with($authResp, '235')) {
+                    fwrite($smtpSocket, "MAIL FROM: <{$fromEmail}>\r\n");
+                    fgets($smtpSocket, 512);
+                    foreach ($recipients as $rcpt) {
+                        fwrite($smtpSocket, "RCPT TO: <{$rcpt}>\r\n");
+                        fgets($smtpSocket, 512);
+                    }
+                    fwrite($smtpSocket, "DATA\r\n");
+                    fgets($smtpSocket, 512);
+                    $fullMessage = "To: {$toHeader}\r\nSubject: {$subject}\r\n{$headers}\r\n\r\n{$body}\r\n.\r\n";
+                    fwrite($smtpSocket, $fullMessage);
+                    fgets($smtpSocket, 512);
+                    fwrite($smtpSocket, "QUIT\r\n");
+                }
+                fclose($smtpSocket);
+            }
+        } catch (Throwable $e) {}
+    }
 
     // Audit log
     $logDir = dirname(__DIR__, 2) . '/api/logs';
     if (!is_dir($logDir)) @mkdir($logDir, 0777, true);
-    @file_put_contents($logDir . '/godaddy_mail_outbox.log', "[" . date('c') . "] [PHP] TYPE: {$type} | TO: {$recipient} | SUBJECT: {$subject}\n" . json_encode($data, JSON_PRETTY_PRINT) . "\n------------------------------------------------------------\n", FILE_APPEND);
+    @file_put_contents(
+        $logDir . '/godaddy_mail_outbox.log',
+        "[" . date('c') . "] [PHP-GODADDY] TYPE: {$type} | TO: {$toHeader} | SUBJECT: {$subject}\n" .
+        json_encode($data, JSON_PRETTY_PRINT) . "\n------------------------------------------------------------\n",
+        FILE_APPEND
+    );
 }
 
 // ==========================================

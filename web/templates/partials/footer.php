@@ -57,18 +57,18 @@ $year = date('Y');
             <?= htmlspecialchars($settings['address'] ?? 'Nanak Nagar, Jammu, J&K 180004, India') ?>
           </li>
           <li style="margin-top:8px;">
-            <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>" class="footer-list-link" style="color:var(--white); font-weight:700;">
-              <?= htmlspecialchars($settings['phone'] ?? '+91 94191 00000') ?>
+            <a href="tel:<?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>" class="footer-list-link" style="color:var(--white); font-weight:700;">
+              <?= htmlspecialchars($settings['phone'] ?? '+91 70061 34729') ?>
             </a>
           </li>
           <li>
-            <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '919419100000') ?>" target="_blank" rel="noopener" class="footer-list-link">
-              WhatsApp: <?= htmlspecialchars($settings['whatsapp'] ?? '919419100000') ?>
+            <a href="https://wa.me/<?= htmlspecialchars($settings['whatsapp'] ?? '917006134729') ?>" target="_blank" rel="noopener" class="footer-list-link">
+              WhatsApp: <?= htmlspecialchars($settings['whatsapp'] ?? '917006134729') ?>
             </a>
           </li>
           <li>
-            <a href="mailto:<?= htmlspecialchars($settings['email'] ?? 'info@thedriveclinic.com') ?>" class="footer-list-link">
-              <?= htmlspecialchars($settings['email'] ?? 'info@thedriveclinic.com') ?>
+            <a href="mailto:<?= htmlspecialchars($settings['email'] ?? 'care@thedriveclinic.com') ?>" class="footer-list-link">
+              <?= htmlspecialchars($settings['email'] ?? 'care@thedriveclinic.com') ?>
             </a>
           </li>
           <li style="color:var(--text-3); font-size:13px; margin-top:8px;">

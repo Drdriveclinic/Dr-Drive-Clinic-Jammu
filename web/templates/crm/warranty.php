@@ -160,7 +160,7 @@ $activeCount = count(array_filter($warranties, fn($w) => $w['status'] === 'ACTIV
           </div>
           <div class="crm-form-group">
             <label class="crm-label">Customer Mobile Phone *</label>
-            <input type="tel" name="customer_phone" class="crm-input" placeholder="+91 94191 XXXXX" required>
+            <input type="tel" name="customer_phone" class="crm-input" placeholder="+91 70061 34729" required>
           </div>
         </div>
 
@@ -177,21 +177,20 @@ $activeCount = count(array_filter($warranties, fn($w) => $w['status'] === 'ACTIV
 
         <div class="crm-form-row">
           <div class="crm-form-group">
-            <label class="crm-label">Product Brand & Grade *</label>
-            <select name="product_brand" class="crm-select" required>
-              <option value="STEK DYNOshield Gloss PPF">STEK DYNOshield Gloss TPU PPF (10 Yrs)</option>
-              <option value="STEK DYNOmatte PPF">STEK DYNOmatte Satin PPF (10 Yrs)</option>
-              <option value="Garware Premium Plus PPF">Garware Premium Plus PPF (5 Yrs)</option>
-              <option value="SunTek Ultra PPF">SunTek Ultra Self-Healing Film (7 Yrs)</option>
-              <option value="3M Scotchgard Pro Series">3M Scotchgard Pro Series PPF (7 Yrs)</option>
-              <option value="Avery Dennison Supreme PPF">Avery Dennison Supreme Defense (10 Yrs)</option>
-              <option value="Gtechniq Crystal Serum Ultra 9H">Gtechniq Crystal Serum Ultra 9H Ceramic (5 Yrs)</option>
-              <option value="CarPro CQuartz Professional">CarPro CQuartz Professional Ceramic (3 Yrs)</option>
-            </select>
+            <label class="crm-label">PPF / Ceramic Product Name & Brand *</label>
+            <input type="text" name="product_brand" id="warrantyProductBrand" class="crm-input" placeholder="Type PPF or Ceramic product name manually..." required list="productBrandSuggestions">
+            <datalist id="productBrandSuggestions">
+              <option value="Self-Healing Gloss TPU PPF">
+              <option value="Satin Matte Finish TPU PPF">
+              <option value="10-Year Armor TPU PPF">
+              <option value="9H Dual-Layer Nano Ceramic Coating">
+              <option value="Graphene Matrix Armor Shield">
+            </datalist>
+            <span style="font-size:11px; color:#888888; margin-top:4px; display:block;">Enter the exact product or brand name manually according to what was installed.</span>
           </div>
           <div class="crm-form-group">
             <label class="crm-label">Manufacturer Roll / Batch No. *</label>
-            <input type="text" name="roll_batch_no" class="crm-input" placeholder="e.g. STK-2026-B849" required style="font-family:monospace;">
+            <input type="text" name="roll_batch_no" class="crm-input" placeholder="e.g. BATCH-2026-X88" required style="font-family:monospace;">
           </div>
         </div>
 

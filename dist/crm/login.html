@@ -1246,7 +1246,7 @@
             </div>
             <div class="crm-form-group">
               <label class="crm-label">WhatsApp / Phone *</label>
-              <input type="tel" name="phone" class="crm-input" placeholder="+91 94191 22334" required>
+              <input type="tel" name="phone" class="crm-input" placeholder="+91 70061 34729" required>
             </div>
           </div>
           <div class="crm-form-row">
@@ -1397,7 +1397,7 @@
             </div>
             <div class="crm-form-group">
               <label class="crm-label">Phone / WhatsApp *</label>
-              <input type="tel" name="phone" class="crm-input" placeholder="+91 94191 55667" required>
+              <input type="tel" name="phone" class="crm-input" placeholder="+91 70061 34729" required>
             </div>
           </div>
           <div class="crm-form-row">
@@ -1666,7 +1666,7 @@
             </div>
             <div class="crm-form-group">
               <label class="crm-label">Phone / WhatsApp *</label>
-              <input type="tel" name="phone" class="crm-input" placeholder="+91 94191 33445" required>
+              <input type="tel" name="phone" class="crm-input" placeholder="+91 70061 34729" required>
             </div>
           </div>
           <div class="crm-form-row">
@@ -1757,7 +1757,7 @@
             </div>
             <div class="crm-form-group">
               <label class="crm-label">WhatsApp / Phone *</label>
-              <input type="tel" name="phone" class="crm-input" placeholder="9419122334" required>
+              <input type="tel" name="phone" class="crm-input" placeholder="7006134729" required>
             </div>
           </div>
           <div class="crm-form-row">
@@ -1893,7 +1893,7 @@
             </div>
             <div class="crm-form-group">
               <label class="crm-label">WhatsApp Number *</label>
-              <input type="tel" name="phone" class="crm-input" placeholder="9419166778" required>
+              <input type="tel" name="phone" class="crm-input" placeholder="7006134729" required>
             </div>
           </div>
           <div class="crm-form-row" style="margin-bottom:12px;">
@@ -1908,13 +1908,16 @@
           </div>
           <div class="crm-form-row" style="margin-bottom:12px;">
             <div class="crm-form-group">
-              <label class="crm-label">Treatment Type *</label>
-              <select name="service_type" class="crm-input" required>
-                <option value="STEK DynoShield 10-Yr TPU PPF">STEK DynoShield 10-Yr TPU PPF</option>
-                <option value="Gtechniq Crystal Serum Light 9H Ceramic">Gtechniq Crystal Serum Light 9H Ceramic</option>
-                <option value="Ultra Gloss Self-Healing Matte PPF">Ultra Gloss Self-Healing Matte PPF</option>
-                <option value="Ceramic Pro Gold 7-Year Package">Ceramic Pro Gold 7-Year Package</option>
-              </select>
+              <label class="crm-label">PPF / Ceramic Product Name & Brand *</label>
+              <input type="text" name="service_type" id="crmWarrantyProductInput" class="crm-input" placeholder="Type PPF or Ceramic product name manually..." required list="crmProductSuggestions">
+              <datalist id="crmProductSuggestions">
+                <option value="Self-Healing Gloss TPU PPF">
+                <option value="Satin Matte Finish TPU PPF">
+                <option value="10-Year Armor TPU Film">
+                <option value="9H Dual-Layer Nano Ceramic Coating">
+                <option value="Graphene Matrix Armor Coating">
+              </datalist>
+              <small style="font-size:11px; color:#64748b; margin-top:3px; display:block;">Enter product name manually according to what was installed.</small>
             </div>
             <div class="crm-form-group">
               <label class="crm-label">Warranty Years *</label>
@@ -2636,7 +2639,7 @@
     const p = (state.salaryPayouts || []).find(item => item.id === id);
     if (!p) return;
     const s = (state.staff || []).find(item => item.name === p.staff_name);
-    const phone = s ? s.phone : '9419100000';
+    const phone = s ? s.phone : '7006134729';
     const msg = `Official Salary Slip: The Drive Clinic%0AEmployee: ${p.staff_name} (${p.role})%0AMonth: ${p.month}%0ABase Salary: ₹${p.base_salary}%0ACommissions: +₹${p.commissions}%0ABonus: +₹${p.bonus}%0ANet Payout: ₹${p.net_salary}%0AStatus: PAID (${p.payment_mode})%0A%0AThank you for your dedication to studio craftsmanship!`;
     window.open('https://wa.me/91' + phone + '?text=' + msg, '_blank');
   };
@@ -2808,7 +2811,7 @@
     const inv = (state.invoices || []).find(item => String(item.id) === String(id));
     if (!inv) return;
     const msg = `Official Studio Tax Invoice: ${inv.id}%0AClient: ${inv.customer_name}%0AVehicle: ${inv.vehicle_model} (${inv.vehicle_reg})%0ATotal Amount: ₹${Number(inv.amount).toLocaleString('en-IN')}%0AStatus: ${inv.status}%0A%0AThe Drive Clinic Jammu • Where Cars Get Their Shine Back`;
-    const url = 'https://wa.me/91' + String(inv.phone || '9419100000').replace(/[^0-9]/g, '') + '?text=' + msg;
+    const url = 'https://wa.me/91' + String(inv.phone || '7006134729').replace(/[^0-9]/g, '') + '?text=' + msg;
     window.open(url, '_blank');
   };
 
@@ -4663,8 +4666,8 @@
             </svg>
             <div style="font-size:11px; color:#475569; margin-top:8px; line-height:1.4;">
               <strong>The Drive Clinic</strong> — Premium Detailing & Protection Studio<br>
-              Bypass Road, Channi Himmat, Jammu, J&K – 180015<br>
-              Direct: +91 94191 55667 | care@thedriveclinic.com
+              Nanak Nagar, Jammu, Jammu & Kashmir 180004, India<br>
+              Direct: +91 70061 34729 | care@thedriveclinic.com
             </div>
           </div>
           <div style="text-align:right;">

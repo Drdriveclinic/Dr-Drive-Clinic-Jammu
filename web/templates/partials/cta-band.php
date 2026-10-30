@@ -7,7 +7,7 @@ $ctaBandLead = $ctaBandLead ?? "Book your detailing experience or schedule a stu
 $ctaBandPrimaryText = $ctaBandPrimaryText ?? "BOOK YOUR SERVICE →";
 $ctaBandPrimaryHref = $ctaBandPrimaryHref ?? "/book";
 $ctaBandSecondaryText = $ctaBandSecondaryText ?? "WHATSAPP US →";
-$ctaBandSecondaryHref = $ctaBandSecondaryHref ?? "https://wa.me/" . ($settings['whatsapp'] ?? '919419100000');
+$ctaBandSecondaryHref = $ctaBandSecondaryHref ?? "https://wa.me/" . ($settings['whatsapp'] ?? '917006134729');
 ?>
 <section class="section section-dark" style="position:relative; overflow:hidden; text-align:center;">
   <div class="container" style="position:relative; z-index:2; padding-top:20px; padding-bottom:20px;">

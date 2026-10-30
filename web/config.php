@@ -34,8 +34,8 @@ return [
     
     // Default Studio Info (fallback if DB query is empty)
     'studio' => [
-        'phone'         => '+91 94191 00000',
-        'whatsapp'      => '919419100000',
+        'phone'         => '+91 70061 34729',
+        'whatsapp'      => '917006134729',
         'email'         => 'care@thedriveclinic.com',
         'address'       => 'Nanak Nagar, Jammu, Jammu & Kashmir 180004, India',
         'instagram'     => 'https://instagram.com/thedriveclinic',
@@ -45,11 +45,12 @@ return [
 
     // GoDaddy Business Email Configuration
     'mail' => [
-        'to'       => env('NOTIFICATION_EMAIL', 'care@thedriveclinic.com'),
-        'from'     => env('NOTIFICATION_FROM', 'care@thedriveclinic.com'),
-        'host'     => env('SMTP_HOST', 'smtpout.secureserver.net'),
-        'port'     => (int) env('SMTP_PORT', '465'),
-        'username' => env('SMTP_USER', 'care@thedriveclinic.com'),
-        'password' => env('SMTP_PASS', '')
+        'to'         => env('NOTIFICATION_EMAIL', 'Care@thedriveclinic.com, thedriveclinic@gmail.com'),
+        'recipients' => ['Care@thedriveclinic.com', 'thedriveclinic@gmail.com'],
+        'from'       => env('NOTIFICATION_FROM', 'Care@thedriveclinic.com'),
+        'host'       => env('SMTP_HOST', 'smtpout.secureserver.net'),
+        'port'       => (int) env('SMTP_PORT', '465'),
+        'username'   => env('SMTP_USER', 'Care@thedriveclinic.com'),
+        'password'   => env('SMTP_PASS', '')
     ]
 ];
