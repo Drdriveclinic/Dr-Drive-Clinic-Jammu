@@ -55,7 +55,7 @@ if (fs.existsSync(robotsSrc)) {
   fs.copyFileSync(robotsSrc, path.join(DIST_DIR, 'robots.txt'));
 }
 
-// 3. Ensure CRM HTML template is synced
+// 3. Ensure CRM HTML template & standalone server are synced
 const crmTemplateSrc = path.join(ROOT_DIR, 'scripts', 'crm-app-template.html');
 if (fs.existsSync(crmTemplateSrc)) {
   const crmHtml = fs.readFileSync(crmTemplateSrc, 'utf8');
@@ -63,6 +63,21 @@ if (fs.existsSync(crmTemplateSrc)) {
   fs.writeFileSync(path.join(CRM_DIST_DIR, 'login.html'), crmHtml, 'utf8');
   console.log('✓ Synced CRM workspace template to dist/crm/');
 }
+
+const crmServerSrc = path.join(ROOT_DIR, 'scripts', 'crm-standalone-server.js');
+if (fs.existsSync(crmServerSrc)) {
+  fs.copyFileSync(crmServerSrc, path.join(CRM_DIST_DIR, 'server.js'));
+  console.log('✓ Synced CRM standalone server to dist/crm/server.js');
+}
+
+// Sync dist/contact and dist/memberships to dist/website/ if present
+['contact/index.html', 'memberships/index.html'].forEach(relPath => {
+  const srcFile = path.join(DIST_DIR, relPath);
+  const destFile = path.join(DIST_DIR, 'website', relPath);
+  if (fs.existsSync(srcFile) && fs.existsSync(path.dirname(destFile))) {
+    fs.copyFileSync(srcFile, destFile);
+  }
+});
 
 // 4. Ensure api data directory exists
 const apiDataDir = path.join(ROOT_DIR, 'api', 'data');

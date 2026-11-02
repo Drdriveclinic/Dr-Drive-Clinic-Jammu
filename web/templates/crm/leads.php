@@ -64,17 +64,27 @@ foreach ($leads as $l) {
       </div>
       <div class="crm-col-cards">
         <?php foreach ($colNew as $lead): ?>
-          <div class="crm-lead-card" data-lead-id="<?= $lead['id'] ?>" data-search="<?= htmlspecialchars(strtolower($lead['customer_name'] . ' ' . $lead['vehicle_model'] . ' ' . $lead['service_name'] . ' ' . $lead['source'])) ?>">
+          <div class="crm-lead-card" data-lead-id="<?= htmlspecialchars((string)$lead['id'], ENT_QUOTES) ?>" data-search="<?= htmlspecialchars(strtolower($lead['customer_name'] . ' ' . $lead['vehicle_model'] . ' ' . $lead['service_name'] . ' ' . $lead['source'])) ?>">
             <div class="crm-lead-name"><?= htmlspecialchars($lead['customer_name']) ?></div>
-            <div class="crm-lead-vehicle"><?= htmlspecialchars($lead['vehicle_model']) ?></div>
+            <div class="crm-lead-vehicle"><?= htmlspecialchars($lead['vehicle_model']) ?> <?= !empty($lead['vehicle_reg']) ? '(' . htmlspecialchars($lead['vehicle_reg']) . ')' : '' ?></div>
             <div class="crm-lead-service"><?= htmlspecialchars($lead['service_name']) ?></div>
             <div class="crm-lead-amount">₹<?= number_format((float)$lead['estimated_amount']) ?></div>
             <div class="crm-lead-source-row">
               <span class="crm-source-pill"><?= htmlspecialchars($lead['source'] ?? 'Website') ?></span>
             </div>
-            <button class="crm-card-action-btn" onclick="updateLeadStage(<?= $lead['id'] ?>, 'CONTACTED')">
-              Mark contacted
-            </button>
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+              <button type="button" class="crm-card-action-btn" onclick="updateLeadStage('<?= htmlspecialchars((string)$lead['id'], ENT_QUOTES) ?>', 'CONTACTED')">
+                📞 Mark contacted
+              </button>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="crm-card-action-btn" style="flex:1; margin-top:0; font-size:11px; padding:6px 8px;" onclick="openPrepareQuoteModal(<?= htmlspecialchars(json_encode($lead), ENT_QUOTES) ?>)">
+                  📝 Quote
+                </button>
+                <button type="button" class="crm-card-action-btn" style="flex:1; margin-top:0; font-size:11px; padding:6px 8px;" onclick="openConvertBookingModal(<?= htmlspecialchars(json_encode($lead), ENT_QUOTES) ?>)">
+                  🚗 To Bay
+                </button>
+              </div>
+            </div>
           </div>
         <?php endforeach; ?>
         <?php if (empty($colNew)): ?>

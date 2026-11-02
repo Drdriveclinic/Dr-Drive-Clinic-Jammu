@@ -400,6 +400,18 @@ if ($requestUri === '/crm/api/bookings' && $requestMethod === 'POST') {
         $now = date('Y-m-d H:i:s');
         $leadStmt->execute([$ref, $name, $phone, $vehicleModel, $vehicleReg, $serviceId, $notes, $now, $now]);
 
+        dispatchGoDaddyEmail('booking', [
+            'ref' => $ref,
+            'name' => $name,
+            'phone' => $phone,
+            'vehicle' => "{$vehicleModel}" . ($vehicleReg ? " ({$vehicleReg})" : ''),
+            'service' => 'Studio Detailing',
+            'date' => $date,
+            'time' => $time,
+            'notes' => $notes,
+            'source' => 'CRM Booking'
+        ]);
+
         echo json_encode(['success' => true, 'message' => "Booking {$ref} created for {$name}!"]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
@@ -789,14 +801,27 @@ if ($requestUri === '/crm/api/whatsapp/campaign' && $requestMethod === 'POST') {
     exit;
 }
 
-// GoDaddy Business Email Dispatcher (Care@thedriveclinic.com & thedriveclinic@gmail.com)
+// GoDaddy Business Email & Gmail Multi-Channel Dispatcher (Care@thedriveclinic.com & thedriveclinic@gmail.com)
 function dispatchGoDaddyEmail(string $type, array $data): void {
     global $config;
-    $recipients = ['Care@thedriveclinic.com', 'thedriveclinic@gmail.com'];
+    $defaultRecipients = ['Care@thedriveclinic.com', 'thedriveclinic@gmail.com'];
+    $configuredRecipients = [];
     if (!empty($config['mail']['recipients']) && is_array($config['mail']['recipients'])) {
-        $recipients = $config['mail']['recipients'];
+        $configuredRecipients = $config['mail']['recipients'];
     } elseif (!empty($config['mail']['to'])) {
-        $recipients = array_map('trim', explode(',', $config['mail']['to']));
+        $configuredRecipients = array_map('trim', explode(',', $config['mail']['to']));
+    }
+    $merged = array_merge($defaultRecipients, $configuredRecipients);
+    $recipients = [];
+    $seen = [];
+    foreach ($merged as $addr) {
+        $addr = trim((string)$addr);
+        if ($addr === '') continue;
+        $lower = strtolower($addr);
+        if (!isset($seen[$lower])) {
+            $seen[$lower] = true;
+            $recipients[] = $addr;
+        }
     }
 
     $name = $data['name'] ?? $data['customer_name'] ?? 'Website Client';
@@ -809,69 +834,93 @@ function dispatchGoDaddyEmail(string $type, array $data): void {
 
     $cleanPhone = preg_replace('/\D/', '', (string)($data['phone'] ?? ''));
     $waLink = $cleanPhone ? "https://wa.me/" . (str_starts_with($cleanPhone, '91') ? $cleanPhone : "91" . $cleanPhone) : 'N/A';
+    $vehicleDesc = $data['vehicle'] ?? $data['vehicle_model'] ?? 'Vehicle';
+    $msgText = $data['message'] ?? $data['notes'] ?? 'Direct submission from website';
+    $sourceLabel = $data['source'] ?? 'Website';
 
     $body = "THE DRIVE CLINIC // STUDIO MANAGEMENT // JAMMU\n";
-    $body .= "Target Mailboxes: Care@thedriveclinic.com (GoDaddy) & thedriveclinic@gmail.com\n";
+    $body .= "Target Mailboxes: " . implode(', ', $recipients) . "\n";
     $body .= "====================================================\n";
     $body .= "EVENT: " . strtoupper($type) . "\n";
     $body .= "REFERENCE: {$ref}\n";
     $body .= "CUSTOMER: {$name}\n";
     $body .= "PHONE: " . ($data['phone'] ?? 'N/A') . " (WhatsApp: {$waLink})\n";
     $body .= "EMAIL: " . ($data['email'] ?? 'Not provided') . "\n";
-    $body .= "VEHICLE: " . ($data['vehicle'] ?? $data['vehicle_model'] ?? 'Vehicle') . "\n";
+    $body .= "VEHICLE: {$vehicleDesc}\n";
     $body .= "SERVICE: {$service}\n";
     if (!empty($data['date'])) $body .= "SCHEDULE: " . $data['date'] . " at " . ($data['time'] ?? '10:00') . "\n";
-    if (!empty($data['message']) || !empty($data['notes'])) $body .= "MESSAGE: " . ($data['message'] ?? $data['notes'] ?? '') . "\n";
-    $body .= "SOURCE: " . ($data['source'] ?? 'Website') . "\n";
+    if (!empty($msgText)) $body .= "MESSAGE: {$msgText}\n";
+    $body .= "SOURCE: {$sourceLabel}\n";
     $body .= "TIMESTAMP: " . date('Y-m-d H:i:s') . " IST\n";
     $body .= "====================================================\n";
     $body .= "Open CRM: " . ($config['site_url'] ?? 'http://localhost:8000') . "/crm\n";
 
-    $fromEmail = $config['mail']['from'] ?? 'Care@thedriveclinic.com';
-    $replyTo = !empty($data['email']) ? $data['email'] : $fromEmail;
+    $rawFrom = $config['mail']['from'] ?? 'Care@thedriveclinic.com';
+    $fromEmail = preg_match('/<([^>]+)>/', (string)$rawFrom, $m) ? trim($m[1]) : trim((string)$rawFrom);
+    if (!filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
+        $fromEmail = 'Care@thedriveclinic.com';
+    }
+    $replyTo = (!empty($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) ? $data['email'] : $fromEmail;
     $toHeader = implode(', ', $recipients);
 
     $headers = "From: The Drive Clinic Studio <{$fromEmail}>\r\n" .
                "Reply-To: {$replyTo}\r\n" .
-               "Cc: thedriveclinic@gmail.com\r\n" .
                "MIME-Version: 1.0\r\n" .
                "Content-Type: text/plain; charset=UTF-8\r\n" .
                "X-Mailer: TheDriveClinic-GoDaddy/PHP " . phpversion();
 
-    @mail($toHeader, $subject, $body, $headers);
+    // 1. Native PHP mail()
+    @mail($toHeader, $subject, $body, $headers, "-f{$fromEmail}");
 
-    // Optional direct GoDaddy SMTP socket delivery if password is set
+    // 2. Direct GoDaddy / Custom SMTP socket delivery if password is set
     $smtpHost = $config['mail']['host'] ?? 'smtpout.secureserver.net';
+    $smtpPort = (int)($config['mail']['port'] ?? 465);
     $smtpUser = $config['mail']['username'] ?? 'Care@thedriveclinic.com';
     $smtpPass = $config['mail']['password'] ?? '';
+    $smtpDelivered = false;
+
     if (!empty($smtpPass)) {
         try {
             $context = stream_context_create([
                 'ssl' => ['verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true]
             ]);
-            $smtpSocket = @stream_socket_client("ssl://{$smtpHost}:465", $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $context);
+            $proto = ($smtpPort === 465) ? 'ssl://' : 'tcp://';
+            $smtpSocket = @stream_socket_client("{$proto}{$smtpHost}:{$smtpPort}", $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $context);
             if ($smtpSocket) {
+                stream_set_timeout($smtpSocket, 5);
                 fgets($smtpSocket, 512);
-                fwrite($smtpSocket, "EHLO " . ($_SERVER['SERVER_NAME'] ?? 'localhost') . "\r\n");
+                fwrite($smtpSocket, "EHLO thedriveclinic.com\r\n");
                 while ($resp = fgets($smtpSocket, 512)) { if (substr($resp, 3, 1) === ' ') break; }
+                if ($smtpPort === 587) {
+                    fwrite($smtpSocket, "STARTTLS\r\n");
+                    $tlsResp = fgets($smtpSocket, 512);
+                    if (str_starts_with((string)$tlsResp, '220')) {
+                        @stream_socket_enable_crypto($smtpSocket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+                        fwrite($smtpSocket, "EHLO thedriveclinic.com\r\n");
+                        while ($resp = fgets($smtpSocket, 512)) { if (substr($resp, 3, 1) === ' ') break; }
+                    }
+                }
                 fwrite($smtpSocket, "AUTH LOGIN\r\n");
                 fgets($smtpSocket, 512);
                 fwrite($smtpSocket, base64_encode($smtpUser) . "\r\n");
                 fgets($smtpSocket, 512);
                 fwrite($smtpSocket, base64_encode($smtpPass) . "\r\n");
-                $authResp = fgets($smtpSocket, 512);
+                $authResp = (string)fgets($smtpSocket, 512);
                 if (str_starts_with($authResp, '235')) {
-                    fwrite($smtpSocket, "MAIL FROM: <{$fromEmail}>\r\n");
+                    fwrite($smtpSocket, "MAIL FROM:<{$fromEmail}>\r\n");
                     fgets($smtpSocket, 512);
                     foreach ($recipients as $rcpt) {
-                        fwrite($smtpSocket, "RCPT TO: <{$rcpt}>\r\n");
+                        fwrite($smtpSocket, "RCPT TO:<{$rcpt}>\r\n");
                         fgets($smtpSocket, 512);
                     }
                     fwrite($smtpSocket, "DATA\r\n");
                     fgets($smtpSocket, 512);
                     $fullMessage = "To: {$toHeader}\r\nSubject: {$subject}\r\n{$headers}\r\n\r\n{$body}\r\n.\r\n";
                     fwrite($smtpSocket, $fullMessage);
-                    fgets($smtpSocket, 512);
+                    $dataResp = (string)fgets($smtpSocket, 512);
+                    if (str_starts_with($dataResp, '250')) {
+                        $smtpDelivered = true;
+                    }
                     fwrite($smtpSocket, "QUIT\r\n");
                 }
                 fclose($smtpSocket);
@@ -879,7 +928,114 @@ function dispatchGoDaddyEmail(string $type, array $data): void {
         } catch (Throwable $e) {}
     }
 
-    // Audit log
+    // 3. Direct MX Server Delivery + HTTPS FormSubmit Relay Fallback when SMTP password is not configured
+    if (!$smtpDelivered) {
+        foreach ($recipients as $rcpt) {
+            // 3a. Direct MX socket delivery on port 25
+            $parts = explode('@', $rcpt);
+            $domain = $parts[1] ?? '';
+            if ($domain !== '' && function_exists('dns_get_record')) {
+                try {
+                    $mxRecords = @dns_get_record($domain, DNS_MX);
+                    if (!empty($mxRecords) && is_array($mxRecords)) {
+                        usort($mxRecords, fn($a, $b) => ($a['pri'] ?? 50) <=> ($b['pri'] ?? 50));
+                        $mxHost = $mxRecords[0]['target'] ?? '';
+                        if ($mxHost !== '') {
+                            $mxSock = @stream_socket_client("tcp://{$mxHost}:25", $errno, $errstr, 3);
+                            if ($mxSock) {
+                                stream_set_timeout($mxSock, 4);
+                                fgets($mxSock, 512);
+                                fwrite($mxSock, "EHLO thedriveclinic.com\r\n");
+                                while ($r = fgets($mxSock, 512)) { if (substr($r, 3, 1) === ' ') break; }
+                                fwrite($mxSock, "MAIL FROM:<{$fromEmail}>\r\n");
+                                fgets($mxSock, 512);
+                                fwrite($mxSock, "RCPT TO:<{$rcpt}>\r\n");
+                                $rcptResp = (string)fgets($mxSock, 512);
+                                if (str_starts_with($rcptResp, '250')) {
+                                    fwrite($mxSock, "DATA\r\n");
+                                    fgets($mxSock, 512);
+                                    $msg = "Date: " . date('r') . "\r\nTo: <{$rcpt}>\r\nSubject: {$subject}\r\n{$headers}\r\n\r\n{$body}\r\n.\r\n";
+                                    fwrite($mxSock, $msg);
+                                    fgets($mxSock, 512);
+                                }
+                                fwrite($mxSock, "QUIT\r\n");
+                                fclose($mxSock);
+                            }
+                        }
+                    }
+                } catch (Throwable $e) {}
+            }
+
+            // 3b. HTTPS Relay via FormSubmit AJAX API (port 443)
+            try {
+                $relayPayload = json_encode([
+                    '_subject' => $subject,
+                    '_template' => 'table',
+                    '_captcha' => 'false',
+                    'Reference' => $ref,
+                    'Event_Type' => strtoupper($type),
+                    'Customer_Name' => $name,
+                    'Phone' => $data['phone'] ?? 'N/A',
+                    'WhatsApp' => $waLink,
+                    'Email' => $data['email'] ?? 'Not provided',
+                    'Vehicle' => $vehicleDesc,
+                    'Service' => $service,
+                    'Schedule' => !empty($data['date']) ? ($data['date'] . ' at ' . ($data['time'] ?? '10:00')) : 'Flexible',
+                    'Message' => $msgText,
+                    'Source' => $sourceLabel
+                ]);
+                $ctx = stream_context_create([
+                    'http' => [
+                        'method'  => 'POST',
+                        'header'  => "Content-Type: application/json\r\nAccept: application/json\r\nOrigin: https://thedriveclinic.com\r\nReferer: https://thedriveclinic.com/contact\r\nUser-Agent: Mozilla/5.0\r\n",
+                        'content' => $relayPayload,
+                        'timeout' => 4,
+                        'ignore_errors' => true
+                    ],
+                    'ssl' => ['verify_peer' => false, 'verify_peer_name' => false]
+                ]);
+                @file_get_contents('https://formsubmit.co/ajax/' . rawurlencode($rcpt), false, $ctx);
+            } catch (Throwable $e) {}
+        }
+    }
+
+    // 4. Sync to shared JSON store (api/data/leads.json) so Node.js API & Standalone CRM also see the lead
+    try {
+        $apiDataDir = dirname(__DIR__, 2) . '/api/data';
+        if (!is_dir($apiDataDir)) @mkdir($apiDataDir, 0777, true);
+        $leadsJsonPath = $apiDataDir . '/leads.json';
+        $existingLeads = [];
+        if (file_exists($leadsJsonPath)) {
+            $decoded = json_decode((string)@file_get_contents($leadsJsonPath), true);
+            if (is_array($decoded)) $existingLeads = $decoded;
+        }
+        $alreadyExists = false;
+        foreach ($existingLeads as $el) {
+            if (($el['ref'] ?? '') === $ref) {
+                $alreadyExists = true;
+                break;
+            }
+        }
+        if (!$alreadyExists) {
+            array_unshift($existingLeads, [
+                'id' => time() . rand(10, 99),
+                'ref' => $ref,
+                'name' => $name,
+                'customer_name' => $name,
+                'phone' => $data['phone'] ?? '',
+                'email' => $data['email'] ?? null,
+                'vehicle_model' => $vehicleDesc,
+                'service_name' => $service,
+                'source' => $sourceLabel,
+                'message' => $msgText,
+                'stage' => 'NEW',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            @file_put_contents($leadsJsonPath, json_encode($existingLeads, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+    } catch (Throwable $e) {}
+
+    // 5. Audit log
     $logDir = dirname(__DIR__, 2) . '/api/logs';
     if (!is_dir($logDir)) @mkdir($logDir, 0777, true);
     @file_put_contents(
@@ -1045,7 +1201,7 @@ if ($requestUri === '/api/appointments' && $requestMethod === 'POST') {
 if ($requestUri === '/api/appointments' && $requestMethod === 'GET') {
     header('Content-Type: application/json');
     $appointments = Database::query("
-        SELECT a.ref, a.date, a.time, a.status, a.source, s.name as service_name, c.name as customer_name, c.phone, c.email, v.brand as vehicle_brand, v.model as vehicle_model, v.registration as vehicle_registration
+        SELECT a.id, a.ref, a.date, a.time, a.status, a.source, s.name as service_name, c.name as customer_name, c.phone, c.email, v.brand as vehicle_brand, v.model as vehicle_model, v.registration as vehicle_registration
         FROM appointments a
         LEFT JOIN services s ON a.service_id = s.id
         LEFT JOIN customers c ON a.customer_id = c.id
@@ -1054,6 +1210,100 @@ if ($requestUri === '/api/appointments' && $requestMethod === 'GET') {
     ");
     echo json_encode(['ok' => true, 'data' => $appointments]);
     exit;
+}
+
+/**
+ * Helper: Ensure a Lead / Completed Job / Paid Record is synced into `customers`, `vehicles`, and `job_cards`.
+ */
+function syncLeadToCustomerAndVehicleDirectory(PDO $db, array $lead, string $jobStatus = 'COMPLETED'): array {
+    $now = date('Y-m-d H:i:s');
+    $name = trim((string)($lead['customer_name'] ?? $lead['name'] ?? 'Studio Client'));
+    $phone = trim((string)($lead['phone'] ?? ''));
+    $email = trim((string)($lead['email'] ?? ''));
+    $vehicleModel = trim((string)($lead['vehicle_model'] ?? 'Vehicle'));
+    $vehicleBrand = trim((string)($lead['vehicle_brand'] ?? 'Car'));
+    $vehicleReg = trim((string)($lead['vehicle_reg'] ?? ''));
+    $serviceName = trim((string)($lead['service_name'] ?? 'Studio Detailing'));
+    $bayNo = (int)($lead['bay_no'] ?? 1) ?: 1;
+    $tech = trim((string)($lead['assigned_tech'] ?? 'Lead Detailer'));
+    $totalAmount = (float)($lead['quote_total'] ?: ($lead['paid_amount'] ?: $lead['estimated_amount']));
+
+    // 1. Upsert Customer (match by exact phone or last 10 digits)
+    $cleanDigits = preg_replace('/\D/', '', $phone);
+    $last10 = strlen($cleanDigits) >= 10 ? substr($cleanDigits, -10) : $cleanDigits;
+
+    $cust = null;
+    if ($phone !== '') {
+        $cust = Database::queryOne("SELECT * FROM customers WHERE phone = ?", [$phone]);
+    }
+    if (!$cust && $last10 !== '') {
+        $allCusts = Database::query("SELECT * FROM customers");
+        foreach ($allCusts as $cRow) {
+            $cDigits = preg_replace('/\D/', '', (string)$cRow['phone']);
+            if (strlen($cDigits) >= 10 && substr($cDigits, -10) === $last10) {
+                $cust = $cRow;
+                break;
+            }
+        }
+    }
+
+    if ($cust) {
+        $customerId = (int)$cust['id'];
+        if (!empty($email) && empty($cust['email'])) {
+            $db->prepare("UPDATE customers SET email = ? WHERE id = ?")->execute([$email, $customerId]);
+        }
+    } else {
+        $insCust = $db->prepare("INSERT INTO customers (name, phone, whatsapp, email, created_at) VALUES (?, ?, ?, ?, ?)");
+        $insCust->execute([$name ?: 'Studio Client', $phone ?: ('N/A-' . time()), $phone, $email ?: null, $now]);
+        $customerId = (int)$db->lastInsertId();
+    }
+
+    // 2. Upsert Vehicle for Customer
+    $veh = null;
+    if ($vehicleReg !== '') {
+        $veh = Database::queryOne("SELECT * FROM vehicles WHERE customer_id = ? AND (registration = ? OR model = ?)", [$customerId, $vehicleReg, $vehicleModel]);
+    } else {
+        $veh = Database::queryOne("SELECT * FROM vehicles WHERE customer_id = ? AND model = ?", [$customerId, $vehicleModel]);
+    }
+
+    if ($veh) {
+        $vehicleId = (int)$veh['id'];
+        if ($vehicleReg !== '' && empty($veh['registration'])) {
+            $db->prepare("UPDATE vehicles SET registration = ? WHERE id = ?")->execute([$vehicleReg, $vehicleId]);
+        }
+    } else {
+        $insVeh = $db->prepare("INSERT INTO vehicles (customer_id, type, brand, model, registration, created_at) VALUES (?, 'Car', ?, ?, ?, ?)");
+        $insVeh->execute([$customerId, $vehicleBrand ?: 'Car', $vehicleModel ?: 'Vehicle', $vehicleReg ?: null, $now]);
+        $vehicleId = (int)$db->lastInsertId();
+    }
+
+    // 3. Upsert Job Card for Customer & Vehicle
+    $cardNo = 'JC-LEAD-' . ($lead['id'] ?? rand(1000, 9999));
+    $existingJc = Database::queryOne("SELECT * FROM job_cards WHERE card_no = ?", [$cardNo]);
+    if ($existingJc) {
+        $jobCardId = (int)$existingJc['id'];
+        $db->prepare("UPDATE job_cards SET status = ?, total_amount = ?, completed_at = ? WHERE id = ?")
+           ->execute([$jobStatus, $totalAmount, $jobStatus === 'COMPLETED' ? $now : null, $jobCardId]);
+    } else {
+        $insJc = $db->prepare("
+            INSERT INTO job_cards (
+                card_no, customer_id, vehicle_id, bay_no, assigned_tech, status,
+                service_names, consumables_json, technician_notes, total_amount, created_at, completed_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $insJc->execute([
+            $cardNo, $customerId, $vehicleId, $bayNo, $tech, $jobStatus,
+            $serviceName, $lead['consumables_json'] ?? null, $lead['remarks'] ?? null,
+            $totalAmount, $now, $jobStatus === 'COMPLETED' ? $now : null
+        ]);
+        $jobCardId = (int)$db->lastInsertId();
+    }
+
+    return [
+        'customer_id' => $customerId,
+        'vehicle_id' => $vehicleId,
+        'job_card_id' => $jobCardId
+    ];
 }
 
 // ==========================================
@@ -1117,11 +1367,12 @@ if ($requestUri === '/crm/api/leads/create' && $requestMethod === 'POST') {
 
 if ($requestUri === '/crm/api/leads/status' && $requestMethod === 'POST') {
     header('Content-Type: application/json');
-    $input = json_decode(file_get_contents('php://input'), true) ?? [];
-    $leadId = (int)($input['lead_id'] ?? 0);
-    $stage = trim($input['stage'] ?? 'CONTACTED');
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $rawId = trim((string)($input['lead_id'] ?? $input['id'] ?? ''));
+    $ref = trim((string)($input['ref'] ?? ''));
+    $stage = trim((string)($input['stage'] ?? 'CONTACTED'));
 
-    if ($leadId <= 0) {
+    if ($rawId === '' && $ref === '') {
         echo json_encode(['success' => false, 'error' => 'Valid lead ID required']);
         exit;
     }
@@ -1129,8 +1380,41 @@ if ($requestUri === '/crm/api/leads/status' && $requestMethod === 'POST') {
     try {
         $db = Database::getConnection();
         $now = date('Y-m-d H:i:s');
-        $stmt = $db->prepare("UPDATE leads SET stage = ?, updated_at = ? WHERE id = ?");
-        $stmt->execute([$stage, $now, $leadId]);
+        if (ctype_digit($rawId) && (int)$rawId > 0) {
+            $stmt = $db->prepare("UPDATE leads SET stage = ?, updated_at = ? WHERE id = ? OR lead_no = ?");
+            $stmt->execute([$stage, $now, (int)$rawId, $ref ?: ('LEAD-' . $rawId)]);
+            $lead = Database::queryOne("SELECT * FROM leads WHERE id = ? OR lead_no = ?", [(int)$rawId, $ref ?: ('LEAD-' . $rawId)]);
+        } else {
+            $lookupRef = $ref ?: $rawId;
+            $stmt = $db->prepare("UPDATE leads SET stage = ?, updated_at = ? WHERE lead_no = ?");
+            $stmt->execute([$stage, $now, $lookupRef]);
+            $lead = Database::queryOne("SELECT * FROM leads WHERE lead_no = ?", [$lookupRef]);
+        }
+
+        // If completed/won, sync into Customer & Vehicle Directory
+        if ($lead && in_array($stage, ['WON', 'COMPLETED', 'IN_SERVICE'], true)) {
+            syncLeadToCustomerAndVehicleDirectory($db, $lead, $stage === 'COMPLETED' ? 'COMPLETED' : 'IN_PROGRESS');
+        }
+
+        // Also update shared api/data/leads.json if present
+        $leadsJsonPath = dirname(__DIR__, 2) . '/api/data/leads.json';
+        if (file_exists($leadsJsonPath)) {
+            $existingLeads = json_decode((string)@file_get_contents($leadsJsonPath), true);
+            if (is_array($existingLeads)) {
+                $changed = false;
+                foreach ($existingLeads as &$el) {
+                    if ((string)($el['id'] ?? '') === $rawId || (string)($el['ref'] ?? '') === $rawId || ($ref !== '' && (string)($el['ref'] ?? '') === $ref)) {
+                        $el['stage'] = $stage;
+                        $changed = true;
+                    }
+                }
+                unset($el);
+                if ($changed) {
+                    @file_put_contents($leadsJsonPath, json_encode($existingLeads, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                }
+            }
+        }
+
         echo json_encode(['success' => true, 'message' => "Lead moved to {$stage} successfully!"]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
@@ -1256,7 +1540,11 @@ if ($requestUri === '/crm/api/leads/convert' && $requestMethod === 'POST') {
         $up = $db->prepare("UPDATE leads SET stage = 'IN_SERVICE', bay_no = ?, assigned_tech = ?, updated_at = ? WHERE id = ?");
         $up->execute([$bayNo, $assignedTech, $now, $leadId]);
 
-        echo json_encode(['success' => true, 'message' => "Vehicle dispatched to Bay 0{$bayNo}!"]);
+        $lead['bay_no'] = $bayNo;
+        $lead['assigned_tech'] = $assignedTech;
+        syncLeadToCustomerAndVehicleDirectory($db, $lead, 'IN_PROGRESS');
+
+        echo json_encode(['success' => true, 'message' => "Vehicle dispatched to Bay 0{$bayNo} & synced to Customer Directory!"]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
@@ -1284,24 +1572,124 @@ if ($requestUri === '/crm/api/leads/payment' && $requestMethod === 'POST') {
         $up = $db->prepare("UPDATE leads SET payment_status = ?, payment_method = ?, paid_amount = ?, stage = ?, updated_at = ? WHERE id = ?");
         $up->execute([$status, $method, $paidAmount, $stage, $now, $leadId]);
 
-        // Insert / link tax invoice
+        // Sync Customer, Vehicle, Job Card & Tax Invoice so Customer & Vehicle Directory reflects completed & paid leads
         if ($lead) {
-            $invNo = 'INV-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
-            $invSubtotal = (float)($lead['quote_subtotal'] ?: $lead['estimated_amount']);
-            $invGst = (float)($lead['quote_gst'] ?: ($invSubtotal * 0.18));
-            $invTotal = (float)($lead['quote_total'] ?: ($invSubtotal + $invGst));
+            $lead['paid_amount'] = $paidAmount;
+            $lead['payment_status'] = $status;
+            $lead['payment_method'] = $method;
+            $synced = syncLeadToCustomerAndVehicleDirectory($db, $lead, $stage === 'COMPLETED' ? 'COMPLETED' : 'IN_PROGRESS');
 
+            $invNo = 'INV-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+            $invSubtotal = (float)($lead['quote_subtotal'] ?: ($paidAmount > 0 ? round($paidAmount / 1.18, 2) : $lead['estimated_amount']));
+            $invGst = (float)($lead['quote_gst'] ?: round($invSubtotal * 0.18, 2));
+            $invTotal = (float)($paidAmount > 0 ? $paidAmount : ($lead['quote_total'] ?: ($invSubtotal + $invGst)));
+
+            $existingInv = Database::queryOne("SELECT id FROM invoices WHERE lead_id = ?", [$leadId]);
+            if ($existingInv) {
+                $db->prepare("
+                    UPDATE invoices SET
+                        customer_id = ?, vehicle_id = ?, job_card_id = ?,
+                        subtotal = ?, gst_amount = ?, grand_total = ?,
+                        payment_status = ?, payment_method = ?, paid_amount = ?,
+                        customer_name = ?, customer_phone = ?, customer_email = ?,
+                        vehicle_model = ?, vehicle_reg = ?
+                    WHERE id = ?
+                ")->execute([
+                    $synced['customer_id'], $synced['vehicle_id'], $synced['job_card_id'],
+                    $invSubtotal, $invGst, $invTotal,
+                    $status, $method, $paidAmount ?: $invTotal,
+                    $lead['customer_name'], $lead['phone'], $lead['email'] ?? null,
+                    $lead['vehicle_model'], $lead['vehicle_reg'] ?? null,
+                    (int)$existingInv['id']
+                ]);
+            } else {
+                $invStmt = $db->prepare("
+                    INSERT INTO invoices (
+                        invoice_no, job_card_id, customer_id, vehicle_id,
+                        subtotal, discount, gst_amount, grand_total,
+                        payment_status, payment_method, paid_amount, notes, created_at,
+                        customer_name, customer_phone, customer_email, vehicle_model, vehicle_reg, lead_id
+                    ) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+                $invStmt->execute([
+                    $invNo, $synced['job_card_id'], $synced['customer_id'], $synced['vehicle_id'],
+                    $invSubtotal, $invGst, $invTotal,
+                    $status, $method, $paidAmount ?: $invTotal,
+                    "Settled for {$lead['customer_name']} ({$lead['vehicle_model']})", $now,
+                    $lead['customer_name'], $lead['phone'], $lead['email'] ?? null,
+                    $lead['vehicle_model'], $lead['vehicle_reg'] ?? null, $leadId
+                ]);
+            }
+        }
+
+        echo json_encode(['success' => true, 'message' => "Payment recorded ({$method}), job marked {$stage}, and synced to Customer & Vehicle Directory!"]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+if ($requestUri === '/crm/api/customers/create' && $requestMethod === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true) ?: $_POST;
+    $name = trim((string)($input['name'] ?? $input['customer_name'] ?? ''));
+    $phone = trim((string)($input['phone'] ?? ''));
+    $email = trim((string)($input['email'] ?? ''));
+    $vehicleBrand = trim((string)($input['vehicle_brand'] ?? 'Car'));
+    $vehicleModel = trim((string)($input['vehicle_model'] ?? ''));
+    $vehicleReg = strtoupper(trim((string)($input['vehicle_reg'] ?? '')));
+    $totalSpend = (float)($input['total_spend'] ?? 0);
+    $notes = trim((string)($input['notes'] ?? 'Manually Registered Studio Client'));
+
+    if ($name === '' || $phone === '' || $vehicleModel === '') {
+        echo json_encode(['success' => false, 'error' => 'Customer name, phone number, and vehicle model are required']);
+        exit;
+    }
+
+    try {
+        $db = Database::getConnection();
+        $now = date('Y-m-d H:i:s');
+
+        $synced = syncLeadToCustomerAndVehicleDirectory($db, [
+            'id' => rand(1000, 9999),
+            'customer_name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'vehicle_brand' => $vehicleBrand,
+            'vehicle_model' => $vehicleModel,
+            'vehicle_reg' => $vehicleReg,
+            'service_name' => $notes ?: 'Studio Detailing & Care',
+            'estimated_amount' => $totalSpend,
+            'quote_total' => $totalSpend,
+            'paid_amount' => $totalSpend,
+            'remarks' => $notes
+        ], 'COMPLETED');
+
+        if ($totalSpend > 0) {
+            $invNo = 'INV-' . date('Y') . '-' . sprintf('%03d', rand(100, 999));
+            $sub = round($totalSpend / 1.18, 2);
+            $gst = round($totalSpend - $sub, 2);
             $invStmt = $db->prepare("
-                INSERT INTO invoices (invoice_no, subtotal, discount, gst_amount, grand_total, payment_status, payment_method, paid_amount, notes, created_at)
-                VALUES (?, ?, 0, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO invoices (
+                    invoice_no, job_card_id, customer_id, vehicle_id,
+                    subtotal, discount, gst_amount, grand_total,
+                    payment_status, payment_method, paid_amount, notes, created_at,
+                    customer_name, customer_phone, customer_email, vehicle_model, vehicle_reg
+                ) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'PAID', 'UPI / Cash', ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $invStmt->execute([
-                $invNo, $invSubtotal, $invGst, $invTotal, $status, $method, $paidAmount,
-                "Settled for {$lead['customer_name']} ({$lead['vehicle_model']})", $now
+                $invNo, $synced['job_card_id'], $synced['customer_id'], $synced['vehicle_id'],
+                $sub, $gst, $totalSpend, $totalSpend, $notes, $now,
+                $name, $phone, $email ?: null, $vehicleModel, $vehicleReg ?: null
             ]);
         }
 
-        echo json_encode(['success' => true, 'message' => "Payment recorded ({$method}) and job marked {$stage}!"]);
+        echo json_encode([
+            'success' => true,
+            'customer_id' => $synced['customer_id'],
+            'vehicle_id' => $synced['vehicle_id'],
+            'message' => "Customer {$name} ({$vehicleModel}) registered in Customer & Vehicle Directory!"
+        ]);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
@@ -1442,6 +1830,32 @@ if ($requestUri === '/crm/api/memberships/create' && $requestMethod === 'POST') 
             $vStmt = $db->prepare("INSERT INTO vehicles (customer_id, type, brand, model, registration, created_at) VALUES (?, 'Car', 'Vehicle', ?, ?, ?)");
             $vStmt->execute([$custId, $vehicleModel, $vehicleReg, $now]);
         }
+
+        // Sync membership enrollment into Leads pipeline
+        $leadStmt = $db->prepare("
+            INSERT INTO leads (
+                lead_no, customer_name, phone, email, vehicle_model, vehicle_reg,
+                service_name, estimated_amount, source, stage, remarks,
+                quote_total, payment_status, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'VIP Membership', 'NEW', ?, ?, 'UNPAID', ?, ?)
+        ");
+        $leadStmt->execute([
+            $memberNo, $name, $phone, $email ?: null, $vehicleModel, $vehicleReg ?: null,
+            "VIP Pass: {$planName} ({$billingCycle})", $price,
+            "VIP Club Enrollment ({$washesTotal} washes) " . $perks, $price, $now, $now
+        ]);
+
+        // Dispatch Email Notification to Care@thedriveclinic.com & thedriveclinic@gmail.com
+        dispatchGoDaddyEmail('lead', [
+            'ref' => $memberNo,
+            'name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'vehicle_model' => $vehicleModel . ($vehicleReg ? " ({$vehicleReg})" : ''),
+            'service_name' => "VIP Pass: {$planName} ({$billingCycle} - ₹{$price})",
+            'message' => "VIP Club Pass Enrollment: {$planName} ({$billingCycle}), Price: ₹{$price}, Washes: {$washesTotal}. {$perks}",
+            'source' => 'VIP Membership Page'
+        ]);
 
         echo json_encode([
             'success' => true,

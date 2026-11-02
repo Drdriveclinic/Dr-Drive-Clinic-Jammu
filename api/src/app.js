@@ -8,6 +8,7 @@ import { env } from './config/env.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { generalLimiter } from './middleware/rateLimiter.middleware.js';
+import { notify } from './services/notify.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,96 @@ app.use('/api', generalLimiter);
 
 // Mount API routes
 app.use('/api', routes);
+
+// Compatibility routes for Membership & CRM form submissions on Node.js runtime
+app.post('/crm/api/memberships/create', async (req, res) => {
+  try {
+    const body = req.body || {};
+    const name = (body.customer_name || body.name || 'VIP Member').trim();
+    const phone = (body.phone || '').trim();
+    const email = (body.email || '').trim();
+    const vehicleModel = (body.vehicle_model || 'Vehicle').trim();
+    const vehicleReg = (body.vehicle_reg || '').trim();
+    const planName = (body.plan_name || 'Signature Wash Club').trim();
+    const billingCycle = (body.billing_cycle || 'Monthly').trim();
+    const price = body.price || 2999;
+    const memberNo = 'TDC-VIP-' + Math.floor(1000 + Math.random() * 9000);
+
+    await notify({
+      type: 'membership_lead',
+      ref: memberNo,
+      customer: { name, phone, email, vehicle_model: vehicleModel, vehicle_reg: vehicleReg },
+      service: `VIP Membership: ${planName} (${billingCycle} - ₹${price})`,
+      message: `VIP Club Pass Enrollment: ${planName} (${billingCycle}) for ${vehicleModel} ${vehicleReg ? `[${vehicleReg}]` : ''}`,
+      source: 'VIP_MEMBERSHIP',
+      date: new Date().toISOString().slice(0, 10),
+      time: new Date().toLocaleTimeString('en-GB')
+    });
+
+    res.json({
+      success: true,
+      ok: true,
+      member_no: memberNo,
+      message: `VIP Member pass ${memberNo} activated for ${name}!`
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Compatibility routes for CRM lead status & manual customer directory creation
+app.post('/crm/api/leads/status', (req, res) => {
+  try {
+    const { lead_id, id, ref, stage = 'CONTACTED' } = req.body || {};
+    const targetId = lead_id || id || ref;
+    const leadsFile = path.resolve(__dirname, '../data/leads.json');
+    if (fs.existsSync(leadsFile)) {
+      const list = JSON.parse(fs.readFileSync(leadsFile, 'utf8') || '[]');
+      let changed = false;
+      list.forEach((l) => {
+        if (
+          (targetId && (String(l.id) === String(targetId) || String(l.ref) === String(targetId))) ||
+          (ref && String(l.ref) === String(ref))
+        ) {
+          l.stage = stage;
+          changed = true;
+        }
+      });
+      if (changed) {
+        fs.writeFileSync(leadsFile, JSON.stringify(list, null, 2), 'utf8');
+      }
+    }
+    res.json({ success: true, ok: true, message: `Lead stage updated to ${stage}` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/crm/api/customers/create', (req, res) => {
+  try {
+    const body = req.body || {};
+    const customersFile = path.resolve(__dirname, '../data/customers.json');
+    const dataDir = path.dirname(customersFile);
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    const list = fs.existsSync(customersFile) ? JSON.parse(fs.readFileSync(customersFile, 'utf8') || '[]') : [];
+    const newCust = {
+      id: 'CUST-' + Date.now(),
+      name: body.name || body.customer_name || 'Studio Client',
+      phone: body.phone || '',
+      email: body.email || '',
+      vehicles: [{ model: body.vehicle_model || 'Vehicle', reg: body.vehicle_reg || 'N/A' }],
+      visit_count: Number(body.visit_count || 1),
+      total_spend: Number(body.total_spend || 0),
+      notes: body.notes || 'Manually Registered Client',
+      created_at: new Date().toISOString().slice(0, 10)
+    };
+    list.unshift(newCust);
+    fs.writeFileSync(customersFile, JSON.stringify(list, null, 2), 'utf8');
+    res.json({ success: true, ok: true, data: newCust, message: 'Customer registered in directory!' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // 404 handler for unmatched API routes
 app.all('/api/*', (req, res) => {

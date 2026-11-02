@@ -47,13 +47,14 @@ export async function createLead(req, res, next) {
       vehicle_model,
       vehicle_reg,
       service_slug,
+      service_name: inputServiceName,
       message,
       utm_params
     } = req.validatedBody;
 
     const isDbReady = await db.checkConnection();
     let serviceId = null;
-    let serviceName = 'General Inquiry';
+    let serviceName = inputServiceName || 'General Inquiry';
 
     if (isDbReady && service_slug) {
       const rows = await db.query('SELECT id, name FROM services WHERE slug = ?', [service_slug]);
@@ -61,7 +62,7 @@ export async function createLead(req, res, next) {
         serviceId = rows[0].id;
         serviceName = rows[0].name;
       }
-    } else if (service_slug) {
+    } else if (service_slug && !inputServiceName) {
       serviceName = service_slug.replace(/-/g, ' ').toUpperCase();
     }
 
@@ -215,6 +216,42 @@ export async function bulkImportLeads(req, res, next) {
         leads: imported
       }
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateLeadStage(req, res, next) {
+  try {
+    const id = req.params.id || req.body?.lead_id || req.body?.id;
+    const ref = req.body?.ref;
+    const stage = req.body?.stage || 'CONTACTED';
+
+    if (!id && !ref) {
+      return res.status(400).json({ ok: false, success: false, error: 'Valid lead ID or ref required' });
+    }
+
+    const currentLeads = getFileLeads();
+    let updated = false;
+    for (const l of currentLeads) {
+      if (
+        (id && (String(l.id) === String(id) || String(l.ref) === String(id))) ||
+        (ref && String(l.ref) === String(ref))
+      ) {
+        l.stage = stage;
+        updated = true;
+      }
+    }
+    if (updated) {
+      fs.writeFileSync(LEADS_FILE, JSON.stringify(currentLeads, null, 2), 'utf8');
+    }
+
+    const isDbReady = await db.checkConnection();
+    if (isDbReady && id) {
+      await db.query('UPDATE leads SET stage = ? WHERE id = ?', [stage, id]).catch(() => {});
+    }
+
+    res.json({ ok: true, success: true, message: `Lead moved to ${stage} successfully!`, data: { id, ref, stage } });
   } catch (err) {
     next(err);
   }

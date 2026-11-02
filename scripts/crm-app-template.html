@@ -895,19 +895,32 @@
 
       <!-- TAB 7: CUSTOMERS & VEHICLES -->
       <section id="tab-customers" class="crm-tab-pane" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-          <div style="font-size:13px; color:#64748b;">Complete history of all client vehicles, visits, and studio remarks.</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+          <div>
+            <div style="font-size:15px; font-weight:800; color:#0f172a;">Customer &amp; Vehicle Garage Directory</div>
+            <div style="font-size:12.5px; color:#64748b;">Complete history of all client vehicles, completed detailing visits, lifetime spend, and studio remarks.</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <div style="position:relative; min-width:250px;">
+              <input type="text" id="customerSearchInput" oninput="handleCustomerSearch(this.value)" placeholder="🔍 Search name, mobile, car model or plate..." style="width:100%; height:38px; padding:0 30px 0 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:12.5px; color:#0f172a; background:#ffffff; outline:none;">
+              <button type="button" id="customerSearchClearBtn" onclick="clearCustomerSearch()" style="display:none; position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:#64748b; cursor:pointer; font-size:13px; font-weight:700;">✕</button>
+            </div>
+            <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddCustomer')" style="background:#E50914; color:#ffffff; border:none; padding:9px 18px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(229,9,20,0.25);">
+              <span>➕</span> + Add Customer
+            </button>
+          </div>
         </div>
 
         <div class="crm-table-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.04);">
           <table class="crm-table" id="tableCustomers" style="width:100%; border-collapse:collapse; text-align:left;">
             <thead>
               <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
-                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer Name & Phone</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Customer Name &amp; Phone</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Registered Vehicles</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Total Visits</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Lifetime Spend</th>
                 <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em;">Studio Remarks</th>
+                <th style="padding:14px 16px; font-size:11px; color:#475569; text-transform:uppercase; font-weight:700; letter-spacing:0.05em; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody id="customersTableBody">
@@ -2035,6 +2048,67 @@
     </div>
   </div>
 
+  <!-- MODAL: MANUAL CUSTOMER & VEHICLE REGISTRATION -->
+  <div class="crm-modal-backdrop" id="modalAddCustomer">
+    <div class="crm-modal" style="max-width:560px; width:95%;" onclick="event.stopPropagation()">
+      <div class="crm-modal-header">
+        <div>
+          <h3 class="crm-modal-title">Add Customer &amp; Vehicle to Directory</h3>
+          <p style="font-size:12px; color:#64748b; margin-top:2px;">Register a studio client and their vehicle directly into the Customer &amp; Vehicle Directory.</p>
+        </div>
+        <button class="crm-modal-close" onclick="closeModal('modalAddCustomer')">&times;</button>
+      </div>
+      <form onsubmit="handleManualAddCustomer(event)">
+        <div class="crm-modal-body">
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Customer Full Name *</label>
+              <input type="text" name="name" class="crm-input" placeholder="e.g. Rajeshwar Jamwal" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Phone / WhatsApp Number *</label>
+              <input type="tel" name="phone" class="crm-input" placeholder="e.g. 9419122334" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Email Address (Optional)</label>
+              <input type="email" name="email" class="crm-input" placeholder="e.g. client@example.com">
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Vehicle Brand &amp; Model *</label>
+              <input type="text" name="vehicle_model" class="crm-input" placeholder="e.g. Toyota Fortuner Legender" required>
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Registration Plate *</label>
+              <input type="text" name="vehicle_reg" class="crm-input" placeholder="e.g. JK 02 CQ 0009" required>
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Total Studio Visits</label>
+              <input type="number" name="visit_count" class="crm-input" value="1" min="1">
+            </div>
+          </div>
+          <div class="crm-form-row">
+            <div class="crm-form-group">
+              <label class="crm-label">Lifetime Spend (₹)</label>
+              <input type="number" name="total_spend" class="crm-input" value="0" min="0" step="100" placeholder="e.g. 45000">
+            </div>
+            <div class="crm-form-group">
+              <label class="crm-label">Studio Remarks / Service Notes</label>
+              <input type="text" name="notes" class="crm-input" placeholder="e.g. STEK PPF / VIP Client">
+            </div>
+          </div>
+        </div>
+        <div class="crm-modal-footer">
+          <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddCustomer')" style="background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+          <button type="submit" class="crm-btn crm-btn-primary" style="background:#E50914; border:none; color:#ffffff; padding:8px 20px; border-radius:6px; font-weight:700; cursor:pointer;">Save Customer Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="crm-modal-backdrop" id="modalAddUser">
     <div class="crm-modal" onclick="event.stopPropagation()">
       <div class="crm-modal-header">
@@ -2310,18 +2384,18 @@
   };
 
   window.deleteLeadPermanently = async function(id) {
-    const lead = state.leads.find(l => l.id == id);
+    const lead = state.leads.find(l => String(l.id) === String(id) || String(l.ref) === String(id));
     const leadName = lead ? (lead.customer_name || 'this record') : 'this record';
     if (!confirm(`Are you sure you want to permanently delete lead "${leadName}"?\n\nThis will remove it from your CRM pipeline, master logs, and database.`)) {
       return;
     }
 
-    state.leads = state.leads.filter(l => l.id != id);
+    state.leads = state.leads.filter(l => String(l.id) !== String(id) && String(l.ref) !== String(id));
     saveCrmState(state);
 
     // Call server DELETE route
     try {
-      await fetch('/api/leads/' + id, { method: 'DELETE' });
+      await fetch('/api/leads/' + encodeURIComponent(id), { method: 'DELETE' });
     } catch(err) {
       console.warn('Backend delete lead notification:', err.message);
     }
@@ -2329,7 +2403,7 @@
     // Also purge from any client-cached leads
     try {
       const pub = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
-      const upd = pub.filter(l => l.id != id);
+      const upd = pub.filter(l => String(l.id) !== String(id) && String(l.ref) !== String(id));
       localStorage.setItem('tdc_crm_leads', JSON.stringify(upd));
     } catch(e) {}
 
@@ -2837,15 +2911,308 @@
     alert('✓ Membership pass renewed for ' + m.customer_name + ' until ' + m.expiry_date);
   };
 
-  // 8. Customer Dossier Drawer
+  // 8. Customer Directory Sync, Manual Registration & Dossier Drawer
+  let customerSearchQuery = '';
+
+  function normalizePhone10(phone) {
+    const digits = String(phone || '').replace(/[^0-9]/g, '');
+    return digits.length > 10 ? digits.slice(-10) : digits;
+  }
+
+  function normalizeVehiclesArray(vehicles, fallbackModel, fallbackReg) {
+    const result = [];
+    if (Array.isArray(vehicles)) {
+      vehicles.forEach(v => {
+        if (!v) return;
+        if (typeof v === 'string') {
+          result.push({ model: v, reg: 'N/A' });
+        } else if (typeof v === 'object') {
+          result.push({
+            model: v.model || v.vehicle_model || 'Vehicle',
+            reg: v.reg || v.registration || v.vehicle_reg || 'N/A'
+          });
+        }
+      });
+    } else if (typeof vehicles === 'string' && vehicles.trim() && vehicles !== '[object Object]') {
+      result.push({ model: vehicles.trim(), reg: fallbackReg || 'N/A' });
+    }
+    if (fallbackModel && String(fallbackModel).trim()) {
+      const m = String(fallbackModel).trim();
+      const r = String(fallbackReg || 'N/A').trim() || 'N/A';
+      const exists = result.some(v =>
+        (v.reg && r !== 'N/A' && r !== 'JK 02 TEMP' && v.reg.toLowerCase() === r.toLowerCase()) ||
+        (v.model && v.model.toLowerCase() === m.toLowerCase() && (v.reg === r || r === 'N/A'))
+      );
+      if (!exists) {
+        result.push({ model: m, reg: r });
+      }
+    }
+    return result;
+  }
+
+  window.syncCustomerRecordToDirectory = function(record, options = {}) {
+    if (!record) return null;
+    if (!Array.isArray(state.customers)) state.customers = [];
+
+    const name = String(record.customer_name || record.name || '').trim();
+    const phone = String(record.phone || record.customer_phone || '').trim();
+    const email = String(record.email || record.customer_email || '').trim();
+    const vehicleModel = String(record.vehicle_model || record.vehicle || '').trim();
+    const vehicleReg = String(record.vehicle_reg || record.registration || '').trim();
+    const notes = String(record.notes || record.remarks || record.service_name || '').trim();
+    const phone10 = normalizePhone10(phone);
+
+    if (!name && !phone10) return null;
+
+    let cust = state.customers.find(c => {
+      const cPhone10 = normalizePhone10(c.phone);
+      if (phone10 && cPhone10 && phone10 === cPhone10) return true;
+      if (!phone10 && name && (c.name || '').toLowerCase() === name.toLowerCase()) return true;
+      return false;
+    });
+
+    if (!cust) {
+      cust = {
+        id: 'CUST-' + Date.now() + '-' + Math.floor(100 + Math.random() * 900),
+        name: name || 'Studio Client',
+        phone: phone || 'N/A',
+        email: email || '',
+        vehicles: normalizeVehiclesArray([], vehicleModel, vehicleReg),
+        total_spend: Number(options.amountPaid || 0),
+        visit_count: Number(options.visitCount || (options.addVisit ? 1 : 1)),
+        notes: notes || 'Verified Studio Client',
+        created_at: new Date().toISOString().slice(0, 10)
+      };
+      state.customers.unshift(cust);
+    } else {
+      if (name && (!cust.name || cust.name === 'Studio Client' || cust.name === 'Client')) cust.name = name;
+      if (phone && (!cust.phone || cust.phone === 'N/A')) cust.phone = phone;
+      if (email && !cust.email) cust.email = email;
+      cust.vehicles = normalizeVehiclesArray(cust.vehicles, vehicleModel, vehicleReg);
+      if (options.amountPaid && Number(options.amountPaid) > 0) {
+        cust.total_spend = Number(cust.total_spend || 0) + Number(options.amountPaid);
+      }
+      if (options.addVisit) {
+        cust.visit_count = Number(cust.visit_count || 0) + 1;
+      }
+      if (notes && (!cust.notes || cust.notes === 'Verified Studio Client')) {
+        cust.notes = notes;
+      }
+    }
+    return cust;
+  };
+
+  function reconcileCustomersDirectory() {
+    if (!Array.isArray(state.customers)) state.customers = [];
+
+    // 1. Normalize existing customer records so vehicles/visits/spend are always valid
+    state.customers.forEach((c, idx) => {
+      if (!c.id) c.id = 'CUST-' + (idx + 1);
+      c.vehicles = normalizeVehiclesArray(c.vehicles);
+      if (c.total_spend === undefined && c.spend !== undefined) {
+        c.total_spend = Number(String(c.spend).replace(/[^0-9.]/g, '')) || 0;
+      }
+      c.total_spend = Number(c.total_spend || 0);
+      if (c.visit_count === undefined && c.visits !== undefined) {
+        c.visit_count = Number(c.visits) || 1;
+      }
+      c.visit_count = Math.max(1, Number(c.visit_count || 1));
+      if (!c.notes && c.remarks) c.notes = c.remarks;
+    });
+
+    // 2. Sync any Completed or Paid Job Cards into Customer & Vehicle Directory
+    (state.jobCards || []).forEach(jc => {
+      const isCompletedOrPaid = jc.payment_status === 'PAID' || jc.service_status === 'COMPLETED';
+      if (isCompletedOrPaid) {
+        syncCustomerRecordToDirectory({
+          customer_name: jc.customer_name,
+          phone: jc.phone,
+          vehicle_model: jc.vehicle_model,
+          vehicle_reg: jc.vehicle_reg,
+          notes: jc.service_name ? `Last Service: ${jc.service_name}` : ''
+        });
+      }
+    });
+
+    // 3. Sync any Paid Invoices into Customer & Vehicle Directory
+    (state.invoices || []).forEach(inv => {
+      if (inv.status === 'PAID') {
+        syncCustomerRecordToDirectory({
+          customer_name: inv.customer_name,
+          phone: inv.phone,
+          vehicle_model: inv.vehicle_model,
+          vehicle_reg: inv.vehicle_reg,
+          notes: inv.service_name ? `Invoiced: ${inv.service_name}` : ''
+        });
+      }
+    });
+
+    // 4. Sync any Won / Completed / Paid Leads into Customer & Vehicle Directory
+    (state.leads || []).forEach(l => {
+      if (l.stage === 'WON' || l.stage === 'COMPLETED' || l.payment_status === 'PAID') {
+        syncCustomerRecordToDirectory({
+          customer_name: l.customer_name || l.name,
+          phone: l.phone,
+          email: l.email,
+          vehicle_model: l.vehicle_model,
+          vehicle_reg: l.vehicle_reg,
+          notes: l.service_name ? `Service: ${l.service_name}` : ''
+        });
+      }
+    });
+
+    // 5. Recompute realized spend & visits from PAID invoices / PAID job cards for each customer
+    state.customers.forEach(c => {
+      const cPhone10 = normalizePhone10(c.phone);
+      const cNameLower = (c.name || '').toLowerCase();
+
+      const paidInvs = (state.invoices || []).filter(inv => {
+        if (inv.status !== 'PAID') return false;
+        const iPhone10 = normalizePhone10(inv.phone);
+        if (cPhone10 && iPhone10 && cPhone10 === iPhone10) return true;
+        if (cNameLower && (inv.customer_name || '').toLowerCase() === cNameLower) return true;
+        return false;
+      });
+
+      const paidInvSum = paidInvs.reduce((sum, inv) => sum + (Number(inv.amount) || 0), 0);
+      const manualBaseSpend = Number(c.manual_spend || 0);
+      if (paidInvSum > 0) {
+        c.total_spend = Math.max(Number(c.total_spend || 0), paidInvSum + manualBaseSpend);
+        c.visit_count = Math.max(Number(c.visit_count || 1), paidInvs.length + Number(c.manual_visits || 0));
+      }
+    });
+  }
+
+  window.handleCustomerSearch = function(query) {
+    customerSearchQuery = (query || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('customerSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = customerSearchQuery ? 'block' : 'none';
+    renderAllCrmTables();
+  };
+
+  window.clearCustomerSearch = function() {
+    customerSearchQuery = '';
+    const input = document.getElementById('customerSearchInput');
+    if (input) input.value = '';
+    const clearBtn = document.getElementById('customerSearchClearBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    renderAllCrmTables();
+  };
+
+  function getFilteredCustomers() {
+    const list = state.customers || [];
+    if (!customerSearchQuery) return list;
+    const q = customerSearchQuery;
+    const cleanQ = q.replace(/[^a-z0-9]/gi, '');
+    return list.filter(c => {
+      const nameMatch = (c.name || '').toLowerCase().includes(q);
+      const phoneMatch = (c.phone || '').toLowerCase().includes(q) || (cleanQ && normalizePhone10(c.phone).includes(cleanQ));
+      const emailMatch = (c.email || '').toLowerCase().includes(q);
+      const notesMatch = (c.notes || c.remarks || '').toLowerCase().includes(q);
+      const vehMatch = (c.vehicles || []).some(v =>
+        (v.model || '').toLowerCase().includes(q) ||
+        (v.reg || '').toLowerCase().includes(q) ||
+        (cleanQ && (v.reg || '').replace(/[^a-z0-9]/gi, '').toLowerCase().includes(cleanQ))
+      );
+      return nameMatch || phoneMatch || emailMatch || notesMatch || vehMatch;
+    });
+  }
+
+  window.handleManualAddCustomer = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const fd = new FormData(e.target);
+    const name = String(fd.get('name') || '').trim();
+    const phone = String(fd.get('phone') || '').trim();
+    const email = String(fd.get('email') || '').trim();
+    const vehicleModel = String(fd.get('vehicle_model') || '').trim();
+    const vehicleReg = String(fd.get('vehicle_reg') || 'N/A').trim().toUpperCase();
+    const visitCount = Math.max(1, parseInt(fd.get('visit_count') || '1', 10) || 1);
+    const totalSpend = Math.max(0, parseFloat(fd.get('total_spend') || '0') || 0);
+    const notes = String(fd.get('notes') || '').trim() || 'Manually Registered Client';
+
+    if (!name || !phone || !vehicleModel) {
+      alert('Please enter Customer Name, Phone Number, and Vehicle Model.');
+      return;
+    }
+
+    if (!Array.isArray(state.customers)) state.customers = [];
+    const phone10 = normalizePhone10(phone);
+    let existing = state.customers.find(c => phone10 && normalizePhone10(c.phone) === phone10);
+
+    if (existing) {
+      existing.name = name;
+      existing.phone = phone;
+      if (email) existing.email = email;
+      existing.vehicles = normalizeVehiclesArray(existing.vehicles, vehicleModel, vehicleReg);
+      if (totalSpend > 0) {
+        existing.total_spend = Number(existing.total_spend || 0) + totalSpend;
+        existing.manual_spend = Number(existing.manual_spend || 0) + totalSpend;
+      }
+      existing.visit_count = Math.max(Number(existing.visit_count || 1), visitCount);
+      if (notes) existing.notes = notes;
+    } else {
+      state.customers.unshift({
+        id: 'CUST-' + Date.now(),
+        name,
+        phone,
+        email,
+        vehicles: [{ model: vehicleModel, reg: vehicleReg || 'N/A' }],
+        total_spend: totalSpend,
+        manual_spend: totalSpend,
+        visit_count: visitCount,
+        manual_visits: visitCount,
+        notes,
+        created_at: new Date().toISOString().slice(0, 10)
+      });
+    }
+
+    // Best-effort sync with backend customer creation endpoint
+    fetch('/crm/api/customers/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        phone,
+        email,
+        vehicle_model: vehicleModel,
+        vehicle_reg: vehicleReg,
+        visit_count: visitCount,
+        total_spend: totalSpend,
+        notes
+      })
+    }).catch(() => {});
+
+    saveCrmState(state);
+    closeModal('modalAddCustomer');
+    e.target.reset();
+    alert(`✅ Customer "${name}" (${vehicleModel} - ${vehicleReg}) added to Customer & Vehicle Directory!`);
+  };
+
+  window.deleteCustomerRecord = function(id) {
+    const cust = (state.customers || []).find(c => String(c.id) === String(id));
+    if (!cust) return;
+    if (!confirm(`Remove "${cust.name}" from the Customer & Vehicle Directory?`)) return;
+    state.customers = (state.customers || []).filter(c => String(c.id) !== String(id));
+    saveCrmState(state);
+  };
+
   window.openCustomerDossier = function(id) {
-    const c = (state.customers || []).find(item => item.id === id);
+    const c = (state.customers || []).find(item => String(item.id) === String(id));
     if (!c) return alert('Customer profile not found.');
     document.getElementById('dossierName').textContent = c.name + ' • Garage Dossier';
     document.getElementById('dossierMeta').textContent = 'Phone: +91 ' + c.phone + (c.email ? ' | Email: ' + c.email : '');
     
-    const linkedInvoices = (state.invoices || []).filter(i => i.phone === c.phone || i.customer_name === c.name);
-    const linkedWarranties = (state.warranties || []).filter(w => w.phone === c.phone || w.customer_name === c.name);
+    const cPhone10 = normalizePhone10(c.phone);
+    const linkedInvoices = (state.invoices || []).filter(i =>
+      (cPhone10 && normalizePhone10(i.phone) === cPhone10) ||
+      (i.customer_name && c.name && i.customer_name.toLowerCase() === c.name.toLowerCase())
+    );
+    const linkedWarranties = (state.warranties || []).filter(w =>
+      (cPhone10 && normalizePhone10(w.phone) === cPhone10) ||
+      (w.customer_name && c.name && w.customer_name.toLowerCase() === c.name.toLowerCase())
+    );
+
+    const vehiclesList = normalizeVehiclesArray(c.vehicles);
 
     const content = document.getElementById('dossierContent');
     if (content) {
@@ -2864,7 +3231,7 @@
         <div style="margin-bottom:18px;">
           <div style="font-size:12px; font-weight:800; color:#0f172a; text-transform:uppercase; margin-bottom:8px;">🚗 Registered Garage Vehicles</div>
           <div style="display:flex; flex-direction:column; gap:6px;">
-            ${(c.vehicles || []).map(v => `
+            ${vehiclesList.map(v => `
               <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-weight:700; color:#0f172a;">${v.model}</span>
                 <span style="font-family:monospace; background:#f1f5f9; padding:2px 8px; border-radius:4px; font-size:12px;">${v.reg}</span>
@@ -2907,8 +3274,7 @@
         </div>
       `;
     }
-    const modal = document.getElementById('modalCustomerDossier');
-    if (modal) modal.style.display = 'flex';
+    openModal('modalCustomerDossier');
   };
 
   function renderAllCrmTables() {
@@ -2917,7 +3283,8 @@
       const publicLeads = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
       if (publicLeads.length) {
         publicLeads.forEach(pl => {
-          if (!state.leads.some(l => l.id === pl.id)) {
+          const plId = pl.id || pl.ref;
+          if (!state.leads.some(l => String(l.id) === String(plId) || (l.ref && pl.ref && String(l.ref) === String(pl.ref)))) {
             state.leads.unshift(pl);
           }
         });
@@ -2925,19 +3292,35 @@
       const publicMemberships = JSON.parse(localStorage.getItem('tdc_crm_memberships') || '[]');
       if (publicMemberships.length) {
         publicMemberships.forEach(pm => {
-          if (!state.memberships.some(m => m.id === pm.id)) {
+          if (!state.memberships.some(m => String(m.id) === String(pm.id))) {
             state.memberships.unshift(pm);
           }
         });
       }
     } catch(e){}
 
+    // Normalize every lead so ID and stage are guaranteed valid strings/primitives
+    (state.leads || []).forEach((l, idx) => {
+      if (l.id === undefined || l.id === null || l.id === '') {
+        l.id = l.ref || ('LEAD-' + (1000 + idx));
+      }
+      if (!l.ref) {
+        l.ref = String(l.id).startsWith('LEAD-') || String(l.id).startsWith('DRC-') ? String(l.id) : ('LEAD-' + l.id);
+      }
+      if (!l.stage) {
+        l.stage = 'NEW';
+      }
+    });
+
+    // Reconcile completed/paid leads, job cards & invoices into Customer & Vehicle Directory
+    reconcileCustomersDirectory();
+
     // Update Badges & Stats
     const inBayCount = state.jobCards.filter(j => j.service_status === 'UNDER_SERVICE').length;
     const statInBayEl = document.getElementById('statInBay');
     if (statInBayEl) statInBayEl.textContent = inBayCount;
     document.getElementById('badgeLeadCount').textContent = state.leads.length;
-    document.getElementById('statPendingLeads').textContent = state.leads.filter(l => l.stage === 'NEW').length;
+    document.getElementById('statPendingLeads').textContent = state.leads.filter(l => (l.stage || 'NEW') === 'NEW').length;
     document.getElementById('statActiveJobs').textContent = state.jobCards.length;
     document.getElementById('statMembersCount').textContent = state.memberships.length;
 
@@ -2997,6 +3380,7 @@
     function createKanbanCardHtml(l) {
       const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
       const phone10 = cleanPhone.length > 10 ? cleanPhone.slice(-10) : cleanPhone;
+      const safeId = String(l.id ?? l.ref ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
       
       const src = (l.source || 'WEBSITE').toUpperCase();
       let srcBg = '#f1f5f9', srcColor = '#475569';
@@ -3008,7 +3392,7 @@
       const stage = l.stage || 'NEW';
 
       return `
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; flex-direction:column; gap:8px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; flex-direction:column; gap:8px; position:relative; z-index:1;">
           <!-- Top Row: Ref & Source -->
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-family:monospace; font-size:10.5px; font-weight:800; color:#64748b;">${highlightMatch(l.ref || ('#LEAD-' + l.id))}</span>
@@ -3043,33 +3427,33 @@
           <div style="padding-top:4px; border-top:1px solid #f1f5f9;">
             ${stage === 'NEW' ? `
               <div style="display:flex; gap:4px; margin-bottom:4px;">
-                <button onclick="updateLeadStage(${l.id}, 'CONTACTED')" style="background:#3b82f6; color:#ffffff; border:none; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">📞 Contacted</button>
-                <button onclick="updateLeadStage(${l.id}, 'BAY_SCHEDULED')" style="background:#10b981; color:#ffffff; border:none; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">🚗 Ready</button>
-                <button onclick="deleteLeadPermanently(${l.id})" title="Delete lead" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer;">🗑️</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'CONTACTED')" style="background:#3b82f6; color:#ffffff; border:none; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1; pointer-events:auto;">📞 Contacted</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'BAY_SCHEDULED')" style="background:#10b981; color:#ffffff; border:none; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1; pointer-events:auto;">🚗 Ready</button>
+                <button type="button" onclick="deleteLeadPermanently('${safeId}')" title="Delete lead" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; pointer-events:auto;">🗑️</button>
               </div>
-              <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">🛠️ Send to Job Card &rarr;</button>
+              <button type="button" onclick="convertLeadToJobCard('${safeId}')" style="background:#E50914; color:#ffffff; border:none; padding:6px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%; pointer-events:auto;">🛠️ Send to Job Card &rarr;</button>
             ` : stage === 'CONTACTED' ? `
               <div style="display:flex; gap:4px; margin-bottom:4px;">
-                <button onclick="updateLeadStage(${l.id}, 'BAY_SCHEDULED')" style="background:#10b981; color:#ffffff; border:none; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">🚗 Mark Ready</button>
-                <button onclick="updateLeadStage(${l.id}, 'LOST')" style="background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer;">Waste</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'BAY_SCHEDULED')" style="background:#10b981; color:#ffffff; border:none; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1; pointer-events:auto;">🚗 Mark Ready</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'LOST')" style="background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; pointer-events:auto;">Waste</button>
               </div>
-              <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">🛠️ Send to Job Card &rarr;</button>
+              <button type="button" onclick="convertLeadToJobCard('${safeId}')" style="background:#E50914; color:#ffffff; border:none; padding:6px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; width:100%; pointer-events:auto;">🛠️ Send to Job Card &rarr;</button>
             ` : stage === 'BAY_SCHEDULED' ? `
-              <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:7px 10px; border-radius:4px; font-size:12px; font-weight:800; cursor:pointer; width:100%; box-shadow:0 2px 6px rgba(229,9,20,0.25); margin-bottom:4px;">
+              <button type="button" onclick="convertLeadToJobCard('${safeId}')" style="background:#E50914; color:#ffffff; border:none; padding:7px 10px; border-radius:4px; font-size:12px; font-weight:800; cursor:pointer; width:100%; box-shadow:0 2px 6px rgba(229,9,20,0.25); margin-bottom:4px; pointer-events:auto;">
                 🛠️ Send to Job Card &rarr;
               </button>
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <button onclick="updateLeadStage(${l.id}, 'CONTACTED')" style="background:none; border:none; color:#64748b; font-size:10px; font-weight:700; cursor:pointer; padding:0;">↩ Back to Contacted</button>
-                <button onclick="updateLeadStage(${l.id}, 'LOST')" style="background:none; border:none; color:#ef4444; font-size:10px; font-weight:700; cursor:pointer; padding:0;">Mark Waste</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'CONTACTED')" style="background:none; border:none; color:#64748b; font-size:10px; font-weight:700; cursor:pointer; padding:0; pointer-events:auto;">↩ Back to Contacted</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'LOST')" style="background:none; border:none; color:#ef4444; font-size:10px; font-weight:700; cursor:pointer; padding:0; pointer-events:auto;">Mark Waste</button>
               </div>
             ` : stage === 'WON' ? `
               <div style="background:#ede9fe; color:#6d28d9; padding:4px 6px; border-radius:4px; font-size:11px; font-weight:700; text-align:center; margin-bottom:4px;">🎉 Converted to Job Card</div>
-              <button onclick="switchCrmTab('job-cards', document.querySelector('a[href=\\'#job-cards\\']'))" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; width:100%;">View Job Cards &rarr;</button>
+              <button type="button" onclick="switchCrmTab('job-cards', document.querySelector('a[href=\\'#job-cards\\']'))" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:4px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; width:100%; pointer-events:auto;">View Job Cards &rarr;</button>
             ` : `
               <div style="background:#fee2e2; color:#991b1b; padding:3px 6px; border-radius:4px; font-size:10px; font-weight:700; text-align:center; margin-bottom:4px;">Waste / Dropped Lead</div>
               <div style="display:flex; gap:4px;">
-                <button onclick="deleteLeadPermanently(${l.id})" style="background:#ef4444; color:#ffffff; border:none; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">🗑️ Delete</button>
-                <button onclick="updateLeadStage(${l.id}, 'NEW')" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1;">↩ Restore</button>
+                <button type="button" onclick="deleteLeadPermanently('${safeId}')" style="background:#ef4444; color:#ffffff; border:none; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1; pointer-events:auto;">🗑️ Delete</button>
+                <button type="button" onclick="updateLeadStage('${safeId}', 'NEW')" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:5px 6px; border-radius:4px; font-size:10.5px; font-weight:700; cursor:pointer; flex:1; pointer-events:auto;">↩ Restore</button>
               </div>
             `}
           </div>
@@ -3117,6 +3501,7 @@
       leadsTbody.innerHTML = filteredLeads.length ? filteredLeads.map(l => {
         const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
         const phone10 = cleanPhone.length > 10 ? cleanPhone.slice(-10) : cleanPhone;
+        const safeId = String(l.id ?? l.ref ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
         return `
           <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s ease;" onmouseenter="this.style.background='#f8fafc'" onmouseleave="this.style.background='transparent'">
@@ -3144,8 +3529,8 @@
               <span style="font-size:10px; background:#f1f5f9; color:#475569; font-weight:800; padding:3px 8px; border-radius:4px; text-transform:uppercase;">${l.source || 'WEBSITE'}</span>
             </td>
             <td style="padding:12px 16px;">
-              <select onchange="updateLeadStage(${l.id}, this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:700; outline:none;">
-                <option value="NEW" ${l.stage === 'NEW' ? 'selected' : ''}>🆕 UNTOUCHED</option>
+              <select onchange="updateLeadStage('${safeId}', this.value)" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; padding:4px 8px; font-size:11.5px; font-weight:700; outline:none;">
+                <option value="NEW" ${(l.stage || 'NEW') === 'NEW' ? 'selected' : ''}>🆕 UNTOUCHED</option>
                 <option value="CONTACTED" ${l.stage === 'CONTACTED' ? 'selected' : ''}>📞 CONTACTED</option>
                 <option value="BAY_SCHEDULED" ${l.stage === 'BAY_SCHEDULED' ? 'selected' : ''}>🚗 READY FOR BAY</option>
                 <option value="WON" ${l.stage === 'WON' ? 'selected' : ''}>🎉 CONVERTED (WON)</option>
@@ -3155,11 +3540,11 @@
             <td style="padding:12px 16px; text-align:right;">
               <div style="display:inline-flex; gap:6px; align-items:center;">
                 ${l.stage !== 'WON' ? `
-                <button onclick="convertLeadToJobCard(${l.id})" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                <button type="button" onclick="convertLeadToJobCard('${safeId}')" style="background:#E50914; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
                   🛠️ Send to Job Card
                 </button>` : `
                 <span style="font-size:11px; font-weight:800; color:#15803d; background:#dcfce7; padding:4px 10px; border-radius:12px;">Converted ✓</span>`}
-                <button onclick="deleteLeadPermanently(${l.id})" title="Delete lead from logs" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
+                <button type="button" onclick="deleteLeadPermanently('${safeId}')" title="Delete lead from logs" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">
                   🗑️
                 </button>
               </div>
@@ -3402,25 +3787,52 @@
 
     // 6. Customers Table
     const custTbody = document.getElementById('customersTableBody');
-    custTbody.innerHTML = state.customers.length ? state.customers.map(c => `
+    const filteredCustomers = getFilteredCustomers();
+    custTbody.innerHTML = filteredCustomers.length ? filteredCustomers.map(c => {
+      const safeCustId = String(c.id).replace(/'/g, "\\'");
+      const cleanPhone = normalizePhone10(c.phone);
+      const vehiclesList = normalizeVehiclesArray(c.vehicles);
+      const vehiclesHtml = vehiclesList.length ? vehiclesList.map(v => `
+        <div style="display:inline-flex; align-items:center; gap:5px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:5px; padding:3px 8px; margin:2px 4px 2px 0; font-size:12px;">
+          <strong style="color:#0f172a;">🚗 ${v.model || 'Vehicle'}</strong>
+          ${v.reg && v.reg !== 'N/A' ? `<span style="font-family:monospace; font-size:10.5px; font-weight:800; background:#e2e8f0; color:#0f172a; padding:1px 5px; border-radius:3px;">${v.reg}</span>` : ''}
+        </div>
+      `).join('') : '<span style="color:#94a3b8; font-size:12px;">No vehicle logged</span>';
+
+      const visitsCount = Number(c.visit_count || c.visits || 1);
+      const totalSpendAmt = Number(c.total_spend || c.spend || 0);
+      const remarksText = c.notes || c.remarks || 'Verified Studio Client';
+
+      return `
       <tr style="border-bottom:1px solid #f1f5f9;">
         <td style="padding:12px 16px;">
-          <div style="font-weight:700; color:#0f172a;">${c.name}</div>
-          <div style="font-size:12px; color:#64748b;">${c.phone}</div>
+          <div style="font-weight:700; color:#0f172a; font-size:14px;">${c.name || 'Studio Client'}</div>
+          <div style="display:flex; gap:6px; align-items:center; margin-top:3px; flex-wrap:wrap;">
+            <a href="tel:+91${cleanPhone}" style="font-size:12px; color:#0284c7; font-weight:700; text-decoration:none;">📱 ${c.phone || 'N/A'}</a>
+            ${cleanPhone ? `<a href="https://wa.me/91${cleanPhone}" target="_blank" rel="noopener" style="font-size:11px; background:#dcfce7; color:#15803d; font-weight:700; padding:1px 6px; border-radius:4px; text-decoration:none;">WhatsApp</a>` : ''}
+          </div>
+          ${c.email ? `<div style="font-size:11px; color:#64748b; margin-top:2px;">✉️ ${c.email}</div>` : ''}
         </td>
-        <td style="padding:12px 16px; color:#334155;">${c.vehicles}</td>
-        <td style="padding:12px 16px; font-weight:700; color:#0f172a;">${c.visits} visits</td>
-        <td style="padding:12px 16px; font-weight:800; color:#16a34a;">${c.spend}</td>
+        <td style="padding:12px 16px; color:#334155;">${vehiclesHtml}</td>
+        <td style="padding:12px 16px; font-weight:700; color:#0f172a;">
+          <span style="background:#f1f5f9; border:1px solid #e2e8f0; padding:3px 9px; border-radius:12px; font-size:12px;">${visitsCount} ${visitsCount === 1 ? 'visit' : 'visits'}</span>
+        </td>
+        <td style="padding:12px 16px; font-weight:800; font-size:14.5px; color:#16a34a;">₹${totalSpendAmt.toLocaleString('en-IN')}</td>
+        <td style="padding:12px 16px; font-size:12px; color:#475569; max-width:220px;">${remarksText}</td>
         <td style="padding:12px 16px; text-align:right;">
-          <button onclick="openCustomerDossier(${c.id})" style="background:#0f172a; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11.5px; font-weight:700; cursor:pointer;">View Garage Dossier ↗</button>
+          <div style="display:inline-flex; gap:6px; align-items:center;">
+            <button type="button" onclick="openCustomerDossier('${safeCustId}')" style="background:#0f172a; color:#ffffff; border:none; padding:5px 12px; border-radius:4px; font-size:11.5px; font-weight:700; cursor:pointer; white-space:nowrap;">View Garage Dossier ↗</button>
+            <button type="button" onclick="deleteCustomerRecord('${safeCustId}')" title="Remove customer from directory" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; padding:5px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">🗑️</button>
+          </div>
         </td>
       </tr>
-    `).join('') : `
+      `;
+    }).join('') : `
       <tr>
-        <td colspan="5" style="padding:48px 16px; text-align:center; color:#64748b;">
+        <td colspan="6" style="padding:48px 16px; text-align:center; color:#64748b;">
           <div style="font-size:32px; margin-bottom:10px;">👤</div>
-          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Customer Records Yet</div>
-          <div style="font-size:12px; color:#64748b;">Customer profiles are created automatically as appointments and job cards are logged.</div>
+          <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">No Customer Records Found</div>
+          <div style="font-size:12px; color:#64748b;">Customer profiles are synced automatically when leads/job cards are completed &amp; paid, or click "+ Add Customer" above.</div>
         </td>
       </tr>
     `;
@@ -3540,84 +3952,66 @@
     alert(`✓ Access revoked and account deleted for ${user.name}.`);
   };
 
-  // Live Sync with Server APIs
-  async function syncServerData() {
-    try {
-      // Sync Leads
-      const leadsRes = await fetch('/api/leads');
-      if (leadsRes.ok) {
-        const json = await leadsRes.json();
-        const list = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
-        list.forEach(srvLead => {
-          if (!state.leads.some(l => l.id == srvLead.id || l.ref == srvLead.ref)) {
-            state.leads.unshift({
-              id: srvLead.id || Date.now(),
-              ref: srvLead.ref || ('LEAD-' + (srvLead.id || Math.floor(1000 + Math.random() * 9000))),
-              customer_name: srvLead.name || srvLead.customer_name || 'Website Client',
-              phone: srvLead.phone || '',
-              email: srvLead.email || '',
-              vehicle_model: srvLead.vehicle_model || srvLead.vehicle_type || 'Vehicle',
-              vehicle_reg: srvLead.vehicle_reg || 'N/A',
-              service_name: srvLead.service_name || srvLead.service || 'Studio Consultation',
-              source: (srvLead.source || 'WEBSITE').toUpperCase(),
-              stage: srvLead.stage || 'NEW',
-              created_at: srvLead.created_at || new Date().toISOString().slice(0, 16)
-            });
-          }
-        });
-      }
-
-      // Sync Appointments
-      const apptRes = await fetch('/api/appointments');
-      if (apptRes.ok) {
-        const json = await apptRes.json();
-        const list = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
-        list.forEach(apt => {
-          if (!state.leads.some(l => l.ref == apt.ref)) {
-            state.leads.unshift({
-              id: apt.id || Date.now(),
-              ref: apt.ref,
-              customer_name: apt.customer_name || 'Online Client',
-              phone: apt.phone || '',
-              email: apt.email || '',
-              vehicle_model: `${apt.vehicle_brand || ''} ${apt.vehicle_model || ''}`.trim() || 'Vehicle',
-              vehicle_reg: apt.vehicle_registration || 'N/A',
-              service_name: apt.service_name || 'Studio Booking',
-              source: 'ONLINE_BOOKING',
-              stage: 'BAY_SCHEDULED',
-              created_at: `${apt.date} ${apt.time}`
-            });
-          }
-        });
-      }
-
-      saveCrmState(state);
-    } catch(e) {}
-  }
-
   // Action Handlers
   window.updateLeadStage = function(id, stage) {
-    const lead = state.leads.find(l => l.id === id);
-    if (lead) {
-      lead.stage = stage;
-      saveCrmState(state);
+    const lead = state.leads.find(l => String(l.id) === String(id) || String(l.ref) === String(id));
+    if (!lead) return;
+    lead.stage = stage;
+
+    // Also update localStorage tdc_crm_leads if present so it doesn't revert
+    try {
+      const pub = JSON.parse(localStorage.getItem('tdc_crm_leads') || '[]');
+      let changed = false;
+      pub.forEach(pl => {
+        if (String(pl.id) === String(id) || String(pl.ref) === String(id) || (lead.ref && String(pl.ref) === String(lead.ref))) {
+          pl.stage = stage;
+          changed = true;
+        }
+      });
+      if (changed) localStorage.setItem('tdc_crm_leads', JSON.stringify(pub));
+    } catch(e) {}
+
+    // If marked WON or COMPLETED, sync customer & vehicle to directory
+    if (stage === 'WON' || stage === 'COMPLETED') {
+      syncCustomerRecordToDirectory({
+        customer_name: lead.customer_name || lead.name,
+        phone: lead.phone,
+        email: lead.email,
+        vehicle_model: lead.vehicle_model,
+        vehicle_reg: lead.vehicle_reg,
+        notes: lead.service_name ? `Service: ${lead.service_name}` : ''
+      });
     }
+
+    saveCrmState(state);
+
+    // Sync stage update to server (both Node & PHP endpoints)
+    fetch('/crm/api/leads/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead_id: lead.id, ref: lead.ref, stage })
+    }).catch(() => {});
   };
 
   window.convertLeadToJobCard = function(id) {
-    const lead = state.leads.find(l => l.id === id);
+    const lead = state.leads.find(l => String(l.id) === String(id) || String(l.ref) === String(id));
     if (!lead) return;
     
     const newJcId = 'JC-2026-0' + (40 + state.jobCards.length + 1);
-    const totalAmt = 35000;
+    const totalAmt = Number(lead.quote_total || lead.estimated_amount || 35000) || 35000;
+    const customerName = lead.customer_name || lead.name || 'Studio Client';
+    const vehicleModel = lead.vehicle_model || 'Vehicle';
+    const vehicleReg = lead.vehicle_reg || 'JK 02 TEMP';
+    const serviceName = lead.service_name || 'Detailing Service';
     
     state.jobCards.unshift({
       id: newJcId,
-      customer_name: lead.customer_name,
-      phone: lead.phone,
-      vehicle_model: lead.vehicle_model,
-      vehicle_reg: lead.vehicle_reg || 'JK 02 TEMP',
-      service_name: lead.service_name,
+      customer_name: customerName,
+      phone: lead.phone || '',
+      email: lead.email || '',
+      vehicle_model: vehicleModel,
+      vehicle_reg: vehicleReg,
+      service_name: serviceName,
       items_used: "Labor & Calibration (Click 'Edit' to add products)",
       total_amount: totalAmt,
       service_status: "UNDER_SERVICE",
@@ -3631,11 +4025,12 @@
     state.invoices.unshift({
       id: newInvId,
       job_id: newJcId,
-      customer_name: lead.customer_name,
+      customer_name: customerName,
       phone: lead.phone || '',
-      vehicle_reg: lead.vehicle_reg || 'JK 02 TEMP',
-      vehicle_model: lead.vehicle_model,
-      service_name: lead.service_name,
+      email: lead.email || '',
+      vehicle_reg: vehicleReg,
+      vehicle_model: vehicleModel,
+      service_name: serviceName,
       amount: totalAmt,
       payment_mode: "Pending",
       status: "UNPAID",
@@ -3643,8 +4038,26 @@
     });
 
     lead.stage = 'WON';
+
+    // Immediately register customer & vehicle in Customer & Vehicle Directory
+    syncCustomerRecordToDirectory({
+      customer_name: customerName,
+      phone: lead.phone,
+      email: lead.email,
+      vehicle_model: vehicleModel,
+      vehicle_reg: vehicleReg,
+      notes: `Active Job Card #${newJcId} (${serviceName})`
+    });
+
+    // Sync stage to server
+    fetch('/crm/api/leads/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead_id: lead.id, ref: lead.ref, stage: 'WON' })
+    }).catch(() => {});
+
     saveCrmState(state);
-    alert('🎉 Lead converted to Job Card #' + newJcId + '!\n\n✓ Invoice #' + newInvId + ' automatically created in Invoices & Billing.\n✓ You can now click "✏️ Edit & Add Products" to add materials or adjust prices.');
+    alert('🎉 Lead converted to Job Card #' + newJcId + '!\n\n✓ Invoice #' + newInvId + ' automatically created in Invoices & Billing.\n✓ Client & Vehicle synced to Customer & Vehicle Directory.');
     switchCrmTab('job-cards', document.querySelector('a[href="#job-cards"]'));
   };
 
@@ -3665,20 +4078,25 @@
     }
 
     const newJcId = 'JC-2026-0' + (40 + state.jobCards.length + 1);
-    const totalAmt = parseFloat(fd.get('total_amount'));
-    const paymentStatus = fd.get('payment_status');
-    const paymentMode = fd.get('payment_mode');
+    const totalAmt = parseFloat(fd.get('total_amount')) || 0;
+    const paymentStatus = fd.get('payment_status') || 'UNPAID';
+    const paymentMode = fd.get('payment_mode') || 'Pending';
+    const customerName = fd.get('customer_name');
+    const phone = fd.get('phone');
+    const vehicleModel = fd.get('vehicle_model');
+    const vehicleReg = fd.get('vehicle_reg');
+    const serviceName = fd.get('service_name');
 
     state.jobCards.unshift({
       id: newJcId,
-      customer_name: fd.get('customer_name'),
-      phone: fd.get('phone'),
-      vehicle_model: fd.get('vehicle_model'),
-      vehicle_reg: fd.get('vehicle_reg'),
-      service_name: fd.get('service_name'),
+      customer_name: customerName,
+      phone: phone,
+      vehicle_model: vehicleModel,
+      vehicle_reg: vehicleReg,
+      service_name: serviceName,
       items_used: itemsUsed,
       total_amount: totalAmt,
-      service_status: "UNDER_SERVICE",
+      service_status: paymentStatus === 'PAID' ? 'COMPLETED' : 'UNDER_SERVICE',
       payment_status: paymentStatus,
       payment_mode: paymentMode,
       created_at: new Date().toISOString().slice(0, 10)
@@ -3688,84 +4106,136 @@
     state.invoices.unshift({
       id: 'INV-' + newJcId,
       job_id: newJcId,
-      customer_name: fd.get('customer_name'),
-      phone: fd.get('phone') || '',
-      vehicle_reg: fd.get('vehicle_reg'),
-      vehicle_model: fd.get('vehicle_model'),
-      service_name: fd.get('service_name'),
+      customer_name: customerName,
+      phone: phone || '',
+      vehicle_reg: vehicleReg,
+      vehicle_model: vehicleModel,
+      service_name: serviceName,
       amount: totalAmt,
       payment_mode: paymentMode,
       status: paymentStatus,
       date: new Date().toISOString().slice(0, 10)
     });
 
+    // Sync to Customer & Vehicle Directory
+    syncCustomerRecordToDirectory({
+      customer_name: customerName,
+      phone: phone,
+      vehicle_model: vehicleModel,
+      vehicle_reg: vehicleReg,
+      notes: `Service: ${serviceName} (${newJcId})`
+    });
+
     saveCrmState(state);
     closeModal('modalCreateJobCard');
     e.target.reset();
-    alert('✅ Job Card #' + newJcId + ' created & Invoice generated in Invoices & Billing!');
+    alert('✅ Job Card #' + newJcId + ' created, Invoice generated & Customer synced to Directory!');
   };
 
   window.updateJobStatus = function(jcId, status) {
-    const jc = state.jobCards.find(j => j.id === jcId);
+    const jc = state.jobCards.find(j => String(j.id) === String(jcId));
     if (jc) {
       jc.service_status = status;
+      if (status === 'COMPLETED') {
+        syncCustomerRecordToDirectory({
+          customer_name: jc.customer_name,
+          phone: jc.phone,
+          vehicle_model: jc.vehicle_model,
+          vehicle_reg: jc.vehicle_reg,
+          notes: `Completed: ${jc.service_name} (${jc.id})`
+        });
+      }
       saveCrmState(state);
     }
   };
 
   window.updateInvoiceStatus = function(invId, status) {
-    const inv = state.invoices.find(i => i.id === invId);
+    const inv = state.invoices.find(i => String(i.id) === String(invId));
     if (inv) {
       inv.status = status;
       if (inv.job_id) {
-        const jc = state.jobCards.find(j => j.id === inv.job_id);
+        const jc = state.jobCards.find(j => String(j.id) === String(inv.job_id));
         if (jc) {
           jc.payment_status = status;
+          if (status === 'PAID') jc.service_status = 'COMPLETED';
         }
+      }
+      if (status === 'PAID') {
+        syncCustomerRecordToDirectory({
+          customer_name: inv.customer_name,
+          phone: inv.phone,
+          vehicle_model: inv.vehicle_model,
+          vehicle_reg: inv.vehicle_reg,
+          notes: `Paid Invoice #${inv.id} (${inv.service_name || 'Detailing'})`
+        });
       }
       saveCrmState(state);
     }
   };
 
   window.markJobPaid = function(jcId) {
-    const jc = state.jobCards.find(j => j.id === jcId);
+    const jc = state.jobCards.find(j => String(j.id) === String(jcId));
     if (jc) {
       jc.payment_status = 'PAID';
       jc.service_status = 'COMPLETED';
+      if (!jc.payment_mode || jc.payment_mode === 'Pending') {
+        jc.payment_mode = 'UPI / Cash';
+      }
 
       // Sync linked invoice
-      const inv = state.invoices.find(i => i.job_id === jc.id || i.id === ('INV-' + jc.id));
+      const inv = state.invoices.find(i => String(i.job_id) === String(jc.id) || String(i.id) === ('INV-' + jc.id));
       if (inv) {
         inv.status = 'PAID';
         if (!inv.payment_mode || inv.payment_mode === 'Pending') {
           inv.payment_mode = 'UPI / Cash';
         }
       }
+
+      // Auto-sync into Customer & Vehicle Directory
+      syncCustomerRecordToDirectory({
+        customer_name: jc.customer_name,
+        phone: jc.phone,
+        vehicle_model: jc.vehicle_model,
+        vehicle_reg: jc.vehicle_reg,
+        notes: `Completed & Paid: ${jc.service_name} (${jc.id})`
+      });
+
       saveCrmState(state);
-      alert('✓ Job Card #' + jcId + ' and linked Invoice marked as PAID and COMPLETED.');
+      alert('✓ Job Card #' + jcId + ' and linked Invoice marked as PAID and COMPLETED.\n✓ Customer & Vehicle updated in Customer Directory!');
     }
   };
 
   window.markInvoicePaid = function(invId) {
-    const inv = state.invoices.find(i => i.id === invId);
+    const inv = state.invoices.find(i => String(i.id) === String(invId));
     if (inv) {
       inv.status = 'PAID';
       if (!inv.payment_mode || inv.payment_mode === 'Pending') {
         inv.payment_mode = 'UPI / Cash';
       }
       if (inv.job_id) {
-        const jc = state.jobCards.find(j => j.id === inv.job_id);
+        const jc = state.jobCards.find(j => String(j.id) === String(inv.job_id));
         if (jc) {
           jc.payment_status = 'PAID';
+          jc.service_status = 'COMPLETED';
         }
       }
+
+      // Auto-sync into Customer & Vehicle Directory
+      syncCustomerRecordToDirectory({
+        customer_name: inv.customer_name,
+        phone: inv.phone,
+        vehicle_model: inv.vehicle_model,
+        vehicle_reg: inv.vehicle_reg,
+        notes: `Paid Invoice #${inv.id} (${inv.service_name || 'Detailing'})`
+      });
+
       saveCrmState(state);
-      alert('✓ Invoice #' + invId + ' marked as PAID.');
+      alert('✓ Invoice #' + invId + ' marked as PAID & Customer synced to Directory.');
     }
   };
 
   window.openEditJobCard = function(jcId) {
-    const jc = state.jobCards.find(j => j.id === jcId);
+    const jc = state.jobCards.find(j => String(j.id) === String(jcId));
     if (!jc) return;
 
     document.getElementById('editJobCardId').value = jc.id;
@@ -3809,7 +4279,7 @@
     e.preventDefault();
     const fd = new FormData(e.target);
     const jcId = fd.get('job_id');
-    const jc = state.jobCards.find(j => j.id === jcId);
+    const jc = state.jobCards.find(j => String(j.id) === String(jcId));
     if (!jc) return;
 
     const prodId = fd.get('add_product_id');
@@ -3838,7 +4308,7 @@
     jc.payment_mode = fd.get('payment_mode');
 
     // Sync linked invoice
-    let inv = state.invoices.find(i => i.job_id === jc.id || i.id === ('INV-' + jc.id));
+    let inv = state.invoices.find(i => String(i.job_id) === String(jc.id) || String(i.id) === ('INV-' + jc.id));
     if (inv) {
       inv.customer_name = jc.customer_name;
       inv.phone = jc.phone;
@@ -3864,6 +4334,15 @@
       });
     }
 
+    // Sync Customer & Vehicle Directory
+    syncCustomerRecordToDirectory({
+      customer_name: jc.customer_name,
+      phone: jc.phone,
+      vehicle_model: jc.vehicle_model,
+      vehicle_reg: jc.vehicle_reg,
+      notes: `${jc.service_name} (${jc.id})`
+    });
+
     saveCrmState(state);
     closeModal('modalEditJobCard');
     alert('✅ Job Card #' + jc.id + ' and linked Invoice updated successfully!');
@@ -3872,8 +4351,9 @@
   window.handleManualAddLead = function(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
-    state.leads.unshift({
+    const newLead = {
       id: Date.now(),
+      name: fd.get('name'),
       customer_name: fd.get('name'),
       phone: fd.get('phone'),
       vehicle_model: fd.get('vehicle'),
@@ -3883,8 +4363,14 @@
       source: "MANUAL",
       stage: "NEW",
       created_at: new Date().toISOString().slice(0, 16).replace('T', ' ')
-    });
+    };
+    state.leads.unshift(newLead);
     saveCrmState(state);
+    fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newLead)
+    }).catch(() => {});
     closeModal('modalAddLead');
     e.target.reset();
   };
@@ -4469,17 +4955,24 @@
   // Modal helpers
   window.openModal = function(id) {
     const el = document.getElementById(id);
-    if (el) el.classList.add('active');
+    if (el) {
+      el.classList.add('active');
+      if (el.style.display === 'none') el.style.display = '';
+    }
   };
 
   window.closeModal = function(id) {
     const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
+    if (el) {
+      el.classList.remove('active');
+      if (el.style.display === 'flex' || el.style.display === 'block') el.style.display = '';
+    }
   };
 
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('crm-modal-backdrop')) {
       e.target.classList.remove('active');
+      if (e.target.style.display === 'flex' || e.target.style.display === 'block') e.target.style.display = '';
     }
   });
 
@@ -4493,12 +4986,28 @@
         const incoming = (body && body.data) ? body.data : (Array.isArray(body) ? body : []);
         if (incoming.length) {
           incoming.forEach(serverLead => {
-            const exists = state.leads.some(l => 
-              l.id === serverLead.id || 
-              (l.phone && serverLead.phone && l.phone === serverLead.phone && l.created_at === serverLead.created_at)
+            const srvId = serverLead.id || serverLead.ref || ('LEAD-' + Date.now());
+            const srvRef = serverLead.ref || serverLead.lead_no || ('LEAD-' + srvId);
+            const exists = state.leads.some(l =>
+              String(l.id) === String(srvId) ||
+              (l.ref && srvRef && String(l.ref) === String(srvRef)) ||
+              (l.phone && serverLead.phone && normalizePhone10(l.phone) === normalizePhone10(serverLead.phone) && l.created_at === serverLead.created_at)
             );
             if (!exists) {
-              state.leads.unshift(serverLead);
+              state.leads.unshift({
+                id: srvId,
+                ref: srvRef,
+                customer_name: serverLead.customer_name || serverLead.name || 'Website Client',
+                name: serverLead.name || serverLead.customer_name || 'Website Client',
+                phone: serverLead.phone || '',
+                email: serverLead.email || '',
+                vehicle_model: serverLead.vehicle_model || serverLead.vehicle_type || 'Vehicle',
+                vehicle_reg: serverLead.vehicle_reg || 'N/A',
+                service_name: serverLead.service_name || serverLead.service || 'Studio Consultation',
+                source: (serverLead.source || 'WEBSITE').toUpperCase(),
+                stage: serverLead.stage || 'NEW',
+                created_at: serverLead.created_at || new Date().toISOString().slice(0, 16).replace('T', ' ')
+              });
               newItemsFound = true;
             }
           });
@@ -4515,21 +5024,30 @@
         const incomingApts = (body && body.data) ? body.data : (Array.isArray(body) ? body : []);
         if (incomingApts.length) {
           incomingApts.forEach(apt => {
-            const aptId = apt.id || apt.ref || Date.now();
+            const aptRef = apt.ref || ('DRC-' + (apt.id || Date.now()));
+            const aptId = apt.id || aptRef;
+            const aptPhone = apt.customer_phone || apt.phone || (apt.customer && apt.customer.phone) || '';
+            const aptService = apt.service_name || (apt.service && apt.service.name) || 'Detailing Service';
+            const aptVehicle = apt.vehicle_model
+              ? `${apt.vehicle_brand || ''} ${apt.vehicle_model}`.trim()
+              : ((apt.vehicle && `${apt.vehicle.brand || ''} ${apt.vehicle.model || ''}`.trim()) || 'Car/SUV');
             const aptLead = {
               id: aptId,
+              ref: aptRef,
               customer_name: apt.customer_name || (apt.customer && apt.customer.name) || 'Studio Client',
-              phone: apt.customer_phone || (apt.customer && apt.customer.phone) || '',
-              vehicle_model: apt.vehicle_model || (apt.vehicle && apt.vehicle.model) || 'Car/SUV',
-              vehicle_reg: apt.vehicle_reg || (apt.vehicle && apt.vehicle.registration) || '',
-              service_name: apt.service_name || (apt.service && apt.service.name) || 'Detailing Service',
+              phone: aptPhone,
+              email: apt.email || (apt.customer && apt.customer.email) || '',
+              vehicle_model: aptVehicle,
+              vehicle_reg: apt.vehicle_reg || apt.vehicle_registration || (apt.vehicle && apt.vehicle.registration) || 'N/A',
+              service_name: aptService,
               source: 'ONLINE_BOOKING',
               stage: 'NEW',
-              created_at: apt.created_at || (apt.appointment_date + ' ' + (apt.slot_time || ''))
+              created_at: apt.created_at || ((apt.date || apt.appointment_date || '') + ' ' + (apt.time || apt.slot_time || '')).trim()
             };
-            const exists = state.leads.some(l => 
-              l.id === aptLead.id || 
-              (l.phone && aptLead.phone && l.phone === aptLead.phone && l.service_name === aptLead.service_name)
+            const exists = state.leads.some(l =>
+              String(l.id) === String(aptLead.id) ||
+              (l.ref && aptRef && String(l.ref) === String(aptRef)) ||
+              (l.phone && aptLead.phone && normalizePhone10(l.phone) === normalizePhone10(aptLead.phone) && l.service_name === aptLead.service_name)
             );
             if (!exists) {
               state.leads.unshift(aptLead);

@@ -564,23 +564,64 @@ export function initBookingFlow() {
     const fallbackRef = 'DRC-' + Math.floor(10000 + Math.random() * 90000);
     const resolvedServiceName = state.serviceName || (state.serviceSlug ? state.serviceSlug.replace(/-/g, ' ').toUpperCase() : 'Studio Detailing');
 
+    // Browser-side email relay to Care@thedriveclinic.com & thedriveclinic@gmail.com
+    const relayPayload = {
+      _subject: `📅 [NEW BOOKING] ${state.name} (${state.phone}) — ${resolvedServiceName}`,
+      _template: 'table',
+      _captcha: 'false',
+      _cc: 'thedriveclinic@gmail.com',
+      Lead_Type: 'ONLINE STUDIO BOOKING',
+      Booking_Ref: fallbackRef,
+      Customer_Name: state.name,
+      Phone_WhatsApp: state.phone,
+      Email: state.email || 'Not Provided',
+      Service_Booked: resolvedServiceName,
+      Vehicle: `${state.brand || ''} ${state.model || ''} (${(state.vehicleType || 'car').toUpperCase()})`.trim(),
+      Registration: state.registration || 'N/A',
+      Preferred_Date: state.date || todayStr,
+      Preferred_Slot: state.time || '10:00',
+      Customer_Notes: state.notes || 'None',
+      Timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+
+    Promise.allSettled([
+      fetch('https://formsubmit.co/ajax/Care@thedriveclinic.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(relayPayload)
+      }),
+      fetch('https://formsubmit.co/ajax/thedriveclinic@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(relayPayload)
+      })
+    ]).catch(() => {});
+
     try {
       const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timeoutId = controller ? setTimeout(() => controller.abort(), 3500) : null;
+      const timeoutId = controller ? setTimeout(() => controller.abort(), 12000) : null;
 
-      const res = await fetch(`${API_BASE}/appointments`, {
+      let res = await fetch(`${API_BASE}/appointments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
         signal: controller ? controller.signal : undefined
       }).catch(() => null);
 
+      if (!res || !res.ok) {
+        res = await fetch('http://localhost:5000/api/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(() => null);
+      }
+
       if (timeoutId) clearTimeout(timeoutId);
 
       if (res && res.ok) {
         try {
           const json = await res.json();
-          if (json && json.ok && json.data) {
+          if (json && (json.ok || json.success) && json.data) {
             bookingData = json.data;
           }
         } catch (jsonErr) {}

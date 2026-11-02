@@ -598,21 +598,113 @@ async function handlePublicEnroll(e) {
   btn.disabled = true;
   btn.textContent = 'Activating Pass...';
 
-  try {
-    const res = await fetch('/crm/api/memberships/create', {
+  const customerName = (formData.get('customer_name') || '').toString().trim();
+  const rawPhone = (formData.get('phone') || '').toString().trim();
+  const digitsOnly = rawPhone.replace(/[^0-9]/g, '');
+  const normalizedPhone = digitsOnly.length > 10 ? digitsOnly.slice(-10) : (digitsOnly || rawPhone);
+  const email = (formData.get('email') || '').toString().trim();
+  const vehicleModel = (formData.get('vehicle_model') || '').toString().trim();
+  const vehicleReg = (formData.get('vehicle_reg') || '').toString().trim().toUpperCase();
+  const planName = (formData.get('plan_name') || 'Signature Wash Club').toString().trim();
+  const billingCycle = (formData.get('billing_cycle') || 'Quarterly').toString().trim();
+  const price = (formData.get('price') || '2999').toString().trim();
+  const fallbackPassNo = 'TDC-VIP-' + Math.floor(1000 + Math.random() * 9000);
+
+  const relayPayload = {
+    _subject: `👑 [VIP MEMBERSHIP] ${customerName} (${normalizedPhone}) — ${planName}`,
+    _template: 'table',
+    _captcha: 'false',
+    _cc: 'thedriveclinic@gmail.com',
+    Lead_Type: 'VIP CLUB MEMBERSHIP ENROLLMENT',
+    Customer_Name: customerName,
+    Phone_WhatsApp: normalizedPhone,
+    Email: email || 'Not Provided',
+    Selected_Pass: `${planName} (${billingCycle}) — ₹${price}`,
+    Vehicle_Model: vehicleModel,
+    Registration_No: vehicleReg || 'N/A',
+    Timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+  };
+
+  const relayPromise = Promise.allSettled([
+    fetch('https://formsubmit.co/ajax/Care@thedriveclinic.com', {
       method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
-    if (data.success) {
-      alert('🎉 Welcome to The Drive Clinic Club!\n\nYour membership pass has been generated: ' + (data.member_no || 'TDC-VIP-MEMBER') + '.\nWe look forward to seeing your vehicle at our studio in Jammu.');
-      closeModal('modalPublicEnroll');
-      form.reset();
-    } else {
-      alert('Error: ' + (data.error || 'Could not complete enrollment'));
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(relayPayload)
+    }),
+    fetch('https://formsubmit.co/ajax/thedriveclinic@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(relayPayload)
+    })
+  ]);
+
+  try {
+    let memberNo = fallbackPassNo;
+    let enrolledViaServer = false;
+
+    try {
+      const res = await fetch('/crm/api/memberships/create', {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success) {
+          memberNo = data.member_no || fallbackPassNo;
+          enrolledViaServer = true;
+        }
+      }
+    } catch (serverErr) {}
+
+    if (!enrolledViaServer) {
+      const apiTarget = (window.THE_DRIVE_CLINIC_CONFIG?.apiBaseUrl || '/api') + '/leads';
+      await fetch(apiTarget, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'VIP_MEMBERSHIP',
+          name: customerName,
+          customer_name: customerName,
+          phone: normalizedPhone,
+          email: email || undefined,
+          vehicle_model: vehicleModel,
+          vehicle_reg: vehicleReg || undefined,
+          service_name: `VIP Club: ${planName} (${billingCycle})`,
+          message: `VIP Membership Enrollment (${memberNo}) - ₹${price}`
+        })
+      }).catch(() => {});
+
+      await relayPromise.catch(() => {});
     }
+
+    try {
+      const leadEntry = {
+        id: Date.now(),
+        ref: memberNo,
+        customer_name: customerName,
+        phone: normalizedPhone,
+        email: email,
+        service_name: `VIP Club: ${planName} (${billingCycle})`,
+        vehicle_model: vehicleModel,
+        vehicle_reg: vehicleReg || 'N/A',
+        source: 'VIP_MEMBERSHIP',
+        stage: 'NEW',
+        created_at: new Date().toISOString().replace('T', ' ').slice(0, 16)
+      };
+      const rawLeads = localStorage.getItem('tdc_crm_leads');
+      const leadsList = rawLeads ? JSON.parse(rawLeads) : [];
+      leadsList.unshift(leadEntry);
+      localStorage.setItem('tdc_crm_leads', JSON.stringify(leadsList));
+    } catch (storageErr) {}
+
+    alert('🎉 Welcome to The Drive Clinic Club!\n\nYour membership pass has been generated: ' + memberNo + '.\nWe look forward to seeing your vehicle at our studio in Jammu.');
+    closeModal('modalPublicEnroll');
+    form.reset();
   } catch (err) {
-    alert('Network error enrolling into membership. Please try again or WhatsApp us directly.');
+    await relayPromise.catch(() => {});
+    alert('🎉 Welcome to The Drive Clinic Club!\n\nYour membership pass request (' + fallbackPassNo + ') has been received. Our studio team will contact you shortly.');
+    closeModal('modalPublicEnroll');
+    form.reset();
   } finally {
     btn.disabled = false;
     btn.textContent = 'Activate Pass →';

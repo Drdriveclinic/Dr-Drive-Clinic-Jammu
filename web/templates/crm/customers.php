@@ -2,16 +2,32 @@
 declare(strict_types=1);
 
 // THE DRIVE CLINIC — Customers & Vehicle Garage Directory
+// Auto-reconcile any completed or paid leads into customers, vehicles, job_cards, and invoices
+try {
+    $db = Database::getConnection();
+    $completedLeads = Database::query("SELECT * FROM leads WHERE stage IN ('COMPLETED', 'WON', 'IN_SERVICE') OR payment_status = 'PAID'");
+    foreach ($completedLeads as $cl) {
+        if (function_exists('syncLeadToCustomerAndVehicleDirectory')) {
+            $synced = syncLeadToCustomerAndVehicleDirectory($db, $cl, ($cl['stage'] ?? '') === 'COMPLETED' ? 'COMPLETED' : 'IN_PROGRESS');
+            // Link any orphan invoices for this lead or customer
+            $db->prepare("UPDATE invoices SET customer_id = ?, vehicle_id = ?, job_card_id = ? WHERE (lead_id = ? OR (customer_id IS NULL AND notes LIKE ?))")
+               ->execute([
+                   $synced['customer_id'],
+                   $synced['vehicle_id'],
+                   $synced['job_card_id'],
+                   (int)$cl['id'],
+                   '%' . $cl['customer_name'] . '%'
+               ]);
+        }
+    }
+} catch (Throwable $e) {}
+
 $customers = Database::query("
   SELECT c.*, 
-         COUNT(DISTINCT v.id) as vehicle_count,
-         COUNT(DISTINCT j.id) as job_count,
-         COALESCE(SUM(i.grand_total), 0) as total_spent
+         (SELECT COUNT(*) FROM vehicles v WHERE v.customer_id = c.id) as vehicle_count,
+         (SELECT COUNT(*) FROM job_cards j WHERE j.customer_id = c.id) as job_count,
+         COALESCE((SELECT SUM(i.grand_total) FROM invoices i WHERE i.customer_id = c.id), 0) as total_spent
   FROM customers c
-  LEFT JOIN vehicles v ON c.id = v.customer_id
-  LEFT JOIN job_cards j ON c.id = j.customer_id
-  LEFT JOIN invoices i ON c.id = i.customer_id
-  GROUP BY c.id
   ORDER BY c.created_at DESC
 ");
 
@@ -70,7 +86,7 @@ $avgSpend = $totalClients > 0 ? round($totalRevenue / $totalClients) : 0;
       <p class="crm-page-sub">Central customer directory, registered vehicle fleet, full service history, tax invoices, and digital PPF warranty certificates.</p>
     </div>
     <div class="crm-page-actions">
-      <button class="crm-btn crm-btn-primary" onclick="openNewBookingModal()">+ Register Customer</button>
+      <button type="button" class="crm-btn crm-btn-primary" onclick="openModal('modalAddCustomer')">+ Add Customer</button>
     </div>
   </div>
 
@@ -187,10 +203,23 @@ $avgSpend = $totalClients > 0 ? round($totalRevenue / $totalClients) : 0;
                 <span><?= htmlspecialchars($c['email'] ?: '—') ?></span>
               </td>
               <td>
-                <span class="crm-pill crm-pill-info"><?= $c['vehicle_count'] ?> <?= $c['vehicle_count'] == 1 ? 'Vehicle' : 'Vehicles' ?></span>
+                <?php if (!empty($custVehicles)): ?>
+                  <div style="display:flex; flex-direction:column; gap:4px;">
+                    <?php foreach ($custVehicles as $cv): ?>
+                      <div>
+                        <strong style="color:#fff; font-size:12.5px;"><?= htmlspecialchars(trim(($cv['brand'] ?? '') . ' ' . ($cv['model'] ?? 'Vehicle'))) ?></strong>
+                        <?php if (!empty($cv['registration'])): ?>
+                          <span class="crm-plate-tag" style="margin-left:6px; font-size:10.5px;"><?= htmlspecialchars($cv['registration']) ?></span>
+                        <?php endif; ?>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php else: ?>
+                  <span class="crm-pill crm-pill-info"><?= (int)$c['vehicle_count'] ?> <?= $c['vehicle_count'] == 1 ? 'Vehicle' : 'Vehicles' ?></span>
+                <?php endif; ?>
               </td>
               <td>
-                <strong><?= $c['job_count'] ?> Services</strong>
+                <strong><?= max(1, (int)$c['job_count']) ?> <?= (int)$c['job_count'] === 1 ? 'Visit' : 'Visits' ?></strong>
               </td>
               <td>
                 <strong class="crm-amount-val" style="color:#10b981;">₹<?= number_format((float)$c['total_spent']) ?></strong>
@@ -239,7 +268,82 @@ $avgSpend = $totalClients > 0 ? round($totalRevenue / $totalClients) : 0;
   </div>
 </div>
 
+<!-- Modal: Manual Customer & Vehicle Registration -->
+<div class="crm-modal-backdrop" id="modalAddCustomer">
+  <div class="crm-modal crm-modal-md">
+    <div class="crm-modal-header">
+      <div class="crm-modal-title-group">
+        <h3 class="crm-modal-title">Add Customer &amp; Vehicle</h3>
+        <p class="crm-modal-sub">Manually register a customer and their vehicle into the studio directory.</p>
+      </div>
+      <button class="crm-modal-close" onclick="closeModal('modalAddCustomer')">&times;</button>
+    </div>
+    <form id="formAddCustomer" onsubmit="handleManualCustomerSubmit(event)">
+      <div class="crm-modal-body">
+        <div class="crm-form-row">
+          <div class="crm-form-group">
+            <label class="crm-label">Customer Full Name *</label>
+            <input type="text" name="name" class="crm-input" placeholder="e.g. Rajeshwar Jamwal" required>
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Phone / WhatsApp *</label>
+            <input type="tel" name="phone" class="crm-input" placeholder="e.g. +91 94191 22334" required>
+          </div>
+        </div>
+        <div class="crm-form-row">
+          <div class="crm-form-group">
+            <label class="crm-label">Email Address (Optional)</label>
+            <input type="email" name="email" class="crm-input" placeholder="e.g. client@example.com">
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Vehicle Brand &amp; Model *</label>
+            <input type="text" name="vehicle_model" class="crm-input" placeholder="e.g. Toyota Fortuner Legender" required>
+          </div>
+        </div>
+        <div class="crm-form-row">
+          <div class="crm-form-group">
+            <label class="crm-label">Registration Plate *</label>
+            <input type="text" name="vehicle_reg" class="crm-input" placeholder="e.g. JK 02 CQ 0009" required>
+          </div>
+          <div class="crm-form-group">
+            <label class="crm-label">Lifetime Spend (₹)</label>
+            <input type="number" name="total_spend" class="crm-input" value="0" min="0" step="100">
+          </div>
+        </div>
+        <div class="crm-form-group">
+          <label class="crm-label">Studio Remarks / Service Notes</label>
+          <input type="text" name="notes" class="crm-input" placeholder="e.g. Full Body PPF / VIP Client">
+        </div>
+      </div>
+      <div class="crm-modal-footer">
+        <button type="button" class="crm-btn crm-btn-secondary" onclick="closeModal('modalAddCustomer')">Cancel</button>
+        <button type="submit" class="crm-btn crm-btn-primary">Save Customer Profile</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
+async function handleManualCustomerSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+  try {
+    const res = await fetch('/crm/api/customers/create', {
+      method: 'POST',
+      body: fd
+    });
+    const data = await res.json();
+    if (data.success) {
+      closeModal('modalAddCustomer');
+      window.location.reload();
+    } else {
+      alert(data.error || 'Could not register customer');
+    }
+  } catch (err) {
+    alert('Network error while saving customer');
+  }
+}
 function filterCustomerTable() {
   const query = document.getElementById('custSearchInput').value.toLowerCase();
   const rows = document.querySelectorAll('#customersTable tbody tr');

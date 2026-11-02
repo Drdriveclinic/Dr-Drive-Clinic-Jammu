@@ -124,21 +124,27 @@ async function build() {
 
           document.addEventListener('submit', function(e) {
             const form = e.target;
-            if (form.matches('#formPublicEnroll, #modalBookingForm, form[action*="book"], form[action*="contact"], form[action*="leads"]')) {
+            if (form.matches('#contact-enquiry-form, #formPublicEnroll, #modalBookingForm, form[action*="book"], form[action*="contact"], form[action*="leads"]')) {
               const fd = new FormData(form);
               const data = Object.fromEntries(fd.entries());
+              const rawPhone = (data.phone || '').toString().replace(/[^0-9]/g, '');
+              const normalizedPhone = rawPhone.length > 10 ? rawPhone.slice(-10) : (rawPhone || data.phone || '');
+              const resolvedName = data.name || data.customer_name || 'Website Lead';
+              const resolvedService = data.service_name || data.plan_name || (data.service_slug ? data.service_slug.replace(/-/g, ' ').toUpperCase() : '') || data.service || 'Detailing & Protection';
               data.id = Date.now();
               data.created_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
-              data.source = 'WEBSITE_DOMAIN';
-              data.stage = 'NEW';
               saveLead({
                 id: data.id,
-                customer_name: data.name || data.customer_name || 'Website Lead',
-                phone: data.phone || '',
+                name: resolvedName,
+                customer_name: resolvedName,
+                phone: normalizedPhone,
                 email: data.email || '',
-                service_name: data.service_name || data.service || 'Detailing & Protection',
-                vehicle_model: data.vehicle || data.vehicle_model || '',
+                service_name: resolvedService,
+                service_slug: data.service_slug || undefined,
+                vehicle_model: data.vehicle || data.vehicle_model || data.vehicle_type || 'Car',
+                vehicle_reg: data.vehicle_reg || '',
                 notes: data.notes || data.message || '',
+                message: data.message || data.notes || '',
                 source: 'WEBSITE_DOMAIN',
                 stage: 'NEW',
                 created_at: data.created_at

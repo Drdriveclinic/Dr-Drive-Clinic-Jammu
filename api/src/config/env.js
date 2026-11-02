@@ -15,10 +15,10 @@ const envSchema = z.object({
   SMTP_HOST: z.string().default('smtpout.secureserver.net'),
   SMTP_PORT: z.string().default('465').transform((v) => parseInt(v, 10)),
   SMTP_SECURE: z.string().default('true').transform((v) => v === 'true' || v === '1'),
-  SMTP_USER: z.string().default('care@thedriveclinic.com'),
+  SMTP_USER: z.string().default('Care@thedriveclinic.com'),
   SMTP_PASS: z.string().default(''),
-  NOTIFICATION_EMAIL: z.string().default('care@thedriveclinic.com'),
-  NOTIFICATION_FROM: z.string().default('"The Drive Clinic" <care@thedriveclinic.com>')
+  NOTIFICATION_EMAIL: z.string().default('Care@thedriveclinic.com, thedriveclinic@gmail.com'),
+  NOTIFICATION_FROM: z.string().default('"The Drive Clinic" <Care@thedriveclinic.com>')
 });
 
 const parsed = envSchema.safeParse(process.env);
